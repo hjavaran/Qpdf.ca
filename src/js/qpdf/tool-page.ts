@@ -7,6 +7,7 @@
 // network disconnected. Heavy engines are downloaded only on request.
 import { isFavorite, toggleFavorite, onFavoritesChange } from './favorites.js';
 import { registerServiceWorker, whenControlled } from './sw.js';
+import { initFileIcons } from './file-icons.js';
 
 interface OfflineEntry {
   id: string;
@@ -137,7 +138,9 @@ async function initOffline(): Promise<void> {
   }
   const entry = manifest.pages[slug];
   if (!entry) {
-    setStatus('idle', 'Needs an internet connection');
+    // Only the LibreOffice converters have no offline entry: their engine is
+    // fetched from assets.qpdf.ca the first time and then kept by the browser.
+    setStatus('idle', 'First use automatically downloads the converter in your browser. Your file never leaves your device.');
     return;
   }
   const controlled = await Promise.race([
@@ -187,3 +190,5 @@ const idle = (cb: () => void) =>
 
 if (document.readyState === 'complete') idle(() => void initOffline());
 else window.addEventListener('load', () => idle(() => void initOffline()), { once: true });
+
+initFileIcons();

@@ -93,19 +93,32 @@ onPageReady(() => {
         return;
       }
 
+      // CSV files are converted by Qpdf.ca's own CSV renderer: the LibreOffice
+      // build stalls while importing CSV, and this avoids the ~74 MB download.
+      const isCsv = (f: File) => /\.csv$/i.test(f.name);
       const converter = getLibreOfficeConverter();
 
-      // Initialize LibreOffice if not already done
-      await converter.initialize((progress: LoadProgress) => {
-        showLoader(progress.message, progress.percent);
-      });
+      if (state.files.some((f) => !isCsv(f))) {
+        // Initialize LibreOffice if not already done
+        await converter.initialize((progress: LoadProgress) => {
+          showLoader(progress.message, progress.percent);
+        });
+      }
+
+      const convertOne = async (file: File): Promise<Blob> => {
+        if (!isCsv(file)) return converter.convertToPdf(file);
+        const { convertCsvToPdf } = await import('../utils/csv-to-pdf.js');
+        return convertCsvToPdf(file, {
+          onProgress: (percent, message) => showLoader(message, percent),
+        });
+      };
 
       if (state.files.length === 1) {
         const originalFile = state.files[0];
 
         showLoader('Processing...');
 
-        const pdfBlob = await converter.convertToPdf(originalFile);
+        const pdfBlob = await convertOne(originalFile);
 
         const fileName =
           originalFile.name.replace(/\.(xls|xlsx|ods|csv)$/i, '') + '.pdf';
@@ -137,7 +150,7 @@ onPageReady(() => {
             })
           );
 
-          const pdfBlob = await converter.convertToPdf(file);
+          const pdfBlob = await convertOne(file);
 
           const baseName = file.name.replace(/\.(xls|xlsx|ods|csv)$/i, '');
           const pdfBuffer = await pdfBlob.arrayBuffer();
