@@ -77,7 +77,7 @@ Published so far (both short and original):
 - Office converters (`/word-to-pdf/` …) appear only when
   `VITE_LIBREOFFICE_ASSET_URL` is configured.
 - Upstream BentoPDF paths (`/extract-pages`, `/merge-pdf.html`, …) 301-redirect
-  to the QPDF slugs.
+  to the Qpdf slugs.
 
 ## French (future)
 
@@ -109,7 +109,7 @@ Not built in Stage 1. The plan that fits the architecture:
 
 1. Make the repository public (AGPL) and deploy (see `docs/DEPLOYMENT.md`).
 2. Optionally enable the Office converters via R2 (`docs/cloudflare-r2.md`).
-3. Run Lighthouse and Search Console after launch. QPDF's own pages are light
+3. Run Lighthouse and Search Console after launch. Qpdf's own pages are light
    (subset icon font, ~10 KB); tool pages still load the upstream application
    bundle (~1.6 MB uncompressed: PDF.js, full icon sets). Splitting that
    bundle per tool is the main remaining performance task (see docs/TESTING.md).

@@ -88,7 +88,7 @@ if (isDevelopment) {
                 if (
                   confirm(
                     trText(
-                      'A new version of QPDF is available. Reload to update?'
+                      'A new version of Qpdf is available. Reload to update?'
                     )
                   )
                 ) {

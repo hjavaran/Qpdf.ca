@@ -12,7 +12,7 @@ import { trText } from '../i18n/i18n.js';
 
 const LIBREOFFICE_LOCAL_PATH = import.meta.env.BASE_URL + 'libreoffice-wasm/';
 // soffice.wasm.gz (46.5 MiB) and soffice.data.gz (27.3 MiB) exceed Cloudflare
-// Pages' 25 MiB per-file limit, so QPDF serves them from a separate static
+// Pages' 25 MiB per-file limit, so Qpdf serves them from a separate static
 // asset host (Cloudflare R2). The small loader scripts stay on the site's own
 // origin because Workers must be same-origin. See docs/cloudflare-r2.md.
 const LIBREOFFICE_BLOB_BASE: string | undefined =

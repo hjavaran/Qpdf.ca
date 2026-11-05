@@ -1010,7 +1010,7 @@
   },
   "digitalSignPdf": {
     "name": "Digital Signature PDF",
-    "pageTitle": "Digital Signature PDF - Add Cryptographic Signature | QPDF",
+    "pageTitle": "Digital Signature PDF - Add Cryptographic Signature | Qpdf",
     "subtitle": "Add a cryptographic digital signature to your PDF using X.509 certificates. Supports PKCS#12 (.pfx, .p12) and PEM formats. Your private key never leaves your browser.",
     "certificateSection": "Certificate",
     "uploadCert": "Upload certificate (.pfx, .p12, .pem)",
@@ -1096,12 +1096,12 @@
   },
   "validateSignaturePdf": {
     "name": "Validate PDF Signature",
-    "pageTitle": "Validate PDF Signature - Verify Digital Signatures | QPDF",
+    "pageTitle": "Validate PDF Signature - Verify Digital Signatures | Qpdf",
     "subtitle": "Verify digital signatures in your PDF files. Check certificate validity, view signer details, and confirm document integrity. All processing happens in your browser."
   },
   "timestampPdf": {
     "name": "Timestamp PDF",
-    "pageTitle": "Timestamp PDF Online Free - RFC 3161 Document Timestamp | QPDF",
+    "pageTitle": "Timestamp PDF Online Free - RFC 3161 Document Timestamp | Qpdf",
     "subtitle": "Add an RFC 3161 document timestamp to your PDF using a trusted Time Stamp Authority (TSA) server. Proves your document existed at a specific point in time. No certificate required.",
     "tsaSectionTitle": "Timestamp Server (TSA)",
     "selectTsa": "Select a TSA server",

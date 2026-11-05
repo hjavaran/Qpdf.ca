@@ -16,7 +16,7 @@ reliable option, so they are served from an R2 bucket. The smaller loader files
 (`soffice.js`, `soffice.worker.js`, `browser.worker.global.js`) stay on
 Pages because Web Workers must be same-origin.
 
-**R2 stores software only. QPDF never uploads or stores documents.** The
+**R2 stores software only. Qpdf never uploads or stores documents.** The
 browser downloads the engine from R2 and converts the document locally.
 
 ## What is already implemented

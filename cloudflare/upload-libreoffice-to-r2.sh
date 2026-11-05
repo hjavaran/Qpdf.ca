@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Upload the two LibreOffice WebAssembly files that exceed Cloudflare Pages'
 # 25 MiB per-file limit to a Cloudflare R2 bucket. They are software assets
-# only — QPDF never stores documents in R2.
+# only — Qpdf never stores documents in R2.
 #
 # Prerequisites: an R2 bucket with a public custom domain (e.g. assets.qpdf.ca),
 # `npx wrangler login`, and approval of any R2 charges (see docs/cloudflare-r2.md).

@@ -107,4 +107,4 @@ http
     if (!fs.existsSync(file)) return send(res, 404, path.join(ROOT, '404.html'), p);
     send(res, 200, file, p);
   })
-  .listen(PORT, () => console.log(`QPDF dist served at http://localhost:${PORT}`));
+  .listen(PORT, () => console.log(`Qpdf dist served at http://localhost:${PORT}`));

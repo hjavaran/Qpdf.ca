@@ -29,7 +29,7 @@ export async function repairPdfFile(file: File): Promise<Uint8Array | null> {
     try {
       qpdf.callMain(args);
     } catch (e) {
-      console.warn(`QPDF execution warning for ${file.name}:`, e);
+      console.warn(`Qpdf execution warning for ${file.name}:`, e);
     }
 
     let repairedData: Uint8Array | null = null;

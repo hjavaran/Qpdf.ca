@@ -13,8 +13,8 @@
         {{> breadcrumbs }}
         <h1 style="margin-top: 1rem">Your PDFs stay private</h1>
         <p>
-          QPDF works with your documents inside your own web browser. This page explains, in plain English, what
-          happens to a file when you use a QPDF tool, what does and does not travel over the internet, and how you
+          Qpdf works with your documents inside your own web browser. This page explains, in plain English, what
+          happens to a file when you use a Qpdf tool, what does and does not travel over the internet, and how you
           can check it for yourself.
         </p>
       </div>
@@ -24,9 +24,9 @@
           <div class="qp-callout qp-callout-ok">
             <p><strong>The short version</strong></p>
             <ul>
-              <li>QPDF’s tools process your PDF on your device, inside the browser tab.</li>
-              <li>Your documents are not uploaded to QPDF’s servers or sent to any other service.</li>
-              <li>QPDF has no accounts, no analytics, no advertising and no tracking cookies.</li>
+              <li>Qpdf’s tools process your PDF on your device, inside the browser tab.</li>
+              <li>Your documents are not uploaded to Qpdf’s servers or sent to any other service.</li>
+              <li>Qpdf has no accounts, no advertising and no tracking cookies. It uses Cloudflare Web Analytics, a cookieless page-view counter, and it never receives your documents.</li>
               <li>You can check this yourself: load a tool, switch off your Wi-Fi, and process a file.</li>
             </ul>
           </div>
@@ -38,17 +38,17 @@
             computer.
           </p>
           <p>
-            QPDF turns that around. When you open a tool, your browser downloads the <em>software</em> needed to do
+            Qpdf turns that around. When you open a tool, your browser downloads the <em>software</em> needed to do
             the job. When you then select a PDF, the browser reads it from your disk into memory and the software
             works on it right there, using your own processor. The finished file is created in memory and saved back
-            to your device. There is no QPDF processing server, because none is needed.
+            to your device. There is no Qpdf processing server, because none is needed.
           </p>
 
           <h2 id="javascript-webassembly">How JavaScript and WebAssembly do the work</h2>
           <p>
             Web browsers can run two kinds of program: JavaScript, and WebAssembly — a compact format that lets
             mature programs written in languages like C, C++ and Rust run inside a web page at close to native speed.
-            QPDF uses both. Depending on the tool, the work is done by well-established open-source engines:
+            Qpdf uses both. Depending on the tool, the work is done by well-established open-source engines:
           </p>
           <ul>
             <li><strong>pdf-lib</strong> and <strong>PDF.js</strong> for reading, editing and rendering pages;</li>
@@ -59,9 +59,9 @@
             <li><strong>Tesseract</strong> for OCR (English and French).</li>
           </ul>
           <p>
-            Every one of these engines is served from QPDF’s own hosting, at a pinned version. QPDF does not load
+            Every one of these engines is served from Qpdf’s own hosting, at a pinned version. Qpdf does not load
             scripts, fonts or engines from third-party content networks, and the site’s Content Security Policy
-            instructs your browser to refuse connections to any origin other than QPDF’s own.
+            instructs your browser to refuse connections to any origin other than Qpdf’s own.
           </p>
 
           <h2 id="download-vs-upload">Downloading software is not uploading documents</h2>
@@ -77,7 +77,7 @@
           <h3>1. When you select a PDF</h3>
           <p>
             You choose a file with the file picker or drag it onto the page. The browser gives the page read access to
-            that one file. QPDF reads its bytes into memory. Nothing is sent over the network, and the file name is
+            that one file. Qpdf reads its bytes into memory. Nothing is sent over the network, and the file name is
             used only to suggest a name for the result.
           </p>
           <h3>2. While it is processed</h3>
@@ -89,7 +89,7 @@
           <p>
             The output is assembled in memory and handed to your browser’s download feature through a temporary
             <code>blob:</code> address that exists only inside your browser. The file is written to your device.
-            QPDF keeps no copy.
+            Qpdf keeps no copy.
           </p>
 
           <h2 id="memory">Temporary memory in your browser</h2>
@@ -97,40 +97,53 @@
             While you work, your document and intermediate data live in the tab’s memory, and the page may create
             preview images of pages. This data is released when you clear the tool, process another file, or close
             the tab. Be aware of the limits: browsers decide when memory is actually freed and overwritten, and your
-            operating system may write memory to a swap or hibernation file. QPDF cannot securely erase memory on
+            operating system may write memory to a swap or hibernation file. Qpdf cannot securely erase memory on
             your device.
           </p>
 
-          <h2 id="stored-preferences">What QPDF stores in your browser</h2>
-          <p>QPDF never stores your documents, their file names or text extracted from them. It does store:</p>
+          <h2 id="stored-preferences">What Qpdf stores in your browser</h2>
+          <p>Qpdf never stores your documents, their file names or text extracted from them. It does store:</p>
           <ul>
             <li><strong>Favourite tools</strong> — the list of tools you starred (Compress PDF by default), in <code>localStorage</code>.</li>
             <li><strong>Interface settings</strong> — such as layout preferences, keyboard shortcuts and PDF viewer display preferences.</li>
-            <li><strong>Application files for offline use</strong> — QPDF’s own pages, scripts and engines, cached by a service worker so tools can work without a connection.</li>
+            <li><strong>Application files for offline use</strong> — Qpdf’s own pages, scripts and engines, cached by a service worker so tools can work without a connection.</li>
             <li><strong>Downloaded fonts</strong> — fonts used to build OCR text layers may be cached in IndexedDB so they do not need to be downloaded again.</li>
           </ul>
           <p>
-            All of this stays in your browser and is never sent to QPDF. You can remove it at any time by clearing
+            All of this stays in your browser and is never sent to Qpdf. You can remove it at any time by clearing
             this site’s data in your browser settings.
           </p>
 
           <h2 id="network-requests">What still reaches the hosting infrastructure</h2>
           <p>
-            QPDF is a static website hosted on Cloudflare Pages. Like any website, loading it means your browser
+            Qpdf is a static website hosted on Cloudflare Pages. Like any website, loading it means your browser
             requests files from Cloudflare’s servers. Those requests necessarily reveal ordinary technical
             information — your IP address, the pages and files requested, and your browser’s user agent — which
-            Cloudflare may process to deliver and protect the site. These requests contain QPDF’s software, never
+            Cloudflare may process to deliver and protect the site. These requests contain Qpdf’s software, never
             your documents.
           </p>
           <p>
             Some tools need large engines (for example PyMuPDF, about 54 MB). The first time you use one, your
-            browser downloads it from qpdf.ca; the tool page tells you before it does so. QPDF does not use analytics
-            or advertising services, so there are no requests to such services.
+            browser downloads it from qpdf.ca; the tool page tells you before it does so. Qpdf does not use advertising
+            services.
+          </p>
+          <h3 id="analytics">Web analytics</h3>
+          <p>
+            To see roughly how many people use the site, Qpdf uses
+            <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>, a
+            cookieless service that counts page views and visits and reports page addresses, referrers, country,
+            browser type and loading performance. It does not use cookies or local storage, does not build
+            cross-site profiles, and is not loaded if your browser sends “Do Not Track” or “Global Privacy Control”.
+            It runs on pages only as a small script: your documents, their names and their contents are never read
+            by it or sent to it. When you process a file you may therefore see one small request to
+            <code>cloudflareinsights.com</code> in your browser’s Network tab; it contains the page address, not your
+            document. Tools keep working with the connection switched off; the analytics request simply does not
+            happen.
           </p>
 
           <section id="test-it-yourself" aria-labelledby="test-title" class="qp-demo" style="margin-top: 2.5rem">
             <h2 id="test-title">Don’t just trust us. Test it yourself.</h2>
-            <p style="margin-top: 0.5rem">You can confirm that QPDF does not need to upload your file, in about a minute:</p>
+            <p style="margin-top: 0.5rem">You can confirm that Qpdf does not need to upload your file, in about a minute:</p>
             <ol style="margin-top: 1rem">
               <li><span>Open qpdf.ca while you are connected to the internet.</span></li>
               <li><span>Choose <a href="/compress-pdf/">Compress PDF</a>, <a href="/merge-pdf/">Merge PDF</a> or another supported tool.</span></li>
@@ -146,14 +159,15 @@
             </p>
             <p style="margin-top: 0.75rem; font-size: 0.92rem">
               For a closer look, open your browser’s developer tools, select the Network tab, and watch it while you
-              process a file: no request carries your document. This simple test is a useful check, but it does not
+              process a file: no request carries your document (the only other request you may see is the small
+              Cloudflare Web Analytics page-view report described above). This simple test is a useful check, but it does not
               replace a comprehensive, independent security audit.
             </p>
           </section>
 
           <h3 id="offline-tools">Which tools work offline?</h3>
           <p>
-            Every published QPDF tool processes documents locally. Each tool page shows its offline status near the
+            Every published Qpdf tool processes documents locally. Each tool page shows its offline status near the
             top:
           </p>
           <ul>
@@ -177,9 +191,9 @@
 
           <h2 id="transparency">Open source and honest claims</h2>
           <p>
-            QPDF is free software released under the GNU Affero General Public License and built on the open-source
+            Qpdf is free software released under the GNU Affero General Public License and built on the open-source
             BentoPDF project. Anyone can read the <a href="{{site.sourceUrl}}" rel="noopener">source code</a> to see
-            how it handles files. QPDF has not been independently audited and holds no security certifications; we
+            how it handles files. Qpdf has not been independently audited and holds no security certifications; we
             describe what the technology does and give you a way to verify it, rather than relying on badges.
           </p>
           <p>

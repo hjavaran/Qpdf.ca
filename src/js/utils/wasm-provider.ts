@@ -9,7 +9,7 @@ interface WasmProviderConfig {
 
 const STORAGE_KEY = 'bentopdf:wasm-providers';
 
-// QPDF self-hosts every processing engine on its own origin (see
+// Qpdf self-hosts every processing engine on its own origin (see
 // scripts/qpdf/postbuild.mjs, which copies the pinned npm packages into
 // dist/wasm/). No third-party CDN is contacted. VITE_WASM_*_URL can still
 // point to another host for special deployments.
@@ -155,7 +155,7 @@ class WasmProviderManager {
   }
 
   getUrl(packageName: WasmPackage): string | undefined {
-    // QPDF: user-configured engine URLs are not supported; always use the
+    // Qpdf: user-configured engine URLs are not supported; always use the
     // pinned, self-hosted engines.
     const stored: string | undefined = undefined;
     if (stored) {

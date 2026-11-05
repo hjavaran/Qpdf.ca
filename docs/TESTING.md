@@ -81,7 +81,7 @@ one-time download” with a button. OCR and PDF/A were verified online only.
 | 126.2 MB, 30 pages | 5.1 MB | 32 s |
 
 Synthetic random-noise images, desktop-class machine; real documents and
-devices with less memory will differ. No size limit is imposed by QPDF.
+devices with less memory will differ. No size limit is imposed by Qpdf.
 
 ### LibreOffice path (simulated R2)
 

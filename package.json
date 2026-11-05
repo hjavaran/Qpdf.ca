@@ -142,7 +142,7 @@
     "follow-redirects": "^1.15.11",
     "esbuild": "^0.25.0"
   },
-  "description": "QPDF — private, browser-based PDF tools (https://qpdf.ca). Based on BentoPDF.",
+  "description": "Qpdf — private, browser-based PDF tools (https://qpdf.ca). Based on BentoPDF.",
   "homepage": "https://qpdf.ca",
   "repository": {
     "type": "git",

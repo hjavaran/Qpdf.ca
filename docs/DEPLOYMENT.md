@@ -1,6 +1,6 @@
-# Deploying QPDF to Cloudflare Pages
+# Deploying Qpdf to Cloudflare Pages
 
-QPDF is a static site. Cloudflare Pages builds it from GitHub and serves it
+Qpdf is a static site. Cloudflare Pages builds it from GitHub and serves it
 from `dist/`. No Workers, Functions, databases or paid services are required
 for the core site. Status on 2026-11-04: **not yet deployed** — this
 environment had no Cloudflare credentials and no access to the qpdf.ca DNS.
@@ -8,7 +8,7 @@ environment had no Cloudflare credentials and no access to the qpdf.ca DNS.
 ## Before the first public deployment (required)
 
 1. **Make the GitHub repository public** (or publish the exact source another
-   way). QPDF is AGPL-3.0; users of the website must be able to obtain its
+   way). Qpdf is AGPL-3.0; users of the website must be able to obtain its
    source. The footer links to `SOURCE_URL` (default
    `https://github.com/hjavaran/Qpdf.ca`). See [LICENSING.md](LICENSING.md).
 2. Decide whether to enable the Office converters now (needs R2, see
@@ -36,6 +36,7 @@ Environment variables (Production and Preview):
 | `SITE_URL` | `https://qpdf.ca` | Canonical domain for canonicals, sitemap, Open Graph |
 | `SOURCE_URL` | `https://github.com/hjavaran/Qpdf.ca` | AGPL source link (optional override) |
 | `VITE_LIBREOFFICE_ASSET_URL` | *(empty)* | Set only after the R2 bucket exists |
+| `CF_ANALYTICS_TOKEN` | *(your 32-character Web Analytics site token)* | Optional. Enables Cloudflare Web Analytics and the matching CSP allowance. Keep Pages' one-click "Web Analytics" toggle off to avoid double counting |
 
 `.env.production` already contains the non-secret engine paths; nothing secret
 is needed. The build fails deliberately if any output file exceeds 25 MiB or

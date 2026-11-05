@@ -34,7 +34,7 @@ const leaf = 'M50 0 57 14 65 10 61 33 75 19 79 27 93 24 87 39 97 45 74 62 78 73 
   .pill b{display:inline-block;padding:10px 18px;border:2px solid #E7E5DF;border-radius:999px;background:#fff;font-weight:600}
   </style></head><body>
   <svg class="leaf" viewBox="0 0 100 100"><path d="${leaf}" fill="#B8202F" fill-opacity="0.05" stroke="#B8202F" stroke-opacity="0.14" stroke-width="0.3"/></svg>
-  <div class="wrap"><div class="brand">${mark.replace('<svg ', '<svg width="64" height="64" ')}QPDF<span>.ca</span></div>
+  <div class="wrap"><div class="brand">${mark.replace('<svg ', '<svg width="64" height="64" ')}Qpdf<span>.ca</span></div>
   <h1>Private PDF tools.<br><em>Simple by design.</em></h1>
   <p>Compress, merge, split and convert PDFs in your browser. Your documents stay on your device.</p></div>
   <div class="pill"><b>Processed locally</b><b>No file uploads</b><b>Free to use</b></div>

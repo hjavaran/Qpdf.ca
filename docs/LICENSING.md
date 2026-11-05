@@ -2,11 +2,11 @@
 
 This is an engineering summary, not legal advice.
 
-## QPDF's licence
+## Qpdf's licence
 
-QPDF is a modified version of **BentoPDF v2.8.11** (commit
+Qpdf is a modified version of **BentoPDF v2.8.11** (commit
 `1a55d8d44b61f35e1274607582207e4cfabd2bd8`), licensed **AGPL-3.0-only**.
-QPDF is therefore also distributed under AGPL-3.0-only (`LICENSE`).
+Qpdf is therefore also distributed under AGPL-3.0-only (`LICENSE`).
 No commercial licence has been purchased, and none is needed as long as the
 AGPL is followed.
 
@@ -23,10 +23,10 @@ AGPL is followed.
 currently **private**. Under §13 the source must be available to everyone who
 uses qpdf.ca. Make the repository public (it contains no secrets), or publish
 the complete source at another public URL and set `SOURCE_URL`. The alternative
-is a BentoPDF commercial licence, which QPDF does not need otherwise.
+is a BentoPDF commercial licence, which Qpdf does not need otherwise.
 
 BentoPDF's licensing page also asks AGPL users to retain the PDF “producer
-line”. QPDF does not change producer metadata written by the libraries (the
+line”. Qpdf does not change producer metadata written by the libraries (the
 Remove Metadata and Sanitize tools clear it only when the user asks).
 
 See also `SOURCE-NOTICE.md` (bundled engines and where their source is). EditCore source is published at `bentopdf-pdfium-viewer` commit `3f6b6114b166` (verified 2026-11-05; see `SOURCE-NOTICE.md`). `check:dist` still fails if the `EDITCORE_SOURCE_URL` line is missing or `PENDING`.
@@ -37,8 +37,8 @@ The engine behind Compress PDF is published as `hyper-compress-wasm`
 (vendored by BentoPDF) under **AGPL-3.0-only**. The restrictions in BentoPDF's
 `COMMERCIAL-LICENSE.md` (revenue cap, “not a compression product”, at least 10
 other tools, no server use…) apply only to the *commercial* licence's bundled
-grant. Under the AGPL, QPDF may use it, provided the AGPL obligations above are
-met. QPDF would also satisfy those commercial conditions anyway: it is a
+grant. Under the AGPL, Qpdf may use it, provided the AGPL obligations above are
+met. Qpdf would also satisfy those commercial conditions anyway: it is a
 general toolkit with 110+ tools, its home page is not the compressor, and
 compression runs only on the user's device when the user starts it. Making
 Compress PDF the default favourite does not change this.
@@ -46,8 +46,8 @@ Compress PDF the default favourite does not change this.
 ## Other AGPL components loaded at runtime
 
 PyMuPDF/MuPDF (`@bentopdf/pymupdf-wasm`), Ghostscript (`@bentopdf/gs-wasm`) and
-CoherentPDF (`coherentpdf`) are AGPL. Upstream loads them from jsDelivr; QPDF
-self-hosts the same pinned versions, so QPDF distributes them and must (and
+CoherentPDF (`coherentpdf`) are AGPL. Upstream loads them from jsDelivr; Qpdf
+self-hosts the same pinned versions, so Qpdf distributes them and must (and
 does, via the source repository and upstream links) make their source
 available. `bentopdf-pdfium` (editing engine) is also AGPL.
 
@@ -64,13 +64,13 @@ versions is generated on `/licenses/` at build time.
 ## Brand and affiliation
 
 - **qpdf**: an established open-source PDF library (Jay Berkenbilt and
-  contributors, Apache-2.0). QPDF uses a WebAssembly build of it. The About,
-  Licences pages and footer state that QPDF (qpdf.ca) is not affiliated with
+  contributors, Apache-2.0). Qpdf uses a WebAssembly build of it. The About,
+  Licences pages and footer state that Qpdf (qpdf.ca) is not affiliated with
   the qpdf project. This review did not include a trademark search; because
   the names are nearly identical, consider a professional trademark search
   before investing heavily in the brand.
 - No BentoPDF branding, logos, badges or marketing copy are used. BentoPDF's
-  GDPR/HIPAA/CCPA badge images were removed; QPDF makes no certification or
+  GDPR/HIPAA/CCPA badge images were removed; Qpdf makes no certification or
   compliance claims.
 - No government symbols are used. The maple leaf is an original stylised
   drawing, not the flag's leaf.

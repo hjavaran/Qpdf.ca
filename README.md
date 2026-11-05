@@ -1,8 +1,8 @@
-# QPDF — private PDF tools that run in your browser
+# Qpdf — private PDF tools that run in your browser
 
 **Production:** https://qpdf.ca · **Licence:** GNU AGPL-3.0 · **Based on:** [BentoPDF](https://github.com/alam00000/bentopdf) v2.8.11
 
-QPDF is a free, privacy-first PDF toolkit. Every tool processes documents
+Qpdf is a free, privacy-first PDF toolkit. Every tool processes documents
 **inside the visitor's browser** with JavaScript and WebAssembly; documents are
 never uploaded. It is a static site designed for Cloudflare Pages.
 
@@ -72,7 +72,7 @@ npm run test:e2e
 
 | Path | Purpose |
 | --- | --- |
-| `index.html`, `about.html`, `privacy.html`, `privacy-policy.html`, `terms.html`, `tools.html`, `site-index.html`, `licenses.html`, `404.html` | QPDF's own pages |
+| `index.html`, `about.html`, `privacy.html`, `privacy-policy.html`, `terms.html`, `tools.html`, `site-index.html`, `licenses.html`, `404.html` | Qpdf's own pages |
 | `src/pages/<id>.html` | Tool pages (from BentoPDF; head/landing content via partials) |
 | `src/data/tools.mjs` | **Tool registry**: slugs, names, categories, SEO title/description, landing copy, engines |
 | `src/data/site.mjs` | Site constants, static page metadata, navigation |
@@ -82,7 +82,7 @@ npm run test:e2e
 | `src/js/logic/`, `src/js/utils/` | Tool logic (BentoPDF) |
 | `content/guides/*.md` | Guides (Markdown + YAML front matter) |
 | `scripts/qpdf/` | Build pipeline: `copy-engines`, `prebuild`, `context`, `postbuild`, `check-dist`, `serve-dist` |
-| `public/sw.js` | Service worker (caches QPDF's own software only) |
+| `public/sw.js` | Service worker (caches Qpdf's own software only) |
 | `cloudflare/` | R2 upload script and CORS policy for the LibreOffice engine |
 | `tests/` | Synthetic fixtures generator and the E2E harness |
 
@@ -121,7 +121,7 @@ Tesseract files.
 
 - Files are read with the File API and processed in memory, in the page or
   Web Workers. Results are saved through temporary `blob:` URLs.
-- No analytics, ads, cookies or third-party scripts. The CSP restricts
+- No ads, cookies or tracking. Optional cookieless Cloudflare Web Analytics (off unless `CF_ANALYTICS_TOKEN` is set; respects DNT/GPC). The CSP restricts
   `connect-src` to the site itself (plus the R2 asset origin when enabled).
 - Removed upstream network calls: GitHub star counter, ads hook, BentoPDF's
   CORS proxy fallback, jsDelivr/GitHack CDN defaults. RFC 3161 timestamping
@@ -132,7 +132,7 @@ Tesseract files.
 
 ## Offline support
 
-`public/sw.js` caches QPDF's own files: hashed `/assets/*`, version-pinned
+`public/sw.js` caches Qpdf's own files: hashed `/assets/*`, version-pinned
 engines (`/wasm/*`, `/vendor/*`) and per-build static files. The build lists
 each tool's full dependency set in `/offline-manifest.json`; the tool page
 downloads it (automatically for tools under 40 MiB, on request for the larger
@@ -160,12 +160,12 @@ Create `content/guides/<slug>.md` with front matter — see
 
 ## Licensing
 
-QPDF is a modified version of BentoPDF and is licensed under **AGPL-3.0-only**.
+Qpdf is a modified version of BentoPDF and is licensed under **AGPL-3.0-only**.
 Because the site is offered over a network, its complete source must be
 available to users (footer “Source code” link → `SOURCE_URL`, default
 `https://github.com/hjavaran/Qpdf.ca`). **The repository must be public before
 qpdf.ca is launched.** Details and third-party licences:
 [docs/LICENSING.md](docs/LICENSING.md) and `/licenses/`.
 
-QPDF is not affiliated with the [qpdf](https://qpdf.sourceforge.io/) library,
+Qpdf is not affiliated with the [qpdf](https://qpdf.sourceforge.io/) library,
 BentoPDF, Adobe or any government.

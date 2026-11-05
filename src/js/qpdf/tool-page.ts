@@ -165,7 +165,7 @@ async function initOffline(): Promise<void> {
       await warm(entry, manifest, missing);
       ready();
     } catch (err) {
-      console.warn('[QPDF] Offline preparation failed:', err);
+      console.warn('[Qpdf] Offline preparation failed:', err);
       setStatus('error', 'Could not prepare offline use. Check your connection.');
     }
   };

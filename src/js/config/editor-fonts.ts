@@ -1,4 +1,4 @@
-// QPDF self-hosts these fonts (scripts/qpdf/copy-engines.mjs). The engine
+// Qpdf self-hosts these fonts (scripts/qpdf/copy-engines.mjs). The engine
 // fetches them from a worker, so the base must be an absolute URL.
 function absoluteBase(url: string): string {
   try {

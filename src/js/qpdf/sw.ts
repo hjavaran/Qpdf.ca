@@ -1,4 +1,4 @@
-// Registers the offline service worker (public/sw.js). It caches QPDF's own
+// Registers the offline service worker (public/sw.js). It caches Qpdf's own
 // application files only; documents are never fetched, cached or uploaded.
 let registration: Promise<ServiceWorkerRegistration | null> | null = null;
 
@@ -11,7 +11,7 @@ export function registerServiceWorker(): Promise<ServiceWorkerRegistration | nul
   registration = navigator.serviceWorker
     .register('/sw.js', { scope: '/' })
     .catch((err: unknown): null => {
-      console.warn('[QPDF] Service worker registration failed:', err);
+      console.warn('[Qpdf] Service worker registration failed:', err);
       return null;
     });
   return registration;

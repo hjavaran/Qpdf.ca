@@ -1,4 +1,4 @@
-// Build-time page model for QPDF.
+// Build-time page model for Qpdf.
 //
 // getPageContext(pagePath) returns the Handlebars context for any HTML entry:
 // site constants, navigation, page metadata (title, description, canonical,
@@ -14,6 +14,11 @@ import path from 'node:path';
 const env = process.env;
 
 /** True when the LibreOffice asset host (R2) is configured for this build. */
+/** Cloudflare Web Analytics site token (public identifier, not a secret). Optional. */
+export const ANALYTICS_TOKEN = /^[a-f0-9]{32}$/i.test(env.CF_ANALYTICS_TOKEN || '')
+  ? env.CF_ANALYTICS_TOKEN
+  : '';
+
 export const LIBREOFFICE_ENABLED = Boolean(env.VITE_LIBREOFFICE_ASSET_URL);
 
 export const ENGINE_INFO = {
@@ -78,9 +83,9 @@ export const POPULAR = POPULAR_ORDER.map((id) => byId.get(id))
 function privacyNote(t) {
   const info = ENGINE_INFO[t.engine];
   const base =
-    'This tool runs entirely in your browser. Your file is read from your device, processed in memory, and saved back to your device — it is never uploaded to QPDF or anyone else.';
+    'This tool runs entirely in your browser. Your file is read from your device, processed in memory, and saved back to your device — it is never uploaded to Qpdf or anyone else.';
   if (t.engine === 'libreoffice') {
-    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from QPDF’s asset server.`;
+    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from Qpdf’s asset server.`;
   }
   if (info?.download) {
     return `${base} The first time you use it, your browser downloads the ${info.label} (software only, about ${info.download}) from qpdf.ca and keeps it for offline use.`;
@@ -177,6 +182,8 @@ function base() {
     categories: CATEGORY_GROUPS,
     popular: POPULAR,
     toolCount: ENABLED_TOOLS.length,
+    analyticsToken: ANALYTICS_TOKEN,
+    analyticsEnabled: Boolean(ANALYTICS_TOKEN),
     libreofficeEnabled: LIBREOFFICE_ENABLED,
     guides: all.map(guideCard),
     hasGuides: all.length > 0,
@@ -231,7 +238,7 @@ function toolContext(t) {
         {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: `${t.name} — QPDF`,
+          name: `${t.name} — Qpdf`,
           url: abs(url),
           description: t.desc,
           applicationCategory: 'UtilitiesApplication',
@@ -239,7 +246,7 @@ function toolContext(t) {
           browserRequirements: 'Requires JavaScript and WebAssembly',
           isAccessibleForFree: true,
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'CAD' },
-          publisher: { '@type': 'Organization', name: 'QPDF', url: SITE.url },
+          publisher: { '@type': 'Organization', name: 'Qpdf', url: SITE.url },
         },
       ],
     }),
@@ -264,7 +271,7 @@ function staticContext(key) {
     jsonLd.push({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'QPDF',
+      name: 'Qpdf',
       url: `${SITE.url}/`,
       description: SITE.description,
       inLanguage: SITE.lang,
@@ -277,7 +284,7 @@ function staticContext(key) {
       url: abs(p.path),
       description: p.description,
       inLanguage: SITE.lang,
-      isPartOf: { '@type': 'WebSite', name: 'QPDF', url: `${SITE.url}/` },
+      isPartOf: { '@type': 'WebSite', name: 'Qpdf', url: `${SITE.url}/` },
     });
   }
   return {
@@ -314,7 +321,7 @@ function guideContext(g) {
           dateModified: g.reviewed,
           inLanguage: g.lang,
           author: { '@type': 'Organization', name: g.author },
-          publisher: { '@type': 'Organization', name: 'QPDF', url: SITE.url },
+          publisher: { '@type': 'Organization', name: 'Qpdf', url: SITE.url },
           mainEntityOfPage: abs(g.path),
         },
       ],
@@ -335,7 +342,7 @@ export function getPageContext(pagePath) {
     const t = byId.get(m[1]);
     if (t) return { ...ctx, ...toolContext(t) };
     // Unregistered upstream page (not published).
-    return { ...ctx, page: pageMeta({ key: m[1], title: 'QPDF', description: '', path: `/${m[1]}/`, noindex: true }) };
+    return { ...ctx, page: pageMeta({ key: m[1], title: 'Qpdf', description: '', path: `/${m[1]}/`, noindex: true }) };
   }
   if ((m = p.match(/\/guides\/([a-z0-9-]+)\.html$/))) {
     if (m[1] === 'index') return { ...ctx, ...staticContext('guides') };

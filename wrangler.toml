@@ -1,4 +1,4 @@
-# Cloudflare Pages project configuration for QPDF (https://qpdf.ca).
+# Cloudflare Pages project configuration for Qpdf (https://qpdf.ca).
 # Used by `npx wrangler pages deploy` and by Git-connected Pages builds.
 # Build command: npm run build   ·   Output directory: dist
 name = "qpdf"

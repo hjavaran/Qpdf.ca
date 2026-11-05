@@ -1,12 +1,12 @@
 # Corresponding source and bundled engines (AGPL-3.0 §6, §13)
 
-QPDF (https://qpdf.ca) is free software under the GNU AGPL-3.0-only.
+Qpdf (https://qpdf.ca) is free software under the GNU AGPL-3.0-only.
 Its complete source is this repository: https://github.com/hjavaran/Qpdf.ca
 
-QPDF is a modified version of BentoPDF 2.8.11
+Qpdf is a modified version of BentoPDF 2.8.11
 (https://github.com/alam00000/bentopdf, commit
 `1a55d8d44b61f35e1274607582207e4cfabd2bd8`). The first commit in this
-repository is an unmodified (pruned) import of that commit, so every QPDF
+repository is an unmodified (pruned) import of that commit, so every Qpdf
 change is visible in the history that follows.
 
 ## Pre-built engines shipped in `vendor/`
@@ -43,7 +43,7 @@ EDITCORE_SOURCE_URL: https://github.com/alam00000/bentopdf-pdfium-viewer/tree/3f
 
 The three tarballs in `vendor/` were taken unmodified from BentoPDF 2.8.11.
 Byte-for-byte reproduction of `editcore.wasm` from this source has not been
-independently verified by the QPDF maintainers. If these upstream repositories
+independently verified by the Qpdf maintainers. If these upstream repositories
 are removed or the source cannot be obtained, this site must stop distributing
 EditCore.
 

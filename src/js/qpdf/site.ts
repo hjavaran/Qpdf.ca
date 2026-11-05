@@ -1,4 +1,4 @@
-// Site-wide behaviour for every QPDF page: navigation state, mobile menu and
+// Site-wide behaviour for every Qpdf page: navigation state, mobile menu and
 // offline service worker registration.
 import { registerServiceWorker } from './sw.js';
 
@@ -21,3 +21,22 @@ if (btn && menu) {
 
 if (document.readyState === 'complete') registerServiceWorker();
 else window.addEventListener('load', () => registerServiceWorker(), { once: true });
+
+// Cloudflare Web Analytics (optional; enabled at build time with CF_ANALYTICS_TOKEN).
+// Cookieless page-view statistics only. It is not loaded for visitors who send
+// Do Not Track or Global Privacy Control, nor in dev. It never sees documents:
+// files are read by the File API and never pass through the page's network code.
+function loadAnalytics(): void {
+  const token = document.querySelector<HTMLMetaElement>('meta[name="qpdf-wa"]')?.content;
+  if (!token || !/^[a-f0-9]{32}$/i.test(token) || import.meta.env.DEV) return;
+  const nav = navigator as Navigator & { globalPrivacyControl?: boolean; msDoNotTrack?: string };
+  if (nav.globalPrivacyControl || nav.doNotTrack === '1' || nav.msDoNotTrack === '1') return;
+  const s = document.createElement('script');
+  s.defer = true;
+  s.crossOrigin = 'anonymous';
+  s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+  s.setAttribute('data-cf-beacon', JSON.stringify({ token, spa: false }));
+  document.head.append(s);
+}
+if (document.readyState === 'complete') loadAnalytics();
+else window.addEventListener('load', loadAnalytics, { once: true });

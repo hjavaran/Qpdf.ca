@@ -192,7 +192,7 @@ async function convertToPdf() {
     return;
   }
 
-  // QPDF: plain JPEGs are embedded directly with pdf-lib (fast, no extra
+  // Qpdf: plain JPEGs are embedded directly with pdf-lib (fast, no extra
   // download, works offline). JPEG 2000 still needs the PyMuPDF engine.
   const isPlainJpeg = (f: File) =>
     f.type === 'image/jpeg' || f.type === 'image/jpg' || /\.jpe?g$/i.test(f.name);

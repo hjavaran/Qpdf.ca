@@ -112,7 +112,7 @@ export function parseCombinedPem(
  *
  * If not set, certificates requiring external chain fetching will fail.
  *
- * QPDF does not operate a CORS proxy, so chain fetching is disabled unless
+ * Qpdf does not operate a CORS proxy, so chain fetching is disabled unless
  * VITE_CORS_PROXY_URL is set at build time. No third-party proxy is used.
  */
 const DEFAULT_CORS_PROXY_URL =

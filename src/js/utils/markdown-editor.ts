@@ -107,7 +107,7 @@ function escapedMath(state: StateInline, silent: boolean): boolean {
   return false;
 }
 
-const DEFAULT_MARKDOWN = `# Welcome to the QPDF Markdown Editor
+const DEFAULT_MARKDOWN = `# Welcome to the Qpdf Markdown Editor
 
 This is a **live preview** markdown editor with full plugin support.
 
@@ -203,12 +203,12 @@ graph TD
 \`\`\`mermaid
 sequenceDiagram
     participant User
-    participant QPDF
+    participant Qpdf
     participant Server
-    User->>QPDF: Upload PDF
-    QPDF->>QPDF: Process locally
-    QPDF-->>User: Download result
-    Note over QPDF: No server needed!
+    User->>Qpdf: Upload PDF
+    Qpdf->>Qpdf: Process locally
+    Qpdf-->>User: Download result
+    Note over Qpdf: No server needed!
 \`\`\`
 
 ### Pie Chart
@@ -276,7 +276,7 @@ erDiagram
 
 \`\`\`mermaid
 mindmap
-    root((QPDF))
+    root((Qpdf))
         Convert
             Word to PDF
             Excel to PDF

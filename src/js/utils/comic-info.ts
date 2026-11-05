@@ -181,7 +181,7 @@ export function generateComicBookInfoJson(params: ComicMetadata): string {
   }
 
   const wrapper = {
-    appID: 'QPDF',
+    appID: 'Qpdf',
     lastModified: new Date().toISOString(),
     'ComicBookInfo/1.0': info,
   };

@@ -1,7 +1,7 @@
-// QPDF post-build step. Runs after `vite build` and prepares dist/ for
+// Qpdf post-build step. Runs after `vite build` and prepares dist/ for
 // Cloudflare Pages:
 //   1. Moves pages to clean, trailing-slash URLs (<slug>/index.html).
-//   2. Rewrites internal links from upstream page names to QPDF slugs.
+//   2. Rewrites internal links from upstream page names to Qpdf slugs.
 //   3. Writes sitemap.xml, robots.txt, _headers and _redirects.
 //   4. Computes each tool's offline file list (offline-manifest.json) and
 //      the asset list used by the service worker to prune old files.
@@ -18,6 +18,7 @@ import {
   PAGES,
   SITE,
   LIBREOFFICE_ENABLED,
+  ANALYTICS_TOKEN,
 } from './context.mjs';
 import { TOOLS } from '../../src/data/tools.mjs';
 import { loadGuides, ROOT } from './guides.mjs';
@@ -104,7 +105,7 @@ ${urls
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 fs.writeFileSync(
   path.join(DIST, 'robots.txt'),
-  `# QPDF — https://qpdf.ca
+  `# Qpdf — https://qpdf.ca
 User-agent: *
 Allow: /
 Disallow: /wasm/
@@ -131,12 +132,12 @@ const csp = [
   "default-src 'self'",
   // 'wasm-unsafe-eval' for WebAssembly; 'unsafe-eval' and blob: are required
   // by the bundled engines (wasm-vips, Ghostscript loader, Pyodide).
-  "script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' blob:",
+  `script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' blob:${ANALYTICS_TOKEN ? ' https://static.cloudflareinsights.com' : ''}`,
   "worker-src 'self' blob:",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self' blob: data:${extraOrigins.map((o) => ' ' + o).join('')}`,
+  `connect-src 'self' blob: data:${extraOrigins.map((o) => ' ' + o).join('')}${ANALYTICS_TOKEN ? ' https://cloudflareinsights.com' : ''}`,
   "media-src 'self' blob:",
   "frame-src 'self' blob:",
   "child-src 'self' blob:",
@@ -346,4 +347,5 @@ log(
     `largest ${heavy[0][0]} ${(heavy[0][1].bytes / 1048576).toFixed(1)} MiB`
 );
 log(`sitemap: ${urls.length} URLs · LibreOffice tools ${LIBREOFFICE_ENABLED ? 'enabled' : 'disabled (no asset host configured)'}`);
+log(`Cloudflare Web Analytics ${ANALYTICS_TOKEN ? 'ENABLED (beacon + CSP allowance)' : 'disabled (CF_ANALYTICS_TOKEN not set)'}`);
 log(`build ${buildId} ready for Cloudflare Pages`);

@@ -18,7 +18,7 @@ for (const g of guides) {
 console.log(`prebuild: ${guides.length} guide page(s) generated`);
 
 // Guard: every icon used in the tool registry must exist in the subset icon
-// font used by QPDF's own pages (scripts/qpdf/subset-icons.py).
+// font used by Qpdf's own pages (scripts/qpdf/subset-icons.py).
 const { TOOLS } = await import('../../src/data/tools.mjs');
 const iconCss = fs.readFileSync(path.join(ROOT, 'src/css/icons-site.css'), 'utf8');
 const missingIcons = [...new Set(TOOLS.map((t) => t.icon).filter(Boolean))].filter(

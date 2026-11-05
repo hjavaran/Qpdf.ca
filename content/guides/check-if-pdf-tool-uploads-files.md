@@ -29,7 +29,7 @@ your browser avoids all of that, because the file never leaves your device.
 
 This is the simplest test and needs no technical knowledge.
 
-1. Open the tool’s page while you are online and wait for it to finish loading. On QPDF, wait until the tool
+1. Open the tool’s page while you are online and wait for it to finish loading. On Qpdf, wait until the tool
    shows **Ready to work offline**.
 2. Turn off Wi-Fi, or unplug the network cable.
 3. Select a test PDF and run the tool.

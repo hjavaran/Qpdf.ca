@@ -509,7 +509,7 @@ function describeCompressResult(
 }
 
 
-// ── QPDF: result card with sizes and an explicit download button ───────────
+// ── Qpdf: result card with sizes and an explicit download button ───────────
 interface CompressResultView {
   title: string;
   message: string;
