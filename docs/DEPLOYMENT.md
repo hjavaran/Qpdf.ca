@@ -91,7 +91,9 @@ npm run build
 npx wrangler pages deploy dist --project-name qpdf --branch main
 ```
 
-(`wrangler.toml` sets `pages_build_output_dir = "dist"`.)
+Do **not** add a `wrangler.toml` to the repository: when Pages finds one it uses only the file's
+`[vars]` and ignores the dashboard's environment variables (this silently disabled the contact form
+and analytics keys). Build settings and variables live in the Cloudflare dashboard.
 
 ## Costs
 

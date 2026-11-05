@@ -15,9 +15,11 @@ const env = process.env;
 
 /** True when the LibreOffice asset host (R2) is configured for this build. */
 /** Cloudflare Web Analytics site token (public identifier, not a secret). Optional. */
-export const ANALYTICS_TOKEN = /^[a-f0-9]{32}$/i.test(env.CF_ANALYTICS_TOKEN || '')
-  ? env.CF_ANALYTICS_TOKEN
-  : '';
+// Accepts the bare token, or Cloudflare's whole pasted snippet (the token is extracted from it).
+const RAW_CF = (env.CF_ANALYTICS_TOKEN || '').trim();
+export const ANALYTICS_TOKEN = /^[a-f0-9]{32}$/i.test(RAW_CF)
+  ? RAW_CF
+  : (RAW_CF.match(/["']token["']\s*:\s*["']([a-f0-9]{32})["']/i) || [])[1] || '';
 
 /** Web3Forms public access key for the contact form (public by design). Optional.
  *  Tolerates pasted whitespace, newlines and surrounding quotes. */
