@@ -3,7 +3,11 @@
 import { getStoredItem } from './safe-storage.js';
 
 export function initFullWidthMode() {
-  const savedFullWidth = getStoredItem('fullWidthMode') !== 'false';
+  // QPDF: editor-style tools are wide by default (data-qp-wide on the page);
+  // other tools use a focused column unless the user opted into full width.
+  const savedFullWidth =
+    getStoredItem('fullWidthMode') === 'true' ||
+    !!document.querySelector('[data-qp-wide="true"]');
 
   if (savedFullWidth) {
     applyFullWidthMode(true);

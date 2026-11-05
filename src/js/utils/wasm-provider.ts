@@ -9,10 +9,23 @@ interface WasmProviderConfig {
 
 const STORAGE_KEY = 'bentopdf:wasm-providers';
 
+// QPDF self-hosts every processing engine on its own origin (see
+// scripts/qpdf/postbuild.mjs, which copies the pinned npm packages into
+// dist/wasm/). No third-party CDN is contacted. VITE_WASM_*_URL can still
+// point to another host for special deployments.
+function sameOrigin(path: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+  const origin =
+    typeof location !== 'undefined' && location.origin && location.origin !== 'null'
+      ? location.origin
+      : 'https://qpdf.ca';
+  return new URL(`${base}${path}`, origin).href;
+}
+
 const CDN_DEFAULTS: Record<WasmPackage, string> = {
-  pymupdf: 'https://cdn.jsdelivr.net/npm/@bentopdf/pymupdf-wasm@0.11.16/',
-  ghostscript: 'https://cdn.jsdelivr.net/npm/@bentopdf/gs-wasm@0.1.1/assets/',
-  cpdf: 'https://cdn.jsdelivr.net/npm/coherentpdf@2.5.5/dist/',
+  pymupdf: sameOrigin('wasm/pymupdf/'),
+  ghostscript: sameOrigin('wasm/gs/'),
+  cpdf: sameOrigin('wasm/cpdf/'),
 };
 
 function envOrDefault(envVar: string | undefined, fallback: string): string {
@@ -142,7 +155,9 @@ class WasmProviderManager {
   }
 
   getUrl(packageName: WasmPackage): string | undefined {
-    const stored = this.config[packageName];
+    // QPDF: user-configured engine URLs are not supported; always use the
+    // pinned, self-hosted engines.
+    const stored: string | undefined = undefined;
     if (stored) {
       if (this.isTrustedUrl(stored)) return stored;
       console.warn(
@@ -462,7 +477,7 @@ export function showWasmRequiredDialog(
     if (onConfigure) {
       onConfigure();
     } else {
-      window.location.href = `${import.meta.env.BASE_URL}wasm-settings.html`;
+      window.location.href = import.meta.env.BASE_URL;
     }
   });
 }

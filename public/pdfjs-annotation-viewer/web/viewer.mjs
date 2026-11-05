@@ -11946,7 +11946,7 @@ class ViewHistory {
   }
   async _writeToStorage() {
     const databaseStr = JSON.stringify(this.database);
-    localStorage.setItem("pdfjs.history", databaseStr);
+    void databaseStr /* QPDF: per-document view history is not persisted */;
   }
   async _readFromStorage() {
     return localStorage.getItem("pdfjs.history");

@@ -112,17 +112,13 @@ export function parseCombinedPem(
  *
  * If not set, certificates requiring external chain fetching will fail.
  *
- * On the official BentoPDF domains we fall back to the project-operated proxy.
- * The generated CSP already allows that origin by default (see
- * scripts/generate-security-headers.mjs), but the runtime never used it, which
- * left the timestamp tool broken on the official HTTPS site. The fallback is
- * deliberately scoped to the official domains so self-hosted instances keep
- * requiring their own proxy.
+ * QPDF does not operate a CORS proxy, so chain fetching is disabled unless
+ * VITE_CORS_PROXY_URL is set at build time. No third-party proxy is used.
  */
 const DEFAULT_CORS_PROXY_URL =
-  'https://bentopdf-cors-proxy.bentopdf.workers.dev';
+  '';
 
-const OFFICIAL_HOSTNAMES = new Set(['bentopdf.com', 'www.bentopdf.com']);
+const OFFICIAL_HOSTNAMES = new Set<string>();
 
 function resolveCorsProxyUrl(): string {
   const configured = import.meta.env.VITE_CORS_PROXY_URL || '';

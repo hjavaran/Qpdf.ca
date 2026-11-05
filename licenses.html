@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">Open-source licences and credits</h1>
+        <p>QPDF is free software. It is built on the work of many open-source projects, credited below.</p>
+      </div>
+      <article class="qp-prose" style="max-width: 78ch; padding-bottom: 3rem">
+        <h2>QPDF’s licence and source code</h2>
+        <p>
+          QPDF is licensed under the <a href="https://www.gnu.org/licenses/agpl-3.0.html" rel="noopener">GNU Affero
+          General Public License, version 3</a> (AGPL-3.0). You may use, study, share and modify it under the terms of
+          that licence. The complete corresponding source code of the version running on this website, including
+          QPDF’s modifications, is available at <a href="{{site.sourceUrl}}" rel="noopener">{{site.sourceUrl}}</a>.
+        </p>
+        <p>
+          QPDF is a modified version of <a href="{{site.upstream.url}}" rel="noopener">BentoPDF</a>
+          {{site.upstream.version}} (commit <code>{{site.upstream.commit}}</code>), © BentoPDF contributors, licensed
+          under AGPL-3.0. QPDF’s changes include a new design and navigation, the tool registry and landing pages,
+          offline support, self-hosted processing engines, removal of third-party network requests, and the content
+          system. The full list of changes is in the source repository’s history.
+        </p>
+
+        <h2>Main components</h2>
+        <p>Versions and licences below are read from the installed packages when the site is built.</p>
+        <div style="overflow-x: auto">
+          <table>
+            <thead><tr><th>Component</th><th>Used for</th><th>Version</th><th>Licence</th></tr></thead>
+            <tbody>
+              {{#each thirdParty}}<tr><td><a href="{{url}}" rel="noopener">{{pkg}}</a></td><td>{{role}}</td><td>{{version}}</td><td>{{license}}</td></tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Self-hosted engine packages are published with their licence files alongside them on this site (for
+          example <code>/wasm/pymupdf/LICENSE</code>). Other open-source packages bundled into QPDF’s scripts are
+          listed in the source repository’s <code>package.json</code> and <code>package-lock.json</code>.
+        </p>
+
+        <h2>AGPL-licensed engines</h2>
+        <p>
+          BentoPDF, Hyper Compress, PyMuPDF/MuPDF, Ghostscript and CoherentPDF are licensed under the AGPL. QPDF uses
+          them under that licence, which is why QPDF’s own source code is published under the same licence. QPDF has
+          not purchased commercial licences for these components.
+        </p>
+
+        <h2>Pre-built engines and source availability</h2>
+        <p>
+          The Compress PDF engine (Hyper Compress, AGPL-3.0,
+          <a href="https://github.com/alam00000/bentopdf-hyper-compress" rel="noopener">source</a>) and the editing
+          engine EditCore (AGPL-3.0,
+          <a href="https://github.com/alam00000/bentopdf-pdfium-viewer/tree/3f6b6114b166" rel="noopener">source</a>) are shipped as pre-built WebAssembly packages. The exact packages,
+          their licences and where their source is published are listed in
+          <a href="{{site.sourceUrl}}/blob/main/SOURCE-NOTICE.md" rel="noopener">SOURCE-NOTICE.md</a>. For the
+          source of any component, contact the developer via
+          <a href="https://wealththeory.ca/" rel="noopener">wealththeory.ca</a>.
+        </p>
+
+        <h2>Trademarks and affiliation</h2>
+        <p>
+          Product names mentioned on this site belong to their owners and are used only to describe compatibility.
+          QPDF is not affiliated with or endorsed by BentoPDF, the qpdf project, Artifex, Adobe, Microsoft, Apple,
+          Cloudflare, or any government.
+        </p>
+      </article>
+    </main>
+    {{> footer }}
+  </body>
+</html>

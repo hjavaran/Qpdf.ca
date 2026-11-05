@@ -169,18 +169,28 @@ describe('Compress PDF page', () => {
     expect(mocks.compressWithHyper).not.toHaveBeenCalled();
   });
 
+  // QPDF shows a result card with sizes and an explicit Download button
+  // instead of downloading automatically.
+  const clickResultDownload = async () => {
+    await vi.waitFor(() =>
+      expect(document.getElementById('qp-compress-download')).not.toBeNull()
+    );
+    (document.getElementById('qp-compress-download') as HTMLButtonElement).click();
+  };
+
   it('sends the password and says the copy has none', async () => {
     await addLockedFile('locked.pdf');
     await unlock('locked.pdf');
     clickCompress();
-    await vi.waitFor(() => expect(mocks.downloadFile).toHaveBeenCalled());
+    await clickResultDownload();
+    expect(mocks.downloadFile).toHaveBeenCalled();
     expect(mocks.compressWithHyper).toHaveBeenCalledWith(
       expect.any(ArrayBuffer),
       expect.objectContaining({ password: PASSWORD })
     );
-    expect(mocks.showAlert.mock.calls.at(-1)?.[1]).toContain(
-      'the compressed copy has no password'
-    );
+    expect(
+      document.getElementById('qp-compress-result')?.textContent
+    ).toContain('the compressed copy has no password');
   });
 
   it('marks the password wrong when the engine rejects it', async () => {
@@ -209,7 +219,7 @@ describe('Compress PDF page', () => {
       expect(mocks.verifyHyperPassword).toHaveBeenCalledTimes(2)
     );
     clickCompress();
-    await vi.waitFor(() => expect(mocks.downloadFile).toHaveBeenCalled());
+    await clickResultDownload();
     const [zipBlob, zipName] = mocks.downloadFile.mock.calls[0];
     expect(zipName).toBe('compressed-pdfs.zip');
     const JSZip = (await import('jszip')).default;

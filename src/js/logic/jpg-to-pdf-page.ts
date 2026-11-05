@@ -7,6 +7,7 @@ import {
   moveItem,
 } from '../utils/sortable-file-list.js';
 import { loadPyMuPDF } from '../utils/pymupdf-loader.js';
+import { convertImagesToPdfFile } from '../utils/images-to-pdf-lib.js';
 import type { PyMuPDFInstance } from '@/types';
 import {
   getSelectedQuality,
@@ -191,10 +192,15 @@ async function convertToPdf() {
     return;
   }
 
-  showLoader('Loading engine...');
+  // QPDF: plain JPEGs are embedded directly with pdf-lib (fast, no extra
+  // download, works offline). JPEG 2000 still needs the PyMuPDF engine.
+  const isPlainJpeg = (f: File) =>
+    f.type === 'image/jpeg' || f.type === 'image/jpg' || /\.jpe?g$/i.test(f.name);
+  const needsMupdf = !files.every(isPlainJpeg);
+  showLoader(needsMupdf ? 'Loading engine...' : 'Converting images to PDF...');
 
   try {
-    const mupdf = await ensurePyMuPDF();
+    const mupdf = needsMupdf ? await ensurePyMuPDF() : null;
 
     showLoader('Converting images to PDF...');
     const quality = getSelectedQuality();
@@ -203,7 +209,9 @@ async function convertToPdf() {
       compressedFiles.push(await compressImageFile(file, quality));
     }
 
-    const pdfBlob = await mupdf.imagesToPdf(compressedFiles);
+    const pdfBlob: Blob = mupdf
+      ? await mupdf.imagesToPdf(compressedFiles)
+      : await convertImagesToPdfFile(compressedFiles);
 
     downloadFile(pdfBlob, 'from_jpgs.pdf');
 

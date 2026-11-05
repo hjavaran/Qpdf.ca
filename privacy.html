@@ -1,200 +1,209 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Primary Meta Tags -->
-    <title>Privacy Policy - Your Data Stays Private | BentoPDF</title>
-    <meta
-      name="description"
-      content="BentoPDF privacy policy: All PDF processing happens in your browser. We never see, store, or upload your files. 100% private and secure."
-    />
-    <meta name="author" content="BentoPDF" />
-    <meta name="robots" content="index, follow" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://www.bentopdf.com/privacy" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.bentopdf.com/privacy" />
-    <meta
-      property="og:title"
-      content="Privacy Policy - Your Data Stays Private | BentoPDF"
-    />
-    <meta
-      property="og:description"
-      content="BentoPDF privacy policy: All PDF processing happens in your browser. We never see, store, or upload your files. 100% private and secure."
-    />
-    <meta
-      property="og:image"
-      content="https://www.bentopdf.com/images/og-privacy.png"
-    />
-    <meta property="og:site_name" content="BentoPDF" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Privacy Policy - Your Data Stays Private | BentoPDF"
-    />
-    <meta
-      name="twitter:description"
-      content="BentoPDF privacy policy: All PDF processing happens in your browser. We never see, store, or upload your files. 100% private and secure."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.bentopdf.com/images/twitter-privacy.png"
-    />
-    <meta name="twitter:site" content="@BentoPDF" />
-
-    <link href="/src/css/styles.css" rel="stylesheet" />
-
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/favicon-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/images/favicon-512x512.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/apple-touch-icon.png"
-    />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
   </head>
-
-  <body class="antialiased bg-gray-900 text-gray-300">
+  <body>
     {{> navbar }}
+    <main class="qp-wrap">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">Your PDFs stay private</h1>
+        <p>
+          QPDF works with your documents inside your own web browser. This page explains, in plain English, what
+          happens to a file when you use a QPDF tool, what does and does not travel over the internet, and how you
+          can check it for yourself.
+        </p>
+      </div>
 
-    <div id="app" class="container mx-auto p-4 md:p-8">
-      <section class="max-w-4xl mx-auto py-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-center text-white mb-4">
-          Privacy Policy
-        </h1>
-        <p class="text-center text-gray-500">Last Updated: August 29, 2026</p>
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px]">
+        <article class="qp-prose" style="max-width: 72ch">
+          <div class="qp-callout qp-callout-ok">
+            <p><strong>The short version</strong></p>
+            <ul>
+              <li>QPDF’s tools process your PDF on your device, inside the browser tab.</li>
+              <li>Your documents are not uploaded to QPDF’s servers or sent to any other service.</li>
+              <li>QPDF has no accounts, no analytics, no advertising and no tracking cookies.</li>
+              <li>You can check this yourself: load a tool, switch off your Wi-Fi, and process a file.</li>
+            </ul>
+          </div>
 
-        <div class="legal-content mt-12">
-          <h2>1. Our Commitment to Privacy</h2>
+          <h2 id="local-processing">What “browser-local” processing means</h2>
           <p>
-            BentoPDF ("we", "us", "our") is fundamentally a privacy-focused
-            service. This Privacy Policy outlines our unwavering commitment to
-            protecting your privacy. Our core principle is simple:
-            <strong>your files are your files</strong>. We do not and cannot
-            view, access, store, or share your documents. All PDF processing
-            occurs entirely on your own computer, within your web browser
-            (client-side).
+            Most online PDF services ask you to upload your document. Their servers make the change and you download
+            the result, so a copy of your file has travelled to — and at least briefly lived on — someone else’s
+            computer.
+          </p>
+          <p>
+            QPDF turns that around. When you open a tool, your browser downloads the <em>software</em> needed to do
+            the job. When you then select a PDF, the browser reads it from your disk into memory and the software
+            works on it right there, using your own processor. The finished file is created in memory and saved back
+            to your device. There is no QPDF processing server, because none is needed.
           </p>
 
-          <h3>1.1 The Client-Side Principle</h3>
+          <h2 id="javascript-webassembly">How JavaScript and WebAssembly do the work</h2>
           <p>
-            Unlike other online PDF services, BentoPDF does not upload your
-            files to a server for processing. The tools you use are powered by
-            JavaScript and WebAssembly libraries that run directly on your
-            device. This means your data never leaves your computer, providing
-            you with the highest level of privacy and security.
-          </p>
-
-          <h2>2. Information We Do Not Collect</h2>
-          <p>
-            Because of our client-side architecture, we are technically
-            incapable of collecting the following information:
+            Web browsers can run two kinds of program: JavaScript, and WebAssembly — a compact format that lets
+            mature programs written in languages like C, C++ and Rust run inside a web page at close to native speed.
+            QPDF uses both. Depending on the tool, the work is done by well-established open-source engines:
           </p>
           <ul>
-            <li>
-              The content of your PDF files or any other documents you use with
-              our tools.
-            </li>
-            <li>Any personal data contained within your documents.</li>
-            <li>Filenames of your documents.</li>
-            <li>
-              Any derived information or metadata from your files, beyond what
-              is necessary for the tool to function during your active session
-              (and this is immediately discarded).
-            </li>
+            <li><strong>pdf-lib</strong> and <strong>PDF.js</strong> for reading, editing and rendering pages;</li>
+            <li><strong>qpdf</strong> for encryption, decryption and structural repairs;</li>
+            <li><strong>PDFium</strong> and <strong>Hyper Compress</strong> for editing and compression;</li>
+            <li><strong>CoherentPDF</strong> for merging with bookmarks and attachments;</li>
+            <li><strong>PyMuPDF</strong> (running on Pyodide) and <strong>Ghostscript</strong> for conversions and PDF/A;</li>
+            <li><strong>Tesseract</strong> for OCR (English and French).</li>
+          </ul>
+          <p>
+            Every one of these engines is served from QPDF’s own hosting, at a pinned version. QPDF does not load
+            scripts, fonts or engines from third-party content networks, and the site’s Content Security Policy
+            instructs your browser to refuse connections to any origin other than QPDF’s own.
+          </p>
+
+          <h2 id="download-vs-upload">Downloading software is not uploading documents</h2>
+          <p>
+            Your browser does talk to qpdf.ca — but only in one direction for anything that matters. It
+            <em>downloads</em> web pages, styles, scripts and WebAssembly engines, exactly as it would for any
+            website. It never <em>uploads</em> your PDF, its contents, or its file name. Think of it like downloading a
+            word processor and then writing a letter on your own computer: the company that made the software never
+            sees the letter.
+          </p>
+
+          <h2 id="what-happens">What happens to your file, step by step</h2>
+          <h3>1. When you select a PDF</h3>
+          <p>
+            You choose a file with the file picker or drag it onto the page. The browser gives the page read access to
+            that one file. QPDF reads its bytes into memory. Nothing is sent over the network, and the file name is
+            used only to suggest a name for the result.
+          </p>
+          <h3>2. While it is processed</h3>
+          <p>
+            The tool runs in the page or in a background Web Worker so the page stays responsive. Workers are part of
+            the same browser tab and do not create network connections to send your data anywhere.
+          </p>
+          <h3>3. When you download the result</h3>
+          <p>
+            The output is assembled in memory and handed to your browser’s download feature through a temporary
+            <code>blob:</code> address that exists only inside your browser. The file is written to your device.
+            QPDF keeps no copy.
+          </p>
+
+          <h2 id="memory">Temporary memory in your browser</h2>
+          <p>
+            While you work, your document and intermediate data live in the tab’s memory, and the page may create
+            preview images of pages. This data is released when you clear the tool, process another file, or close
+            the tab. Be aware of the limits: browsers decide when memory is actually freed and overwritten, and your
+            operating system may write memory to a swap or hibernation file. QPDF cannot securely erase memory on
+            your device.
+          </p>
+
+          <h2 id="stored-preferences">What QPDF stores in your browser</h2>
+          <p>QPDF never stores your documents, their file names or text extracted from them. It does store:</p>
+          <ul>
+            <li><strong>Favourite tools</strong> — the list of tools you starred (Compress PDF by default), in <code>localStorage</code>.</li>
+            <li><strong>Interface settings</strong> — such as layout preferences, keyboard shortcuts and PDF viewer display preferences.</li>
+            <li><strong>Application files for offline use</strong> — QPDF’s own pages, scripts and engines, cached by a service worker so tools can work without a connection.</li>
+            <li><strong>Downloaded fonts</strong> — fonts used to build OCR text layers may be cached in IndexedDB so they do not need to be downloaded again.</li>
+          </ul>
+          <p>
+            All of this stays in your browser and is never sent to QPDF. You can remove it at any time by clearing
+            this site’s data in your browser settings.
+          </p>
+
+          <h2 id="network-requests">What still reaches the hosting infrastructure</h2>
+          <p>
+            QPDF is a static website hosted on Cloudflare Pages. Like any website, loading it means your browser
+            requests files from Cloudflare’s servers. Those requests necessarily reveal ordinary technical
+            information — your IP address, the pages and files requested, and your browser’s user agent — which
+            Cloudflare may process to deliver and protect the site. These requests contain QPDF’s software, never
+            your documents.
+          </p>
+          <p>
+            Some tools need large engines (for example PyMuPDF, about 54 MB). The first time you use one, your
+            browser downloads it from qpdf.ca; the tool page tells you before it does so. QPDF does not use analytics
+            or advertising services, so there are no requests to such services.
+          </p>
+
+          <section id="test-it-yourself" aria-labelledby="test-title" class="qp-demo" style="margin-top: 2.5rem">
+            <h2 id="test-title">Don’t just trust us. Test it yourself.</h2>
+            <p style="margin-top: 0.5rem">You can confirm that QPDF does not need to upload your file, in about a minute:</p>
+            <ol style="margin-top: 1rem">
+              <li><span>Open qpdf.ca while you are connected to the internet.</span></li>
+              <li><span>Choose <a href="/compress-pdf/">Compress PDF</a>, <a href="/merge-pdf/">Merge PDF</a> or another supported tool.</span></li>
+              <li><span>Wait until the tool shows <strong>“Ready to work offline”</strong>. This means its processing software has finished loading. For tools with large engines, select <strong>Download for offline use</strong> first.</span></li>
+              <li><span>Disconnect your computer from Wi-Fi or unplug the network cable.</span></li>
+              <li><span>Select a PDF from your device.</span></li>
+              <li><span>Process it as usual.</span></li>
+              <li><span>Download the finished document.</span></li>
+            </ol>
+            <p style="margin-top: 1rem">
+              If the tool can process your PDF while your computer is disconnected from the internet, it demonstrates
+              that the operation does not require uploading your document to a remote processing server.
+            </p>
+            <p style="margin-top: 0.75rem; font-size: 0.92rem">
+              For a closer look, open your browser’s developer tools, select the Network tab, and watch it while you
+              process a file: no request carries your document. This simple test is a useful check, but it does not
+              replace a comprehensive, independent security audit.
+            </p>
+          </section>
+
+          <h3 id="offline-tools">Which tools work offline?</h3>
+          <p>
+            Every published QPDF tool processes documents locally. Each tool page shows its offline status near the
+            top:
+          </p>
+          <ul>
+            <li><strong>Ready to work offline</strong> — everything the tool needs is stored in your browser.</li>
+            <li><strong>Works offline after a one-time download</strong> — tools that use a large engine (PyMuPDF, Ghostscript, Tesseract OCR) let you download it first, then work offline.</li>
+          </ul>
+          <p>
+            Offline use requires a browser that supports service workers, and it will not work in some private-browsing
+            modes. If a site update is released while you are offline, the tool keeps using the version you already have.
+          </p>
+
+          <h2 id="limitations">The limits of local processing</h2>
+          <p>Browser-local processing removes the biggest risk — sending your document to someone else — but it cannot make an unsafe device safe:</p>
+          <ul>
+            <li><strong>Your device’s security matters.</strong> Malware, a compromised operating system or a shared computer can expose documents regardless of the tool you use.</li>
+            <li><strong>Browser extensions can read web pages.</strong> Extensions with permission to “read and change data on all websites” could in principle read what a page is working on. Use a private window or a clean browser profile for very sensitive work.</li>
+            <li><strong>Downloads stay on your device.</strong> Results are saved to your downloads folder, where other people or programs with access to your device can find them.</li>
+            <li><strong>Memory has limits.</strong> Very large files can exceed the memory available to a browser tab, especially on phones.</li>
+            <li><strong>Check important results.</strong> Always verify redactions, signatures and conversions before relying on them.</li>
           </ul>
 
-          <h2>3. No Tracking or Analytics</h2>
+          <h2 id="transparency">Open source and honest claims</h2>
           <p>
-            BentoPDF does not track you at all. We do not use cookies, analytics
-            platforms, error-reporting services, or any tracking scripts, not
-            even on the live website at bentopdf.com. We do not collect usage
-            data, visit counts, performance metrics, or any other information
-            about you or your session, anonymized or otherwise.
-            <strong
-              >We never know who you are, how many people use BentoPDF, or what
-              you do with it.</strong
-            >
+            QPDF is free software released under the GNU Affero General Public License and built on the open-source
+            BentoPDF project. Anyone can read the <a href="{{site.sourceUrl}}" rel="noopener">source code</a> to see
+            how it handles files. QPDF has not been independently audited and holds no security certifications; we
+            describe what the technology does and give you a way to verify it, rather than relying on badges.
           </p>
-
-          <h2>4. Third-Party Libraries</h2>
           <p>
-            BentoPDF is built using powerful, open-source libraries like
-            PDF-lib.js and PDF.js. These libraries are trusted by developers
-            worldwide and operate under the same client-side principle. While we
-            have vetted these libraries, we encourage you to review their
-            respective privacy policies for your own peace of mind.
+            For the formal details, read the <a href="/privacy-policy/">privacy policy</a> and the
+            <a href="/terms/">terms of use</a>.
           </p>
+        </article>
 
-          <h2>5. Security</h2>
-          <p>
-            Since your files are never transmitted over the internet to our
-            servers, you are protected from potential data breaches during
-            transit or storage on a server. The security of your documents is in
-            your hands and protected by the security of your own computer and
-            web browser.
-          </p>
-
-          <h2>6. Children's Privacy</h2>
-          <p>
-            Our services are not directed at individuals under the age of 13. We
-            do not knowingly collect any personal information from children. If
-            you believe a child has provided us with personal information,
-            please contact us, and we will take steps to delete such
-            information.
-          </p>
-
-          <h2>7. Changes to This Privacy Policy</h2>
-          <p>
-            We may update this Privacy Policy from time to time. We will notify
-            you of any changes by posting the new policy on this page and
-            updating the "Last Updated" date at the top. You are advised to
-            review this Privacy Policy periodically for any changes.
-          </p>
-
-          <h2>8. Contact Us</h2>
-          <p>
-            If you have any questions about this Privacy Policy, please contact
-            us at
-            <a href="mailto:contact@bentopdf.com">contact@bentopdf.com</a>.
-          </p>
-        </div>
-      </section>
-    </div>
-
+        <aside class="hidden lg:block" aria-label="On this page">
+          <div class="qp-toc" style="position: sticky; top: 84px">
+            <p class="qp-meta" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600">On this page</p>
+            <a href="#local-processing">Browser-local processing</a>
+            <a href="#javascript-webassembly">JavaScript and WebAssembly</a>
+            <a href="#download-vs-upload">Download vs upload</a>
+            <a href="#what-happens">Step by step</a>
+            <a href="#stored-preferences">What is stored</a>
+            <a href="#network-requests">Network requests</a>
+            <a href="#test-it-yourself">Test it yourself</a>
+            <a href="#limitations">Limitations</a>
+            <a href="#transparency">Open source</a>
+          </div>
+        </aside>
+      </div>
+    </main>
     {{> footer }}
-    <script type="module" src="src/js/utils/lucide-init.ts"></script>
-    <script type="module" src="src/js/mobileMenu.ts"></script>
-    <script type="module" src="src/js/main.ts"></script>
-    <!-- JSON-LD Schema -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "PrivacyPage",
-        "name": "Privacy Policy - Your Data Stays Private | BentoPDF",
-        "url": "https://www.bentopdf.com/privacy"
-      }
-    </script>
   </body>
 </html>

@@ -11,6 +11,12 @@ import type { InputFormat } from '@matbee/libreoffice-converter/browser';
 import { trText } from '../i18n/i18n.js';
 
 const LIBREOFFICE_LOCAL_PATH = import.meta.env.BASE_URL + 'libreoffice-wasm/';
+// soffice.wasm.gz (46.5 MiB) and soffice.data.gz (27.3 MiB) exceed Cloudflare
+// Pages' 25 MiB per-file limit, so QPDF serves them from a separate static
+// asset host (Cloudflare R2). The small loader scripts stay on the site's own
+// origin because Workers must be same-origin. See docs/cloudflare-r2.md.
+const LIBREOFFICE_BLOB_BASE: string | undefined =
+  import.meta.env.VITE_LIBREOFFICE_ASSET_URL || undefined;
 
 export interface LoadProgress {
   phase: 'loading' | 'initializing' | 'converting' | 'complete' | 'ready';
@@ -30,7 +36,7 @@ async function fetchAsDecompressedUrl(
   url: string,
   mimeType: string
 ): Promise<string> {
-  const response = await fetch(url);
+  const response = await fetch(url, { mode: 'cors', credentials: 'omit' });
   if (!response.ok) {
     throw new Error(
       trText('Failed to fetch {{url}}: HTTP {{status}}', {
@@ -57,9 +63,14 @@ export class LibreOfficeConverter {
   private initialized = false;
   private initializing = false;
   private basePath: string;
+  private blobBase: string;
 
   constructor(basePath?: string) {
     this.basePath = basePath || LIBREOFFICE_LOCAL_PATH;
+    const external = LIBREOFFICE_BLOB_BASE
+      ? LIBREOFFICE_BLOB_BASE.replace(/\/?$/, '/')
+      : undefined;
+    this.blobBase = basePath || external || this.basePath;
   }
 
   async initialize(onProgress?: ProgressCallback): Promise<void> {
@@ -84,11 +95,11 @@ export class LibreOfficeConverter {
 
       const [sofficeWasmUrl, sofficeDataUrl] = await Promise.all([
         fetchAsDecompressedUrl(
-          `${this.basePath}soffice.wasm.gz`,
+          `${this.blobBase}soffice.wasm.gz`,
           'application/wasm'
         ),
         fetchAsDecompressedUrl(
-          `${this.basePath}soffice.data.gz`,
+          `${this.blobBase}soffice.data.gz`,
           'application/octet-stream'
         ),
       ]);

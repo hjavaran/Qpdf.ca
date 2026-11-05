@@ -10,13 +10,11 @@ import '../css/styles.css';
 import {
   escapeHtml,
   formatShortcutDisplay,
-  formatStars,
 } from './utils/helpers.js';
 import {
   initI18n,
   applyTranslations,
   rewriteLinks,
-  injectLanguageSwitcher,
   t,
   trText,
 } from './i18n/index.js';
@@ -45,19 +43,9 @@ const FAVORITE_STAR_PATHS = [
 ] as const;
 declare const __BRAND_NAME__: string;
 
-const adsSection = document.getElementById('ads-section');
-if (
-  adsSection &&
-  (['bentopdf.com', 'www.bentopdf.com'].includes(window.location.hostname) ||
-    import.meta.env.DEV)
-) {
-  adsSection.hidden = false;
-}
-
 const init = async () => {
   await initI18n();
   await loadRuntimeConfig();
-  injectLanguageSwitcher();
   applyTranslations();
 
   if (isCurrentPageDisabled()) {
@@ -966,34 +954,6 @@ const init = async () => {
   }
 
   createIcons({ icons });
-  console.log('Please share our tool and share the love!');
-
-  const githubStarsElements = [
-    document.getElementById('github-stars-desktop'),
-    document.getElementById('github-stars-mobile'),
-  ];
-
-  if (
-    githubStarsElements.some((el) => el) &&
-    !__SIMPLE_MODE__ &&
-    !__DISABLE_GITHUB_STARS__
-  ) {
-    fetch('https://api.github.com/repos/alam00000/bentopdf')
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.stargazers_count !== undefined) {
-          const formattedStars = formatStars(data.stargazers_count);
-          githubStarsElements.forEach((el) => {
-            if (el) el.textContent = formattedStars;
-          });
-        }
-      })
-      .catch(() => {
-        githubStarsElements.forEach((el) => {
-          if (el) el.textContent = '-';
-        });
-      });
-  }
 
   // Initialize Shortcuts System
   ShortcutsManager.init();
@@ -1043,7 +1003,7 @@ const init = async () => {
   ) as HTMLInputElement;
   const toolInterface = document.getElementById('tool-interface');
 
-  const savedFullWidth = getStoredItem('fullWidthMode') !== 'false';
+  const savedFullWidth = getStoredItem('fullWidthMode') === 'true';
   if (fullWidthToggle) {
     fullWidthToggle.checked = savedFullWidth;
     applyFullWidthMode(savedFullWidth);

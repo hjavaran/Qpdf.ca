@@ -1,0 +1,37 @@
+<section class="qp-landing" aria-labelledby="qp-about-tool" data-qp-tool="{{tool.id}}"{{#if tool.wide}} data-qp-wide="true"{{/if}}>
+  <div class="qp-wrap">
+    <div class="qp-landing-grid">
+      <div class="qp-block">
+        <h2 id="qp-about-tool">About {{tool.name}}</h2>
+        <p>{{tool.intro}}</p>
+        <h2 style="margin-top: 1.25rem">How to use it</h2>
+        <ol>
+          {{#each tool.steps}}<li>{{this}}</li>
+          {{/each}}
+        </ol>
+      </div>
+      <div style="display: grid; gap: 1rem; align-content: start">
+        <div class="qp-block qp-block-privacy">
+          <h2><i class="ph ph-shield-check" aria-hidden="true"></i> Your file stays on your device</h2>
+          <p>{{tool.privacyNote}}</p>
+          <p style="margin-top: 0.5rem"><a class="qp-link" href="/privacy/">How QPDF keeps files private →</a></p>
+        </div>
+        {{#if tool.notes.length}}
+        <div class="qp-block">
+          <h2>Good to know</h2>
+          <ul>
+            {{#each tool.notes}}<li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    {{#if tool.related.length}}
+    <div class="qp-section-title" style="margin-top: 2rem"><h2>Related tools</h2><a class="qp-link" href="/tools/" style="font-size: 0.88rem">All tools →</a></div>
+    <div class="qp-grid">
+      {{#each tool.related}}{{> tool-card }}{{/each}}
+    </div>
+    {{/if}}
+  </div>
+</section>

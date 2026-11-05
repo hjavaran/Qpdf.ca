@@ -10,16 +10,16 @@
       autocomplete="off"
       class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg p-2.5 focus:ring-indigo-500 focus:border-indigo-500"
     >
-      <option value="low">Low (Best Quality)</option>
-      <option value="medium" selected>Medium (Recommended)</option>
-      <option value="high">High (Smallest Files)</option>
-      <option value="lossless">Lossless (No Quality Loss)</option>
-      <option value="custom">Custom</option>
+      <option value="medium" selected>Recommended — balanced size and quality</option>
+      <option value="low">Higher quality — gentler compression</option>
+      <option value="high">Stronger compression — smallest file</option>
+      <option value="lossless">Lossless — no change to image quality</option>
+      <option value="custom">Custom settings</option>
     </select>
     <p class="mt-2 text-xs text-gray-400">
-      Powered by Hyper Compress: it recompresses images, subsets and merges
-      fonts, and strips dead weight while text, links, and forms keep working.
-      For image-only scans, turn on Rasterize pages under Custom Settings.
+      Recompresses images, optimizes fonts and removes unused data. Text stays
+      selectable, and links and form fields keep working. Runs on your device
+      with the open-source Hyper Compress engine.
     </p>
   </div>
 
@@ -52,8 +52,8 @@
       </select>
     </div>
     <p class="text-xs text-gray-500 mt-1">
-      Hyper Compress finds the best quality that fits. Leave it empty to use the
-      level as is.
+      QPDF looks for the best quality that fits and tells you if the target
+      cannot be reached. Leave empty to use the level as is.
     </p>
   </div>
 
@@ -77,9 +77,9 @@
       class="hidden mt-4 p-4 bg-gray-900 rounded-lg border border-gray-700 space-y-3"
     >
       <p class="text-sm text-gray-400">
-        Fine-tune Hyper Compress. Picking a compression level resets these,
-        except Override content protection, Convert to grayscale, Preserve
-        PDF/A, and Brotli.
+        Fine-tune the compression engine. Picking a compression level resets
+        these, except Override content protection, Convert to grayscale,
+        Preserve PDF/A, and Brotli.
       </p>
       <label class="flex items-start gap-2 cursor-pointer">
         <input
@@ -93,10 +93,11 @@
             >Override content protection</span
           >
           <span class="block text-xs text-gray-500 mt-0.5"
-            >By default, Hyper Compress preserves content: it leaves digitally
-            signed PDFs untouched and won't rasterize pages that have text. Turn
-            this on to bypass both. Signed PDFs lose their signatures, and
-            Rasterize pages also turns text into images.</span
+            >By default QPDF protects content: digitally signed PDFs are left
+            untouched and pages with text are never turned into images. Turning
+            this on removes signatures from signed PDFs and lets “Rasterize
+            pages” convert text into images (no longer selectable or
+            searchable).</span
           >
         </span>
       </label>
@@ -108,3 +109,4 @@
     Compress PDF
   </button>
 </div>
+<div id="qp-compress-result" class="hidden mt-6" aria-live="polite"></div>

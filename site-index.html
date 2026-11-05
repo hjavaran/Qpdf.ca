@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap" style="padding-bottom: 3rem">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">Site index</h1>
+        <p>Every page on QPDF, organized by topic. This index is generated automatically from the tool registry and guides.</p>
+      </div>
+      <div class="qp-prose">
+        <h2>Information</h2>
+        <ul class="columns-1 sm:columns-2">
+          <li><a href="/">Home</a></li>
+          {{#each infoPages}}<li><a href="{{url}}">{{name}}</a></li>
+          {{/each}}
+        </ul>
+
+        <h2>PDF tools</h2>
+        <div class="grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+          {{#each categories}}
+          <section>
+            <h3>{{name}}</h3>
+            <ul>
+              {{#each tools}}<li><a href="{{url}}">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </section>
+          {{/each}}
+        </div>
+
+        {{#if hasGuides}}
+        <h2>Guides</h2>
+        {{#each guideCategories}}
+        <h3>{{name}}</h3>
+        <ul>
+          {{#each guides}}<li><a href="{{url}}">{{title}}</a></li>
+          {{/each}}
+        </ul>
+        {{/each}}
+        {{/if}}
+      </div>
+    </main>
+    {{> footer }}
+  </body>
+</html>

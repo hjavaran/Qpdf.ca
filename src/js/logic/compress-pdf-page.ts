@@ -508,6 +508,96 @@ function describeCompressResult(
   };
 }
 
+
+// ── QPDF: result card with sizes and an explicit download button ───────────
+interface CompressResultView {
+  title: string;
+  message: string;
+  type: string;
+  originalSize: number;
+  compressedSize: number;
+  blob: Blob;
+  filename: string;
+  count?: number;
+}
+
+function renderCompressResult(view: CompressResultView, onReset: () => void): void {
+  const box = document.getElementById('qp-compress-result');
+  if (!box) return;
+  const saved = view.originalSize - view.compressedSize;
+  const pct = view.originalSize > 0 ? (saved / view.originalSize) * 100 : 0;
+  box.replaceChildren();
+  box.className = 'mt-6 rounded-xl border border-gray-700 bg-gray-900 p-4 sm:p-5';
+
+  const h = document.createElement('h2');
+  h.className = 'text-lg font-semibold text-white';
+  h.textContent = view.title;
+
+  const stats = document.createElement('dl');
+  stats.className = 'mt-3 grid grid-cols-3 gap-2 text-center';
+  const stat = (label: string, value: string, strong = false) => {
+    const d = document.createElement('div');
+    d.className = 'rounded-lg bg-gray-800 border border-gray-700 px-2 py-3';
+    const dt = document.createElement('dt');
+    dt.className = 'text-xs text-gray-400';
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.className = `mt-1 text-base sm:text-lg font-semibold ${strong ? 'text-indigo-400' : 'text-white'}`;
+    dd.textContent = value;
+    d.append(dt, dd);
+    return d;
+  };
+  stats.append(
+    stat(view.count && view.count > 1 ? 'Original (total)' : 'Original', formatBytes(view.originalSize)),
+    stat(view.count && view.count > 1 ? 'Compressed (total)' : 'Compressed', formatBytes(view.compressedSize)),
+    stat('Reduction', saved > 0 ? `${pct.toFixed(pct >= 10 ? 0 : 1)}%` : '0%', saved > 0)
+  );
+
+  const msg = document.createElement('p');
+  msg.className = 'mt-3 text-sm text-gray-300';
+  msg.textContent = view.message;
+  if (saved <= 0) {
+    const why = document.createElement('p');
+    why.className = 'mt-2 text-sm text-gray-400';
+    why.textContent =
+      'This usually means the PDF is already compact: it is mostly text, or its images are already compressed. Try “Stronger compression”, remove pages you do not need, or convert colour scans to greyscale.';
+    msg.after(why);
+    box.append(h, stats, msg, why);
+  } else {
+    box.append(h, stats, msg);
+  }
+
+  const actions = document.createElement('div');
+  actions.className = 'mt-4 flex flex-col sm:flex-row gap-2';
+  const dl = document.createElement('button');
+  dl.type = 'button';
+  dl.id = 'qp-compress-download';
+  dl.className = 'btn-gradient flex-1 text-center';
+  dl.textContent =
+    view.count && view.count > 1 ? `Download ${view.count} PDFs (ZIP)` : 'Download compressed PDF';
+  dl.addEventListener('click', () => downloadFile(view.blob, view.filename));
+  const again = document.createElement('button');
+  again.type = 'button';
+  again.className =
+    'px-4 py-2.5 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 font-semibold hover:bg-gray-700';
+  again.textContent = 'Compress another file';
+  again.addEventListener('click', () => {
+    box.classList.add('hidden');
+    box.replaceChildren();
+    onReset();
+  });
+  actions.append(dl, again);
+  box.append(actions);
+  const note = document.createElement('p');
+  note.className = 'mt-3 text-xs text-gray-500';
+  note.textContent = 'Compressed on this device. Nothing was uploaded.';
+  box.append(note);
+  box.classList.remove('hidden');
+  document.getElementById('compress-options')?.classList.add('hidden');
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  dl.focus({ preventScroll: true });
+}
+
 function describeCompressionError(err: unknown, hadPassword: boolean): string {
   if (err instanceof HyperError && err.code === 'decrypt_failed') {
     return hadPassword ? 'wrong password' : 'password protected';
@@ -932,24 +1022,26 @@ onPageReady(() => {
       return;
     }
 
-    downloadFile(
-      new Blob([new Uint8Array(result.data)], { type: 'application/pdf' }),
-      file.name
-    );
     const { title, message, type } = describeCompressResult(
       result,
       runOptions,
       targetBytes
     );
-    showAlert(
-      title,
-      password
-        ? trText(
-            '{{message}} It was password protected, so the compressed copy has no password. Use Protect PDF to add one again.',
-            { message }
-          )
-        : message,
-      type,
+    renderCompressResult(
+      {
+        title,
+        message: password
+          ? trText(
+              '{{message}} It was password protected, so the compressed copy has no password. Use Protect PDF to add one again.',
+              { message }
+            )
+          : message,
+        type,
+        originalSize: result.originalSize,
+        compressedSize: result.compressedSize,
+        blob: new Blob([new Uint8Array(result.data)], { type: 'application/pdf' }),
+        filename: file.name,
+      },
       () => resetState()
     );
   };
@@ -1020,7 +1112,6 @@ onPageReady(() => {
 
     showLoader('Creating ZIP...');
     const zipBlob = await zip.generateAsync({ type: 'blob' });
-    downloadFile(zipBlob, 'compressed-pdfs.zip');
     hideLoader();
 
     const totalSavings = totalOriginalSize - totalCompressedSize;
@@ -1073,10 +1164,17 @@ onPageReady(() => {
     }
 
     const hasProblems = failures.length > 0 || missedTargetCount > 0;
-    showAlert(
-      hasProblems ? 'Compression Finished' : 'Compression Complete',
-      parts.join(' '),
-      hasProblems ? 'warning' : totalSavings > 0 ? 'success' : 'info',
+    renderCompressResult(
+      {
+        title: hasProblems ? 'Compression Finished' : 'Compression Complete',
+        message: parts.join(' '),
+        type: hasProblems ? 'warning' : totalSavings > 0 ? 'success' : 'info',
+        originalSize: totalOriginalSize,
+        compressedSize: totalCompressedSize,
+        blob: zipBlob,
+        filename: 'compressed-pdfs.zip',
+        count: compressedCount,
+      },
       () => resetState()
     );
   };

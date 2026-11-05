@@ -1,87 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>PDF Workflow Builder - Visual Pipeline | BentoPDF</title>
-    <meta
-      name="title"
-      content="PDF Workflow Builder - Visual Pipeline | BentoPDF"
-    />
-    <meta
-      name="description"
-      content="Build custom PDF processing pipelines visually. Drag, connect, and execute PDF tools in sequence. Free, secure, runs entirely in your browser."
-    />
-    <meta
-      name="keywords"
-      content="pdf workflow, pdf automation, pdf pipeline, visual pdf editor, node editor"
-    />
-    <meta name="author" content="BentoPDF" />
-    <meta
-      name="robots"
-      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-    />
-
-    <link rel="canonical" href="https://www.bentopdf.com/pdf-workflow" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.bentopdf.com/pdf-workflow" />
-    <meta
-      property="og:title"
-      content="PDF Workflow Builder - Visual Pipeline | BentoPDF"
-    />
-    <meta
-      property="og:description"
-      content="Build custom PDF processing pipelines visually. Drag, connect, and execute PDF tools in sequence."
-    />
-    <meta
-      property="og:image"
-      content="https://www.bentopdf.com/images/og-pdf-workflow.png"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="BentoPDF" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://www.bentopdf.com/pdf-workflow" />
-    <meta name="twitter:title" content="PDF Workflow Builder" />
-    <meta
-      name="twitter:description"
-      content="Build custom PDF processing pipelines visually."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.bentopdf.com/images/twitter-pdf-workflow.png"
-    />
-    <meta name="twitter:site" content="@BentoPDF" />
-
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="PDF Workflow" />
-
+    {{> head }}
     <link href="/src/css/styles.css" rel="stylesheet" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/favicon-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/images/favicon-512x512.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/apple-touch-icon.png"
-    />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-
     <style>
       #rete-container {
         background-image: radial-gradient(circle, #374151 1px, transparent 1px);
@@ -278,9 +201,7 @@
   >
     {{> navbar }}
 
-    <h1 class="sr-only">
-      PDF Workflow Builder Free Online - Chain PDF Tools Into One Run
-    </h1>
+    <h1 class="sr-only">{{tool.name}}</h1>
 
     <!-- Main Workflow Layout -->
     <div id="workflow-app" class="flex flex-1 min-h-0">
@@ -411,7 +332,9 @@
       </aside>
     </div>
 
-    {{> footer-compact }}
+    {{> tool-landing }}
+
+    {{> footer }}
 
     <!-- Loader Modal -->
     <div
@@ -714,20 +637,5 @@
     <script type="module" src="/src/js/mobileMenu.ts"></script>
     <script type="module" src="/src/js/main.ts"></script>
     <script type="module" src="/src/js/faqModal.ts"></script>
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "PDF Workflow Builder - BentoPDF",
-        "applicationCategory": "PDF Tool",
-        "operatingSystem": "Any - Web Browser",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
-      }
-    </script>
   </body>
 </html>

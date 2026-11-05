@@ -13,7 +13,6 @@ dist-ssr
 *.local
 .npm-cache
 .env
-.env.production
 .env.local
 
 # Editor directories and files
@@ -55,9 +54,19 @@ test
 bentopdf-pdfium-viewer/
 bentopdf-pymupdf-wasm/
 
-/blog/*.html
-!/blog/author-alam.html
 /src/partials/tool-links-static.html
 /security-headers-docs.conf
 /dist-*.zip
 /docs/.vitepress/cache/
+
+# QPDF generated files
+/guides/*.html
+!/guides/index.html
+/test-results/
+/playwright-report/
+
+# Self-hosted engines copied from node_modules (scripts/qpdf/copy-engines.mjs)
+/public/wasm/
+/public/vendor/
+/tests/fixtures/out/
+/tests/e2e/artifacts/

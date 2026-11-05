@@ -1,6 +1,15 @@
-const FONT_CDN =
-  import.meta.env.VITE_EMBEDPDF_FONTS_URL ||
-  'https://cdn.jsdelivr.net/npm/@embedpdf';
+// QPDF self-hosts these fonts (scripts/qpdf/copy-engines.mjs). The engine
+// fetches them from a worker, so the base must be an absolute URL.
+function absoluteBase(url: string): string {
+  try {
+    return new URL(url, self.location.origin).href.replace(/\/$/, '');
+  } catch {
+    return url;
+  }
+}
+const FONT_CDN = absoluteBase(
+  import.meta.env.VITE_EMBEDPDF_FONTS_URL || '/vendor/embedpdf'
+);
 
 const CHARSET = {
   ANSI: 0,

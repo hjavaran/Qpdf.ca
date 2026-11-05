@@ -362,7 +362,7 @@
     "subtitle": "Fill in forms directly in the browser. Also supports XFA forms.",
     "uploadHint": "Upload a PDF with form fields. Fill them directly in the viewer below, then click the button to save and download the filled form. Also supports XFA forms.",
     "xfaNoteTitle": "Note on XFA Forms:",
-    "xfaNoteDescription": "XFA (XML Forms Architecture) is a legacy format that's only supported by certain PDF viewers like BentoPDF and Firefox. If you open an XFA PDF in other software and see blank pages or no form fields, it means that viewer doesn't support XFA. To view and fill XFA forms properly, use Firefox or BentoPDF's Form Filler."
+    "xfaNoteDescription": "XFA (XML Forms Architecture) is a legacy format that's only supported by certain PDF viewers like Firefox. If you open an XFA PDF in other software and see blank pages or no form fields, it means that viewer doesn't support XFA. To view and fill XFA forms properly, try this form filler or Firefox."
   },
   "createPdfForm": {
     "name": "Create PDF Form",
@@ -1010,7 +1010,7 @@
   },
   "digitalSignPdf": {
     "name": "Digital Signature PDF",
-    "pageTitle": "Digital Signature PDF - Add Cryptographic Signature | BentoPDF",
+    "pageTitle": "Digital Signature PDF - Add Cryptographic Signature | QPDF",
     "subtitle": "Add a cryptographic digital signature to your PDF using X.509 certificates. Supports PKCS#12 (.pfx, .p12) and PEM formats. Your private key never leaves your browser.",
     "certificateSection": "Certificate",
     "uploadCert": "Upload certificate (.pfx, .p12, .pem)",
@@ -1096,12 +1096,12 @@
   },
   "validateSignaturePdf": {
     "name": "Validate PDF Signature",
-    "pageTitle": "Validate PDF Signature - Verify Digital Signatures | BentoPDF",
+    "pageTitle": "Validate PDF Signature - Verify Digital Signatures | QPDF",
     "subtitle": "Verify digital signatures in your PDF files. Check certificate validity, view signer details, and confirm document integrity. All processing happens in your browser."
   },
   "timestampPdf": {
     "name": "Timestamp PDF",
-    "pageTitle": "Timestamp PDF Online Free - RFC 3161 Document Timestamp | BentoPDF",
+    "pageTitle": "Timestamp PDF Online Free - RFC 3161 Document Timestamp | QPDF",
     "subtitle": "Add an RFC 3161 document timestamp to your PDF using a trusted Time Stamp Authority (TSA) server. Proves your document existed at a specific point in time. No certificate required.",
     "tsaSectionTitle": "Timestamp Server (TSA)",
     "selectTsa": "Select a TSA server",
@@ -1248,46 +1248,6 @@
       "storageQuotaExceeded": "Failed to save workflow: storage quota exceeded. Try deleting old templates.",
       "failedToImport": "Failed to import workflow: {{message}}"
     }
-  },
-  "wasmSettings": {
-    "title": "Advanced Features Settings",
-    "description": "Configure external processing modules to enable advanced PDF features. These modules are optional and licensed separately.",
-    "status": {
-      "testing": "Testing...",
-      "customOverride": "Custom Override",
-      "preConfigured": "Pre-configured",
-      "notConfigured": "Not Configured"
-    },
-    "preconfiguredTitle": "Pre-configured and ready to use.",
-    "preconfiguredDescription": "Advanced processing modules are loaded automatically from CDN. You can override the URLs below if you need to use a custom source (e.g., for air-gapped or self-hosted deployments).",
-    "usingDefault": "Using default: {{url}}",
-    "pymupdfSubtitle": "Document Processing Engine",
-    "pymupdfFeatures": "Enables: PDF to Text, Markdown, SVG, DOCX, Excel • Extract Images/Tables • Format Conversion",
-    "testButton": "Test",
-    "recommendedLabel": "Recommended:",
-    "copyTitle": "Copy to clipboard",
-    "ghostscriptSubtitle": "PDF/A Conversion Engine",
-    "ghostscriptFeatures": "Enables: PDF/A-1b, PDF/A-2b, PDF/A-3b Conversion • Font to Outline",
-    "cpdfSubtitle": "Bookmarks & Metadata Engine",
-    "cpdfFeatures": "Enables: Split by Bookmarks • Edit Bookmarks • PDF Metadata",
-    "saveConfiguration": "Save Configuration",
-    "savingConfiguration": "Saving configuration...",
-    "savedTitle": "Saved",
-    "savedMessage": "Configuration saved successfully!",
-    "errorTitle": "Error",
-    "failedSave": "Failed to save configuration: {{message}}",
-    "emptyUrlTitle": "Empty URL",
-    "emptyUrlMessage": "Please enter a URL to test.",
-    "testSuccessTitle": "Success",
-    "connectionSuccess": "Connection to {{package}} successful!",
-    "connectionFailedTitle": "Connection Failed",
-    "connectionFailedMessage": "Could not connect to the URL.",
-    "resetDefaults": "Reset to Defaults",
-    "resetTitle": "Reset",
-    "resetWithDefaults": "Custom overrides cleared. Pre-configured defaults are active.",
-    "resetNoDefaults": "All configurations and cached modules have been cleared.",
-    "licenseTitle": "License Notice:",
-    "licenseDescription": "The external modules (PyMuPDF, Ghostscript, CoherentPDF) are licensed under AGPL-3.0 or similar copyleft licenses. By configuring and using these modules, you agree to their respective license terms. BentoPDF is compatible with any Ghostscript WASM and PyMuPDF WASM implementation that follows the expected interface."
   },
   "pdfOverlay": {
     "name": "PDF Overlay",

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap" style="padding-bottom: 3rem">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">PDF guides</h1>
+        <p>Practical, plain-English guides to getting PDF jobs done — privately.</p>
+      </div>
+      {{#each guideCategories}}
+      <section class="qp-cat" aria-labelledby="g-{{key}}">
+        <div class="qp-cat-head"><h2 id="g-{{key}}" class="qp-h2" style="font-size: 1.2rem">{{name}}</h2></div>
+        <div class="grid gap-3 md:grid-cols-2">
+          {{#each guides}}
+          <a class="qp-block" href="{{url}}" style="display: block; text-decoration: none">
+            <span style="display: block; font-weight: 650; color: var(--qp-ink); font-size: 1.05rem">{{title}}</span>
+            <span style="display: block; margin-top: 0.35rem; color: var(--qp-muted); font-size: 0.93rem; line-height: 1.5">{{description}}</span>
+            <span class="qp-meta" style="display: block; margin-top: 0.6rem">{{readingMinutes}} min read · Reviewed {{reviewed}}</span>
+          </a>
+          {{/each}}
+        </div>
+      </section>
+      {{/each}}
+      <p class="qp-meta" style="margin-top: 2.5rem">Looking for a tool instead? <a class="qp-link" href="/tools/">Browse all PDF tools</a>.</p>
+    </main>
+    {{> footer }}
+  </body>
+</html>

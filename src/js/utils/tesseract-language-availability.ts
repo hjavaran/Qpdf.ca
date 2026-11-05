@@ -91,7 +91,7 @@ function buildUnsupportedLanguageMessage(
   const availableText = formatTesseractLanguageList(availableLanguages);
 
   return [
-    trText('This BentoPDF build only bundles OCR data for {{availableText}}.', {
+    trText('This QPDF build only bundles OCR data for {{availableText}}.', {
       availableText,
     }),
     trText(
@@ -99,7 +99,7 @@ function buildUnsupportedLanguageMessage(
       { unavailableText }
     ),
     trText(
-      'Choose one of the bundled languages or rebuild the air-gapped bundle with the missing language added to --ocr-languages.'
+      'Choose one of the included languages.'
     ),
   ].join(' ');
 }

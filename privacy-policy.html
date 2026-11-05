@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">Privacy policy</h1>
+        <p>Effective November 4, 2026. This policy explains what information is, and is not, handled when you use qpdf.ca.</p>
+      </div>
+      <article class="qp-prose" style="max-width: 70ch; padding-bottom: 3rem">
+        <h2>Summary</h2>
+        <p>
+          QPDF does not collect your documents. PDF processing on qpdf.ca happens in your web browser, on your device.
+          QPDF has no user accounts, does not use analytics or advertising services, and does not set tracking
+          cookies.
+        </p>
+
+        <h2>Who operates QPDF</h2>
+        <p>
+          QPDF (qpdf.ca) is developed by <a href="https://wealththeory.ca/" rel="noopener">wealththeory.ca</a> in
+          Vancouver, British Columbia, Canada.
+        </p>
+
+        <h2>Your documents</h2>
+        <p>
+          When you select a file in a QPDF tool, it is read and processed by software running in your browser. QPDF
+          does not upload, receive, store or have access to your documents, their file names, or information
+          extracted from them. The processed result is saved directly to your device. See
+          <a href="/privacy/">how QPDF works</a> for a technical explanation.
+        </p>
+
+        <h2>Information stored in your browser</h2>
+        <p>QPDF uses your browser’s local storage features for functionality only:</p>
+        <ul>
+          <li>your list of favourite tools and interface preferences (localStorage);</li>
+          <li>copies of QPDF’s own application files so tools can work offline (Cache Storage, via a service worker);</li>
+          <li>fonts downloaded for OCR, so they are not downloaded again (IndexedDB).</li>
+        </ul>
+        <p>
+          This information stays on your device and is not transmitted to QPDF. You can delete it by clearing site
+          data for qpdf.ca in your browser.
+        </p>
+
+        <h2>Hosting and technical information</h2>
+        <p>
+          qpdf.ca is hosted by Cloudflare, Inc. on its Cloudflare Pages service. When your browser requests the
+          website’s pages and files, Cloudflare necessarily receives standard technical information such as your IP
+          address, the URLs requested, the time of the request and your browser’s user agent, and may process it to
+          deliver and secure the service, in accordance with
+          <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare’s privacy policy</a>. These
+          requests do not contain your documents. QPDF does not add analytics, advertising or tracking scripts to the
+          website.
+        </p>
+
+        <h2>Cookies</h2>
+        <p>
+          QPDF does not set cookies. Our hosting provider may use strictly necessary cookies for security purposes,
+          such as protecting the website from abuse.
+        </p>
+
+        <h2>Links to other websites</h2>
+        <p>
+          QPDF links to other websites, such as open-source projects and wealththeory.ca. Their privacy practices
+          are governed by their own policies.
+        </p>
+
+        <h2>Children</h2>
+        <p>QPDF does not knowingly collect personal information from anyone, including children.</p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          If QPDF’s practices change, this page will be updated and the effective date above revised. Material
+          changes — for example, any change that would involve handling your documents on a server — would be
+          clearly announced on the site before they take effect.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Questions about this policy can be sent through <a href="https://wealththeory.ca/" rel="noopener">wealththeory.ca</a>.
+        </p>
+      </article>
+    </main>
+    {{> footer }}
+  </body>
+</html>

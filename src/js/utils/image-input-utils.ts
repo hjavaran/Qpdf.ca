@@ -25,7 +25,7 @@ export const IMAGE_EXTENSIONS = [
   '.webp',
 ] as const;
 
-// TODO@alam00000: Implement image resolution
+// TODO: Implement image resolution
 export const IMAGE_ACCEPT = IMAGE_EXTENSIONS.join(',');
 
 export const IMAGE_FORMATS_LABEL =

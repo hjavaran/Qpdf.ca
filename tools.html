@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap" style="padding-bottom: 3rem">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">All PDF tools</h1>
+        <p>{{toolCount}} private PDF tools that run in your browser. Star the ones you use most to keep them on the homepage.</p>
+      </div>
+
+      <div class="qp-search" role="search">
+        <i class="ph ph-magnifying-glass qp-search-icon" aria-hidden="true"></i>
+        <label for="qp-search" class="sr-only">Search PDF tools</label>
+        <input id="qp-search" type="search" autocomplete="off" spellcheck="false" placeholder="Search tools" />
+        <kbd aria-hidden="true">/</kbd>
+      </div>
+
+      <div id="qp-results" hidden>
+        <div class="qp-section-title"><h2>Results</h2><span class="qp-hint" id="qp-results-count" aria-live="polite"></span></div>
+        <div class="qp-grid" id="qp-results-grid"></div>
+        <p class="qp-empty" id="qp-no-results" hidden>No tools match that search.</p>
+      </div>
+
+      <div id="qp-home-groups">
+        <div class="qp-chips" style="margin-top: 1.25rem" role="group" aria-label="Filter by category">
+          <button type="button" class="qp-chip" data-cat="all" aria-pressed="true">All</button>
+          {{#each categories}}<button type="button" class="qp-chip" data-cat="{{key}}" aria-pressed="false">{{name}}</button>
+          {{/each}}
+        </div>
+        <div id="qp-directory">
+          {{#each categories}}
+          <section class="qp-cat" id="cat-{{key}}" data-cat="{{key}}" aria-labelledby="cat-{{key}}-title">
+            <div class="qp-cat-head">
+              <h2 class="qp-cat-title" id="cat-{{key}}-title" style="font-size: 1.15rem; font-weight: 650; color: var(--qp-ink)">{{name}}</h2>
+              <p>{{blurb}}</p>
+              <span class="qp-count">{{tools.length}} tools</span>
+            </div>
+            <div class="qp-grid">
+              {{#each tools}}{{> tool-card }}{{/each}}
+            </div>
+          </section>
+          {{/each}}
+        </div>
+      </div>
+      {{#unless libreofficeEnabled}}
+      <p class="qp-meta" style="margin-top: 2.5rem; max-width: 70ch">
+        Word, Excel and PowerPoint to PDF conversion is not yet available: its conversion engine is being moved to a
+        dedicated asset host. Every listed tool processes files locally in your browser.
+      </p>
+      {{/unless}}
+    </main>
+    {{> footer }}
+    <script type="module" src="/src/js/qpdf/home.ts"></script>
+  </body>
+</html>

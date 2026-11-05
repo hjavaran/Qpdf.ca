@@ -1,0 +1,5 @@
+<nav class="qp-crumbs" aria-label="Breadcrumb">
+  <ol>
+    {{#each page.breadcrumbs}}<li>{{#if @last}}<span aria-current="page">{{name}}</span>{{else}}<a href="{{url}}">{{name}}</a>{{/if}}</li>{{/each}}
+  </ol>
+</nav>

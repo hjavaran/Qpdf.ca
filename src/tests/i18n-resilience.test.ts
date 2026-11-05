@@ -34,14 +34,13 @@ describe('i18n resilience on hardened browsers', () => {
     failLocaleFetches();
     const { initI18n, t } = await import('../js/i18n/i18n');
     await expect(initI18n()).resolves.toBeDefined();
-    expect(t('simpleMode.title')).not.toBe('simpleMode.title');
+    expect(t('common.error')).not.toBe('common.error');
   });
 
   it('t() serves bundled English instead of raw keys when fetches fail', async () => {
     failLocaleFetches();
     const { initI18n, t } = await import('../js/i18n/i18n');
     await initI18n();
-    expect(t('simpleMode.title')).toBe('PDF Tools');
     expect(t('tools:pdfToTiff.name')).toBe('PDF to TIFF');
     expect(t('common.error')).not.toBe('common.error');
   });
