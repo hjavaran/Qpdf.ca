@@ -28,7 +28,7 @@ export const SITE = {
 export const PAGES = {
   index: {
     path: '/',
-    title: 'Qpdf.ca — Private PDF Tools That Run in Your Browser',
+    title: 'Qpdf.ca — PDF Tools Built for Privacy',
     description:
       'Compress, merge, split, convert, sign and edit PDFs directly in your browser. Your documents stay on your device. Free, no sign-up.',
   },
