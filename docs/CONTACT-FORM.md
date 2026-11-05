@@ -30,3 +30,15 @@ works without a server or database. Until you add an access key the page shows
 
 ## Local development
 `WEB3FORMS_ACCESS_KEY=<key> npm run build && npm run serve:dist`
+
+## Troubleshooting: "The contact form is not set up yet"
+The key is read **at build time**, so check the deployment's build log for the line
+`Contact form …`:
+- `CONFIGURED` → hard-refresh the page (Ctrl/Cmd+Shift+R); the form is live.
+- `… is not set in this build's environment variables` → the variable is missing for
+  that build. The name must be exactly `WEB3FORMS_ACCESS_KEY`, added under
+  **Production** (not only Preview), with type **Text** (not an encrypted secret), and
+  you must **redeploy** afterwards — saving a variable does not change an existing build.
+- `… is set but is not a valid key` → the value is not a Web3Forms key (a UUID such as
+  `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`). Copy it again from the Web3Forms email.
+  Surrounding spaces or quotes are ignored.

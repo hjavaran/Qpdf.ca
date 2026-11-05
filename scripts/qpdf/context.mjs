@@ -19,12 +19,18 @@ export const ANALYTICS_TOKEN = /^[a-f0-9]{32}$/i.test(env.CF_ANALYTICS_TOKEN || 
   ? env.CF_ANALYTICS_TOKEN
   : '';
 
-/** Web3Forms public access key for the contact form (public by design). Optional. */
-export const WEB3FORMS_KEY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-  env.WEB3FORMS_ACCESS_KEY || ''
-)
-  ? env.WEB3FORMS_ACCESS_KEY
+/** Web3Forms public access key for the contact form (public by design). Optional.
+ *  Tolerates pasted whitespace, newlines and surrounding quotes. */
+const RAW_W3F = (env.WEB3FORMS_ACCESS_KEY || '').trim().replace(/^["']|["']$/g, '').trim();
+export const WEB3FORMS_KEY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(RAW_W3F)
+  ? RAW_W3F
   : '';
+/** Human-readable reason for the build log when the key is missing or invalid. */
+export const WEB3FORMS_STATUS = WEB3FORMS_KEY
+  ? 'ok'
+  : env.WEB3FORMS_ACCESS_KEY === undefined
+    ? 'WEB3FORMS_ACCESS_KEY is not set in this build\'s environment variables (check the name, that it is under Production, and that you redeployed)'
+    : `WEB3FORMS_ACCESS_KEY is set but is not a valid key (expected a UUID like xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx; got ${RAW_W3F.length} characters)`;
 
 export const LIBREOFFICE_ENABLED = Boolean(env.VITE_LIBREOFFICE_ASSET_URL);
 

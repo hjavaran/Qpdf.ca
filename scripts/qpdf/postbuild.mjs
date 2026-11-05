@@ -20,6 +20,7 @@ import {
   LIBREOFFICE_ENABLED,
   ANALYTICS_TOKEN,
   WEB3FORMS_KEY,
+  WEB3FORMS_STATUS,
 } from './context.mjs';
 import { TOOLS } from '../../src/data/tools.mjs';
 import { loadGuides, ROOT } from './guides.mjs';
@@ -378,6 +379,6 @@ log(
     `largest ${heavy[0][0]} ${(heavy[0][1].bytes / 1048576).toFixed(1)} MiB`
 );
 log(`sitemap: ${urls.length} URLs · LibreOffice tools ${LIBREOFFICE_ENABLED ? 'enabled' : 'disabled (no asset host configured)'}`);
-log(`Contact form ${WEB3FORMS_KEY ? 'CONFIGURED (api.web3forms.com allowed in CSP)' : 'NOT configured (WEB3FORMS_ACCESS_KEY not set; form disabled)'}`);
+log(`Contact form ${WEB3FORMS_KEY ? 'CONFIGURED (api.web3forms.com allowed in CSP)' : `NOT configured — ${WEB3FORMS_STATUS}`}`);
 log(`Cloudflare Web Analytics ${ANALYTICS_TOKEN ? 'ENABLED (beacon + CSP allowance)' : 'disabled (CF_ANALYTICS_TOKEN not set)'}`);
 log(`build ${buildId} ready for Cloudflare Pages`);
