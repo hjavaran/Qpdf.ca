@@ -34,6 +34,8 @@
           Get your PDF under 100KB for portals with strict upload limits.
         </p>
 
+        <div class="qp-cmp-grid">
+        <div class="qp-cmp-main">
         <div
           id="drop-zone"
           class="relative flex flex-col items-center justify-center w-full h-48 md:h-64 border-2 border-dashed border-gray-600 rounded-xl cursor-pointer bg-gray-900 hover:bg-gray-700 transition-colors duration-300"
@@ -84,7 +86,11 @@
 
         <div id="file-display-area" class="mt-4 space-y-2"></div>
 
+        </div>
+        <div class="qp-cmp-side">
         {{> compress-options targetSize="100" targetUnit="kb" }}
+        </div>
+        </div>
       </div>
     </div>
 

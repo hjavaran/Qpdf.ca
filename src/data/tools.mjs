@@ -82,6 +82,7 @@ export const TOOLS = [
   // ───────────────────────────── Compress & Optimize ─────────────────────────────
   {
     id: 'compress-pdf',
+    wide: true,
     slug: 'compress-pdf',
     name: 'Compress PDF',
     cat: 'compress',
@@ -109,6 +110,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-4mb',
+    wide: true,
     slug: 'compress-pdf-to-4mb',
     name: 'Compress PDF to 4 MB',
     cat: 'compress',
@@ -126,6 +128,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-100kb',
+    wide: true,
     slug: 'compress-pdf-to-100kb',
     name: 'Compress PDF to 100 KB',
     cat: 'compress',
@@ -146,6 +149,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-200kb',
+    wide: true,
     slug: 'compress-pdf-to-200kb',
     name: 'Compress PDF to 200 KB',
     cat: 'compress',
@@ -163,6 +167,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-500kb',
+    wide: true,
     slug: 'compress-pdf-to-500kb',
     name: 'Compress PDF to 500 KB',
     cat: 'compress',
@@ -180,6 +185,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-3mb',
+    wide: true,
     slug: 'compress-pdf-to-3mb',
     name: 'Compress PDF to 3 MB',
     cat: 'compress',
@@ -197,6 +203,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-to-2mb',
+    wide: true,
     slug: 'compress-pdf-to-2mb',
     name: 'Compress PDF to 2 MB',
     cat: 'compress',
@@ -214,6 +221,7 @@ export const TOOLS = [
   },
   {
     id: 'compress-pdf-for-email',
+    wide: true,
     slug: 'compress-pdf-for-email',
     name: 'Compress PDF for Email',
     cat: 'compress',

@@ -169,21 +169,21 @@ describe('Compress PDF page', () => {
     expect(mocks.compressWithHyper).not.toHaveBeenCalled();
   });
 
-  // QPDF shows a result card with sizes and an explicit Download button
-  // instead of downloading automatically.
-  const clickResultDownload = async () => {
+  // Qpdf.ca saves the result automatically once compression succeeds and shows
+  // a results view with a "Download again" button.
+  const waitForResult = async () => {
     await vi.waitFor(() =>
       expect(document.getElementById('qp-compress-download')).not.toBeNull()
     );
-    (document.getElementById('qp-compress-download') as HTMLButtonElement).click();
   };
 
   it('sends the password and says the copy has none', async () => {
     await addLockedFile('locked.pdf');
     await unlock('locked.pdf');
     clickCompress();
-    await clickResultDownload();
-    expect(mocks.downloadFile).toHaveBeenCalled();
+    await waitForResult();
+    expect(mocks.downloadFile).toHaveBeenCalledTimes(1);
+    expect(mocks.downloadFile.mock.calls[0][1]).toBe('locked-compressed.pdf');
     expect(mocks.compressWithHyper).toHaveBeenCalledWith(
       expect.any(ArrayBuffer),
       expect.objectContaining({ password: PASSWORD })
@@ -191,6 +191,10 @@ describe('Compress PDF page', () => {
     expect(
       document.getElementById('qp-compress-result')?.textContent
     ).toContain('the compressed copy has no password');
+    (
+      document.getElementById('qp-compress-download') as HTMLButtonElement
+    ).click();
+    expect(mocks.downloadFile).toHaveBeenCalledTimes(2); // manual download again
   });
 
   it('marks the password wrong when the engine rejects it', async () => {
@@ -219,14 +223,15 @@ describe('Compress PDF page', () => {
       expect(mocks.verifyHyperPassword).toHaveBeenCalledTimes(2)
     );
     clickCompress();
-    await clickResultDownload();
+    await waitForResult();
+    expect(mocks.downloadFile).toHaveBeenCalledTimes(1);
     const [zipBlob, zipName] = mocks.downloadFile.mock.calls[0];
     expect(zipName).toBe('compressed-pdfs.zip');
     const JSZip = (await import('jszip')).default;
     const zip = await JSZip.loadAsync(await (zipBlob as Blob).arrayBuffer());
     expect(Object.keys(zip.files).sort()).toEqual([
-      'report (1).pdf',
-      'report.pdf',
+      'report-compressed (1).pdf',
+      'report-compressed.pdf',
     ]);
   });
 

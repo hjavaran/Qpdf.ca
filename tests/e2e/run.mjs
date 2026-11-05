@@ -134,7 +134,7 @@ async function runTool(browser, t) {
     const bad = auditRequests(ctx, since);
     if (bad.length) throw new Error(`network audit failed: ${bad.slice(0, 5).join('; ')}`);
     const secs = ((Date.now() - started) / 1000).toFixed(1);
-    record(t.name + offlineNote, true, `${detail} (${secs}s, ${fs.statSync(out).size.toLocaleString()} B)`, { requests: ctx.requests.length });
+    record(t.name + offlineNote, true, `${detail} [saved as ${dl.suggestedFilename()}] (${secs}s, ${fs.statSync(out).size.toLocaleString()} B)`, { requests: ctx.requests.length });
   } catch (e) {
     await page.screenshot({ path: path.join(ART, `${t.name.replace(/[^a-z0-9]+/gi, '_')}-fail.png`) }).catch(() => {});
     record(t.name + (t.offline ? ' [offline]' : ''), false, `${e.message.split('\n')[0]}${consoleErrors.length ? ' | pageerror: ' + consoleErrors[0].slice(0, 160) : ''}`);
@@ -149,9 +149,9 @@ const expectPages = (n) => (f) => {
   return `${n} pages`;
 };
 const resultText = async (page) => ((await page.locator('#qp-compress-result').textContent().catch(() => '')) || '').replace(/\s+/g, ' ').trim();
+// Qpdf.ca downloads the result automatically; just wait for the results view.
 const clickDownload = async (page) => {
   await page.locator('#qp-compress-download').waitFor({ timeout: 900000 });
-  await page.click('#qp-compress-download');
 };
 
 const TESTS = [
@@ -165,8 +165,12 @@ const TESTS = [
       const after = fs.statSync(f).size;
       expectPages(4)(f);
       if (!(after < before)) throw new Error(`not smaller: ${before} → ${after}`);
-      await page.waitForTimeout(500);
-      return `${(before / 1048576).toFixed(2)} MB → ${(after / 1048576).toFixed(2)} MB (−${(100 - (after / before) * 100).toFixed(1)}%); card: "${(await resultText(page)).slice(0, 110)}"`;
+      await page.waitForTimeout(1500); // let the ring animation finish
+      const ringNum = await page.locator('.qp-ring-num').textContent();
+      const expected = Math.round(100 - (after / before) * 100) + '%';
+      if (ringNum !== expected) throw new Error(`ring shows ${ringNum}, expected ${expected}`);
+      const name = path.basename(f);
+      return `ring ${ringNum} matches actual saving; auto-download; ${(before / 1048576).toFixed(2)} MB → ${(after / 1048576).toFixed(2)} MB (−${(100 - (after / before) * 100).toFixed(1)}%); card: "${(await resultText(page)).slice(0, 110)}"`;
     },
   },
   {
@@ -417,7 +421,7 @@ TESTS.push({
   name: 'control: lossless without target stays large',
   slug: 'compress-pdf',
   files: ['image-heavy.pdf'],
-  prepare: (p) => p.selectOption('#compression-level', 'lossless'),
+  prepare: (p) => p.click('.qp-seg-btn[data-value="lossless"]'),
   after: clickDownload,
   validate: (f) => {
     const a = fs.statSync(f).size;
@@ -434,7 +438,7 @@ for (const n of [3, 4]) {
       const v = await p.inputValue('#target-size');
       const u = await p.inputValue('#target-size-unit');
       if (v !== String(n) || u !== 'mb') throw new Error(`page preset is ${v} ${u}, expected ${n} mb`);
-      await p.selectOption('#compression-level', 'lossless');
+      await p.click('.qp-seg-btn[data-value="lossless"]');
     },
     after: clickDownload,
     validate: async (f, page) => {
@@ -451,7 +455,7 @@ TESTS.push({
   slug: 'compress-pdf-to-100kb',
   files: ['scanned.pdf'],
   prepare: async (p) => {
-    await p.selectOption('#compression-level', 'lossless');
+    await p.click('.qp-seg-btn[data-value="lossless"]');
   },
   after: clickDownload,
   validate: async (f, page) => {
