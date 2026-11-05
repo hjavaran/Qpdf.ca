@@ -83,6 +83,36 @@ for (const f of htmlFiles) {
   if (s !== before) fs.writeFileSync(f, s);
 }
 
+// ── 2b. External links: new tab, noopener noreferrer, nofollow (except wealththeory.ca) ──
+const THIRD_PARTY_DIR = /^\/(pdfjs-viewer|pdfjs-annotation-viewer|libreoffice-wasm|wasm|vendor)\//;
+const isOwnHost = (h) => h === 'qpdf.ca' || h.endsWith('.qpdf.ca');
+const isFollowHost = (h) => h === 'wealththeory.ca' || h.endsWith('.wealththeory.ca');
+function rewriteExternalLinks(html) {
+  return html.replace(/<a\b([^>]*)>/gi, (m, attrs) => {
+    const hm = attrs.match(/\shref\s*=\s*(?:"([^"]*)"|'([^']*)')/i);
+    if (!hm) return m;
+    const href = hm[1] ?? hm[2];
+    if (!/^https?:\/\//i.test(href)) return m;
+    let host;
+    try {
+      host = new URL(href).hostname.toLowerCase();
+    } catch {
+      return m;
+    }
+    if (isOwnHost(host)) return m;
+    const clean = attrs.replace(/\s(?:target|rel)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+    return `<a${clean} target="_blank" rel="noopener noreferrer${isFollowHost(host) ? '' : ' nofollow'}">`;
+  });
+}
+let externalLinkCount = 0;
+for (const f of walk(DIST).filter((x) => x.endsWith('.html') && !THIRD_PARTY_DIR.test(rel(x)))) {
+  const before = fs.readFileSync(f, 'utf8');
+  const after = rewriteExternalLinks(before);
+  if (after !== before) fs.writeFileSync(f, after);
+  externalLinkCount += (after.match(/ target="_blank" rel="noopener noreferrer/g) || []).length;
+}
+log(`external links rewritten: ${externalLinkCount}`);
+
 // ── 3. sitemap.xml, robots.txt, _redirects, _headers ──────────────────────
 const urls = [
   { loc: '/', priority: '1.0' },
@@ -122,7 +152,7 @@ for (const t of TOOLS) {
   if (t.id !== t.slug || !ENABLED_TOOLS.includes(t)) redirects.push(`/${t.id} ${target} 301`, `/${t.id}/ ${target} 301`);
   redirects.push(`/${t.id}.html ${target} 301`);
 }
-redirects.push('/wasm-settings /tools/ 301', '/wasm-settings.html /tools/ 301');
+redirects.push('/compress-pdf-to-1mb /compress-pdf/ 301', '/compress-pdf-to-1mb/ /compress-pdf/ 301', '/compress-pdf-to-1mb.html /compress-pdf/ 301', '/wasm-settings /tools/ 301', '/wasm-settings.html /tools/ 301');
 for (const key of ['about', 'privacy', 'terms']) redirects.push(`/${key}.html /${key}/ 301`);
 redirects.push('/faq /about/ 301', '/contact.html /contact/ 301', '/licensing /licenses/ 301', '/index.html / 301');
 fs.writeFileSync(path.join(DIST, '_redirects'), redirects.join('\n') + '\n');

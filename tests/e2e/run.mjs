@@ -409,6 +409,60 @@ const TESTS = [
   },
 ];
 
+
+// Target-size presets must pass the page's target to the engine. The lossless level on a
+// 7.7 MB file stays far above 4 MB by itself, so only the target can bring it under.
+const MB = 1024 * 1024;
+TESTS.push({
+  name: 'control: lossless without target stays large',
+  slug: 'compress-pdf',
+  files: ['image-heavy.pdf'],
+  prepare: (p) => p.selectOption('#compression-level', 'lossless'),
+  after: clickDownload,
+  validate: (f) => {
+    const a = fs.statSync(f).size;
+    if (a <= 4 * MB) throw new Error(`control too small (${a}); test would prove nothing`);
+    return `${(a / MB).toFixed(2)} MB (> 4 MB without a target)`;
+  },
+});
+for (const n of [3, 4]) {
+  TESTS.push({
+    name: `compress to ${n} MB preset hits target`,
+    slug: `compress-pdf-to-${n}mb`,
+    files: ['image-heavy.pdf'],
+    prepare: async (p) => {
+      const v = await p.inputValue('#target-size');
+      const u = await p.inputValue('#target-size-unit');
+      if (v !== String(n) || u !== 'mb') throw new Error(`page preset is ${v} ${u}, expected ${n} mb`);
+      await p.selectOption('#compression-level', 'lossless');
+    },
+    after: clickDownload,
+    validate: async (f, page) => {
+      const a = fs.statSync(f).size;
+      if (a > n * MB) throw new Error(`${(a / MB).toFixed(2)} MB exceeds ${n} MB target`);
+      expectPages(4)(f);
+      const card = await resultText(page);
+      return `${(a / MB).toFixed(2)} MB ≤ ${n} MB; card: "${card.slice(0, 60)}…${/target/i.test(card) ? ' [mentions target]' : ''}"`;
+    },
+  });
+}
+TESTS.push({
+  name: 'unreachable target is reported, not faked',
+  slug: 'compress-pdf-to-100kb',
+  files: ['scanned.pdf'],
+  prepare: async (p) => {
+    await p.selectOption('#compression-level', 'lossless');
+  },
+  after: clickDownload,
+  validate: async (f, page) => {
+    const a = fs.statSync(f).size;
+    const card = await resultText(page);
+    if (a <= 100 * 1024) return `reached ${(a / 1024).toFixed(0)} KB (target met)`;
+    if (!/(still above|Target Not Reached)/i.test(card)) throw new Error('missed target without saying so: ' + card.slice(0, 120));
+    return `${(a / 1024).toFixed(0)} KB > 100 KB, honestly reported: "${card.slice(0, 90)}…"`;
+  },
+});
+
 TESTS.push({
   name: 'redact text (true removal)',
   slug: 'redact-pdf',

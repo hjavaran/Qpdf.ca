@@ -1,4 +1,4 @@
-# Qpdf guides (content system)
+# Qpdf.ca guides (content system)
 
 Each guide is one Markdown file in this folder. The build turns
 `content/guides/<slug>.md` into `https://qpdf.ca/guides/<slug>/`, adds it to
@@ -18,8 +18,8 @@ category: pdf-basics                 # required, one of the keys below
 published: 2026-11-04                # required, YYYY-MM-DD
 reviewed: 2026-11-04                 # last reviewed date (defaults to published)
 slug: custom-url-segment             # optional, defaults to the file name
-metaTitle: Custom <title> | Qpdf     # optional
-author: Qpdf                         # optional, defaults to Qpdf
+metaTitle: Custom <title> | Qpdf.ca     # optional
+author: Qpdf.ca                         # optional, defaults to Qpdf.ca
 lang: en-CA                          # optional; use fr-CA for French articles
 translations: { fr-CA: /fr/guides/… } # optional, reserved for French versions
 toc: true                            # optional; TOC shows when ≥ 3 H2 headings

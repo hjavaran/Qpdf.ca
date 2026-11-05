@@ -84,6 +84,17 @@ for (const f of pages) {
   if (/og:url" content="(?!https:\/\/qpdf\.ca)/.test(html)) err(`${r}: og:url not on qpdf.ca`);
   if (/bentopdf\.com/i.test(html)) err(`${r}: references bentopdf.com`);
   if (/cdn\.jsdelivr\.net|unpkg\.com|googleapis|gstatic|githack/.test(html)) err(`${r}: third-party host in HTML`);
+  // External links: new tab + noopener noreferrer; nofollow unless wealththeory.ca
+  for (const m of html.matchAll(/<a\b([^>]*)>/gi)) {
+    const hm = m[1].match(/\shref="(https?:\/\/[^"]+)"/i);
+    if (!hm) continue;
+    let host = '';
+    try { host = new URL(hm[1]).hostname.toLowerCase(); } catch { continue; }
+    if (host === 'qpdf.ca' || host.endsWith('.qpdf.ca')) continue;
+    const follow = host === 'wealththeory.ca' || host.endsWith('.wealththeory.ca');
+    if (!/target="_blank"/.test(m[1]) || !/rel="noopener noreferrer( nofollow)?"/.test(m[1])) err(`${r}: external link without target/rel: ${hm[1]}`);
+    else if (follow === /nofollow/.test(m[1])) err(`${r}: wrong nofollow for ${hm[1]}`);
+  }
   // Internal links and assets
   for (const m of html.matchAll(/(?:href|src)="(\/[^"]*)"/g)) {
     const u = m[1];

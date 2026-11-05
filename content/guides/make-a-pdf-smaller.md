@@ -26,7 +26,7 @@ Text itself is tiny. A 100-page text-only report is often well under 1 MB.
 
 Open [Compress PDF](/compress-pdf/) and try the **Recommended** level first. It recompresses images to a
 sensible quality, cleans up fonts and removes unused data, while keeping text selectable and links and forms
-working. Compare the original and new sizes that Qpdf shows, then open the result and zoom in on a scanned page
+working. Compare the original and new sizes that Qpdf.ca shows, then open the result and zoom in on a scanned page
 or photo to check it.
 
 If the file is still too large, try **Stronger compression**, which lowers image quality further. If the images
@@ -34,8 +34,8 @@ matter — photographs, plans, medical images — try **Higher quality** instead
 
 ## Aim for a target size
 
-Upload portals often have a fixed limit. Enter it as the target size and Qpdf searches for the best quality that
-fits. Aim a little below the limit, and if the target cannot be reached, Qpdf tells you rather than producing an
+Upload portals often have a fixed limit. Enter it as the target size and Qpdf.ca searches for the best quality that
+fits. Aim a little below the limit, and if the target cannot be reached, Qpdf.ca tells you rather than producing an
 unreadable file.
 
 ## When compression is not enough
@@ -49,7 +49,7 @@ unreadable file.
 ## Things to avoid
 
 - **Rasterizing text pages.** Turning pages into images can shrink some scans, but it removes selectable,
-  searchable text and can make the file larger. Qpdf leaves it off unless you choose it.
-- **Compressing signed documents.** Any change to a digitally signed PDF invalidates the signature. Qpdf leaves
+  searchable text and can make the file larger. Qpdf.ca leaves it off unless you choose it.
+- **Compressing signed documents.** Any change to a digitally signed PDF invalidates the signature. Qpdf.ca leaves
   signed files untouched by default; compress before signing instead.
 - **Compressing the only copy.** Keep the original until you have checked the smaller version.

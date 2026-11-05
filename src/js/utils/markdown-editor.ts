@@ -107,7 +107,7 @@ function escapedMath(state: StateInline, silent: boolean): boolean {
   return false;
 }
 
-const DEFAULT_MARKDOWN = `# Welcome to the Qpdf Markdown Editor
+const DEFAULT_MARKDOWN = `# Welcome to the Markdown Editor
 
 This is a **live preview** markdown editor with full plugin support.
 
@@ -203,12 +203,12 @@ graph TD
 \`\`\`mermaid
 sequenceDiagram
     participant User
-    participant Qpdf
+    participant Q as Qpdf
     participant Server
-    User->>Qpdf: Upload PDF
-    Qpdf->>Qpdf: Process locally
-    Qpdf-->>User: Download result
-    Note over Qpdf: No server needed!
+    User->>Q: Upload PDF
+    Q->>Q: Process locally
+    Q-->>User: Download result
+    Note over Q: No server needed!
 \`\`\`
 
 ### Pie Chart

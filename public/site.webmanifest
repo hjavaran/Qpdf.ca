@@ -1,6 +1,6 @@
 {
-  "name": "Qpdf — Private PDF Tools",
-  "short_name": "Qpdf",
+  "name": "Qpdf.ca — Private PDF Tools",
+  "short_name": "Qpdf.ca",
   "description": "Private PDF tools that run in your browser. Your documents stay on your device.",
   "start_url": "/",
   "scope": "/",

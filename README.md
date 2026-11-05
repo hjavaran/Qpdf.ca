@@ -6,7 +6,7 @@ Qpdf is a free, privacy-first PDF toolkit. Every tool processes documents
 **inside the visitor's browser** with JavaScript and WebAssembly; documents are
 never uploaded. It is a static site designed for Cloudflare Pages.
 
-- 111 working tools (compress, merge, split, organize, edit, redact, sign,
+- 112 working tools (compress, merge, split, organize, edit, redact, sign,
   protect/unlock, OCR, PDF/A, conversions…), plus 13 LibreOffice-based Office
   converters that switch on once an R2 asset host is configured.
 - Light, minimal design; animated maple-leaf background; favourites stored

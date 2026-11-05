@@ -1404,3 +1404,47 @@ html[data-theme='dark'] #text-editor-app {
   --ecbg: #151517; --ecpanel: #1d1d20; --ecpanel2: #26262a; --ecline: #2d2d32;
   --ectext: #f2f1ee; --ecmuted: #a3a19a; --ecaccent: #e0414f; --ecstage: #121214;
 }
+
+/* ═════════════════════ Compress PDF feature section ═════════════════════ */
+.qp-feature { padding: 0.5rem 0 2rem; }
+.qp-feature-inner {
+  position: relative;
+  max-width: 820px;
+  margin-inline: auto;
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+  border: 1px solid var(--qp-border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--qp-accent-soft), var(--qp-surface) 70%);
+}
+@media (min-width: 640px) { .qp-feature-inner { padding: 2.4rem 2.75rem; } }
+.qp-feature h2 {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  color: var(--qp-ink);
+  max-width: 22ch;
+  margin-inline: auto;
+}
+.qp-feature p {
+  margin: 0.9rem auto 0;
+  max-width: 62ch;
+  font-size: 1.03rem;
+  line-height: 1.7;
+  color: var(--qp-text);
+}
+.qp-feature-points { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.25rem; }
+.qp-feature-points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--qp-border);
+  background: var(--qp-surface);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--qp-muted);
+}
+.qp-feature-points i { color: var(--qp-accent-text); font-size: 1rem; }

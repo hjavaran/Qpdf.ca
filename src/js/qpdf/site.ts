@@ -70,3 +70,19 @@ function loadAnalytics(): void {
 }
 if (document.readyState === 'complete') loadAnalytics();
 else window.addEventListener('load', loadAnalytics, { once: true });
+
+// Safety net for links created at runtime (tools, messages): external links open in a
+// new tab with noopener noreferrer (+ nofollow, except wealththeory.ca). Static pages are
+// rewritten at build time (scripts/qpdf/postbuild.mjs).
+document.addEventListener(
+  'click',
+  (e) => {
+    const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+    if (!a || !/^https?:$/.test(a.protocol)) return;
+    const h = a.hostname.toLowerCase();
+    if (h === location.hostname || h === 'qpdf.ca' || h.endsWith('.qpdf.ca')) return;
+    a.target = '_blank';
+    a.rel = h === 'wealththeory.ca' || h.endsWith('.wealththeory.ca') ? 'noopener noreferrer' : 'noopener noreferrer nofollow';
+  },
+  true
+);

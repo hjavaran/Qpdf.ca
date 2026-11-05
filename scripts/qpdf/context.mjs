@@ -1,4 +1,4 @@
-// Build-time page model for Qpdf.
+// Build-time page model for Qpdf.ca.
 //
 // getPageContext(pagePath) returns the Handlebars context for any HTML entry:
 // site constants, navigation, page metadata (title, description, canonical,
@@ -82,6 +82,7 @@ const POPULAR_ORDER = [
   'pdf-to-jpg', 'organize-pdf', 'extract-pages', 'delete-pages', 'rotate-pdf',
   'page-numbers', 'add-watermark', 'protect-pdf', 'unlock-pdf', 'flatten-pdf',
   'remove-metadata', 'ocr-pdf', 'redact-pdf', 'word-to-pdf',
+  'fix-page-size', 'remove-blank-pages',
 ];
 export const POPULAR = POPULAR_ORDER.map((id) => byId.get(id))
   .filter((t) => t && isToolEnabled(t))
@@ -90,9 +91,9 @@ export const POPULAR = POPULAR_ORDER.map((id) => byId.get(id))
 function privacyNote(t) {
   const info = ENGINE_INFO[t.engine];
   const base =
-    'This tool runs entirely in your browser. Your file is read from your device, processed in memory, and saved back to your device — it is never uploaded to Qpdf or anyone else.';
+    'This tool runs entirely in your browser. Your file is read from your device, processed in memory, and saved back to your device — it is never uploaded to Qpdf.ca or anyone else.';
   if (t.engine === 'libreoffice') {
-    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from Qpdf’s asset server.`;
+    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from Qpdf.ca’s asset server.`;
   }
   if (info?.download) {
     return `${base} The first time you use it, your browser downloads the ${info.label} (software only, about ${info.download}) from qpdf.ca and keeps it for offline use.`;
@@ -247,7 +248,7 @@ function toolContext(t) {
         {
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: `${t.name} — Qpdf`,
+          name: `${t.name} — Qpdf.ca`,
           url: abs(url),
           description: t.desc,
           applicationCategory: 'UtilitiesApplication',
@@ -255,7 +256,7 @@ function toolContext(t) {
           browserRequirements: 'Requires JavaScript and WebAssembly',
           isAccessibleForFree: true,
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'CAD' },
-          publisher: { '@type': 'Organization', name: 'Qpdf', url: SITE.url },
+          publisher: { '@type': 'Organization', name: 'Qpdf.ca', url: SITE.url },
         },
       ],
     }),
@@ -280,7 +281,7 @@ function staticContext(key) {
     jsonLd.push({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Qpdf',
+      name: 'Qpdf.ca',
       url: `${SITE.url}/`,
       description: SITE.description,
       inLanguage: SITE.lang,
@@ -293,7 +294,7 @@ function staticContext(key) {
       url: abs(p.path),
       description: p.description,
       inLanguage: SITE.lang,
-      isPartOf: { '@type': 'WebSite', name: 'Qpdf', url: `${SITE.url}/` },
+      isPartOf: { '@type': 'WebSite', name: 'Qpdf.ca', url: `${SITE.url}/` },
     });
   }
   return {
@@ -330,7 +331,7 @@ function guideContext(g) {
           dateModified: g.reviewed,
           inLanguage: g.lang,
           author: { '@type': 'Organization', name: g.author },
-          publisher: { '@type': 'Organization', name: 'Qpdf', url: SITE.url },
+          publisher: { '@type': 'Organization', name: 'Qpdf.ca', url: SITE.url },
           mainEntityOfPage: abs(g.path),
         },
       ],
@@ -351,7 +352,7 @@ export function getPageContext(pagePath) {
     const t = byId.get(m[1]);
     if (t) return { ...ctx, ...toolContext(t) };
     // Unregistered upstream page (not published).
-    return { ...ctx, page: pageMeta({ key: m[1], title: 'Qpdf', description: '', path: `/${m[1]}/`, noindex: true }) };
+    return { ...ctx, page: pageMeta({ key: m[1], title: 'Qpdf.ca', description: '', path: `/${m[1]}/`, noindex: true }) };
   }
   if ((m = p.match(/\/guides\/([a-z0-9-]+)\.html$/))) {
     if (m[1] === 'index') return { ...ctx, ...staticContext('guides') };

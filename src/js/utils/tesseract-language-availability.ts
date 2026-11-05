@@ -91,7 +91,7 @@ function buildUnsupportedLanguageMessage(
   const availableText = formatTesseractLanguageList(availableLanguages);
 
   return [
-    trText('This Qpdf build only bundles OCR data for {{availableText}}.', {
+    trText('This Qpdf.ca build only bundles OCR data for {{availableText}}.', {
       availableText,
     }),
     trText(
