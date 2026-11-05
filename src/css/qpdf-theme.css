@@ -903,6 +903,11 @@ input[type='range'] {
 .qp-crumbs [aria-current='page'] { color: var(--qp-text); }
 
 /* ── Tool page additions ───────────────────────────────────────────────── */
+/* Reserve room for the toolbar that tool-page.ts inserts after the back
+   button, so the heading does not jump down when scripts run (CLS). Once the
+   toolbar sits between them this selector no longer matches. */
+#back-to-tools { min-height: 24px; }
+#back-to-tools + h1 { padding-top: calc(30px + 1rem); }
 .qp-toolbar {
   display: flex;
   flex-wrap: wrap;

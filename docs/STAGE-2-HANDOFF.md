@@ -25,7 +25,10 @@ future session needs to know to do that without touching the architecture.
    `reviewed`, `relatedTools`, `relatedGuides`, `sources`. Remove `draft: true`.
 3. Write the body in Markdown starting at `##` headings (the template supplies
    the H1). Link tools by URL, e.g. `[Compress PDF](/compress-pdf/)`.
-4. `npm run build && npm run check:dist`. The guide appears at
+4. `npm run build && npm run check:dist`. The build fails on an unknown
+   `relatedTools`/`relatedGuides` entry, a non-`YYYY-MM-DD` date, a source
+   without a title or `https://` URL, or `reviewed` earlier than `published`.
+   The guide appears at
    `/guides/<slug>/`, on `/guides/`, `/site-index/` and in `sitemap.xml`,
    with Article and BreadcrumbList structured data, an automatic table of
    contents (≥ 3 `##` sections), sources, related tools (as star-able cards)
@@ -67,8 +70,9 @@ Published so far (both short and original):
 
 - Home `/`, `/tools/`, `/privacy/`, `/privacy-policy/`, `/about/`, `/terms/`,
   `/guides/`, `/site-index/`, `/licenses/`.
-- 111 tool pages at `/<slug>/` — the full list is on `/site-index/` and in
-  `dist/sitemap.xml`. Key slugs: `compress-pdf`, `merge-pdf`, `split-pdf`,
+- 125 tool pages at `/<slug>/` (112 browser tools + 13 Office converters) —
+  the full list is on `/site-index/` and in `dist/sitemap.xml` (137 URLs with
+  the 9 content pages, the home page and the guides). Key slugs: `compress-pdf`, `merge-pdf`, `split-pdf`,
   `edit-pdf`, `jpg-to-pdf`, `pdf-to-jpg`, `extract-pdf-pages`,
   `reorder-pdf-pages`, `delete-pdf-pages`, `rotate-pdf`,
   `add-page-numbers-to-pdf`, `watermark-pdf`, `sign-pdf`,
@@ -110,9 +114,12 @@ Not built in Stage 1. The plan that fits the architecture:
 1. Make the repository public (AGPL) and deploy (see `docs/DEPLOYMENT.md`).
 2. Office converters are enabled via R2 (`docs/cloudflare-r2.md`); re-verify after any engine or CSP change.
 3. Run Lighthouse and Search Console after launch. Qpdf's own pages are light
-   (subset icon font, ~10 KB); tool pages still load the upstream application
-   bundle (~1.6 MB uncompressed: PDF.js, full icon sets). Splitting that
-   bundle per tool is the main remaining performance task (see docs/TESTING.md).
-   After adding icons, run `python3 scripts/qpdf/subset-icons.py`.
+   (subset icon font, ~10 KB). Phase A (see
+   [SEO-STAGE2-PHASE-A-REPORT.md](SEO-STAGE2-PHASE-A-REPORT.md)) bundled only
+   the Lucide icons the code uses (`scripts/qpdf/lucide-subset.mjs`), cutting
+   tool pages from ~1.35 MB to ~1.03 MB of JS/CSS, and removed the main layout
+   shifts. The remaining large shared chunk is PDF.js (`ui-*.js`, ~480 KB);
+   loading it lazily needs changes across upstream tool code.
+   After adding Phosphor icons, run `python3 scripts/qpdf/subset-icons.py`.
 4. Consider a custom, lighter page for Sign PDF (currently the PDF.js viewer
    with annotation tools).

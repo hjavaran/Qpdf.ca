@@ -59,9 +59,12 @@
             <li><strong>Tesseract</strong> for OCR (English and French).</li>
           </ul>
           <p>
-            Every one of these engines is served from Qpdf.ca’s own hosting, at a pinned version. Qpdf.ca does not load
-            scripts, fonts or engines from third-party content networks, and the site’s Content Security Policy
-            instructs your browser to refuse connections to any origin other than Qpdf.ca’s own.
+            Every one of these engines is served from Qpdf.ca’s own hosting, at a pinned version: qpdf.ca itself, and
+            <code>assets.qpdf.ca</code> (Qpdf.ca’s Cloudflare R2 storage) for the LibreOffice engine used by the Office
+            converters, whose files are too large for the main site. Qpdf.ca does not load scripts, fonts or engines
+            from third-party content networks. The site’s Content Security Policy tells your browser to refuse
+            connections to any other origin, except Cloudflare Web Analytics and, on the contact page, the Web3Forms
+            form service (both described below).
           </p>
 
           <h2 id="download-vs-upload">Downloading software is not uploading documents</h2>
@@ -124,7 +127,8 @@
           </p>
           <p>
             Some tools need large engines (for example PyMuPDF, about 54 MB). The first time you use one, your
-            browser downloads it from qpdf.ca; the tool page tells you before it does so. Qpdf.ca does not use advertising
+            browser downloads it from qpdf.ca, or from assets.qpdf.ca for the Office converters; the tool page tells you
+            before it does so. Qpdf.ca does not use advertising
             services.
           </p>
           <h3 id="contact-form-note">The contact form</h3>

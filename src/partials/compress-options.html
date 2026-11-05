@@ -65,6 +65,9 @@
     <p class="qp-cmp-hint">
       Qpdf.ca looks for the best quality that fits and tells you if the target cannot be reached. Leave empty to use the level as is.
     </p>
+    {{#if targetLimit}}<p class="qp-cmp-hint">
+      Preset slightly below {{targetLimit}} on purpose: many upload forms require files <em>smaller than</em> their limit, and some count 1 MB as 1,000,000 bytes rather than 1,048,576. Check the size of the downloaded file before you upload it.
+    </p>{{/if}}
   </div>
 
   <button id="process-btn" class="qp-btn qp-btn-primary qp-cmp-go" type="button">

@@ -32,29 +32,23 @@
         <h1
           class="text-2xl font-bold text-white mb-2"
         >{{tool.name}}</h1>
-        <p
-          class="text-gray-400 mb-4"
-          data-i18n="tools:pdfFormFiller.uploadHint"
-        >
+        <p class="text-gray-400 mb-4">
           Upload a PDF with form fields. Fill them directly in the viewer below,
-          then click the button to save and download the filled form. Also
-          supports XFA forms.
+          then save and download the filled form. Made for ordinary fillable
+          PDFs; some XFA forms can also be displayed.
         </p>
 
         <div
-          class="mb-6 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg"
+          class="mb-6 p-3 bg-amber-900/20 border border-amber-700/50 rounded-lg"
+          role="note"
+          id="qp-ircc-form-warning"
         >
-          <p class="text-sm text-blue-300">
-            <strong data-i18n="tools:pdfFormFiller.xfaNoteTitle"
-              >Note on XFA Forms:</strong
-            >
-            <span data-i18n="tools:pdfFormFiller.xfaNoteDescription"
-              >XFA (XML Forms Architecture) is a legacy format that's only
-              supported by certain PDF viewers like Firefox. If you
-              open an XFA PDF in other software and see blank pages or no form
-              fields, it means that viewer doesn't support XFA. To view and fill
-              XFA forms properly, try this form filler or Firefox.</span
-            >
+          <p class="text-sm text-amber-200">
+            <strong>Government forms with a Validate button or 2D barcode — including many IRCC forms:</strong>
+            open, fill, validate and save them only in Adobe Acrobat Reader, as the
+            issuing department instructs. Qpdf.ca may be able to display an XFA form,
+            but that does not mean its validation, barcodes or submission will work.
+            Do not fill, flatten, compress, merge or re-save these forms here.
           </p>
         </div>
 

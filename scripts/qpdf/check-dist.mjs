@@ -73,14 +73,21 @@ for (const f of pages) {
       seenDesc.set(desc, r);
     }
   }
+  const ldTypes = [];
   for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try {
       const o = JSON.parse(m[1]);
       if (!o['@context'] || !o['@type']) err(`${r}: JSON-LD missing @context/@type`);
+      ldTypes.push(o['@type']);
+      if (o['@type'] === 'Article') {
+        for (const k of ['headline', 'datePublished', 'dateModified', 'mainEntityOfPage']) if (!o[k]) err(`${r}: Article JSON-LD missing ${k}`);
+        if (/rating|review/i.test(JSON.stringify(o))) err(`${r}: Article JSON-LD must not contain ratings or reviews`);
+      }
     } catch (e) {
       err(`${r}: invalid JSON-LD (${e.message})`);
     }
   }
+  if (/^\/guides\/[a-z0-9-]+\/index\.html$/.test(r) && !ldTypes.includes('Article')) err(`${r}: guide without Article JSON-LD`);
   if (/og:url" content="(?!https:\/\/qpdf\.ca)/.test(html)) err(`${r}: og:url not on qpdf.ca`);
   if (/bentopdf\.com/i.test(html)) err(`${r}: references bentopdf.com`);
   if (/cdn\.jsdelivr\.net|unpkg\.com|googleapis|gstatic|githack/.test(html)) err(`${r}: third-party host in HTML`);
@@ -115,6 +122,9 @@ for (const loc of locs) {
   if (!indexable.has(p)) err(`sitemap: ${loc} is not an indexable page`);
 }
 for (const u of indexable) if (!locs.includes(SITE + u)) warnings.push(`indexable page missing from sitemap: ${u}`);
+for (const m of sitemap.matchAll(/<url><loc>([^<]+)<\/loc>(<lastmod>([^<]+)<\/lastmod>)?/g)) {
+  if (/\/guides\/[a-z0-9-]+\/$/.test(m[1]) && !/^\d{4}-\d{2}-\d{2}$/.test(m[3] || '')) err(`sitemap: guide ${m[1]} without a valid lastmod`);
+}
 if (new Set(locs).size !== locs.length) err('sitemap: duplicate URLs');
 
 const robots = fs.readFileSync(path.join(DIST, 'robots.txt'), 'utf8');

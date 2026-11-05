@@ -102,6 +102,18 @@ export function redactionScrubTerms(
   return [...terms.values()].sort((a, b) => b.length - a.length);
 }
 
+/**
+ * True when at least one applied redaction was an area (box) mark. Area
+ * marks carry no text, so copies of the covered words elsewhere in the file
+ * (bookmarks, comments, attachments, properties) cannot be scrubbed for them.
+ */
+export function hasAppliedAreaRedactions(
+  texts: Iterable<string | undefined>
+): boolean {
+  for (const text of texts) if (!text?.trim()) return true;
+  return false;
+}
+
 export async function scrubRedactedText(
   bytes: Uint8Array,
   terms: string[]
@@ -500,6 +512,16 @@ async function handleFiles(files: FileList) {
             documentId && redactionTracker
               ? redactionTracker.appliedTexts(documentId)
               : [];
+          if (hasAppliedAreaRedactions(appliedTexts)) {
+            const shouldDownload = await confirmChoice(
+              trText('Check for other copies'),
+              trText(
+                'Area redactions remove what is inside each box on the page. They do not find other copies of the same words elsewhere in the file, such as bookmarks, comments, attachments or document properties. To clean those too, also mark the words themselves with text selection, or use Sanitize PDF afterwards. Always check the downloaded file.'
+              ),
+              trText('Download')
+            );
+            if (!shouldDownload) return;
+          }
           if (appliedTexts.length > 0) {
             const { PDFDocument } = await import('pdf-lib');
             const exported = await PDFDocument.load(outBytes, {

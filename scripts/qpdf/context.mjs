@@ -99,14 +99,14 @@ export const POPULAR = POPULAR_ORDER.map((id) => byId.get(id))
 function privacyNote(t) {
   const info = ENGINE_INFO[t.engine];
   const base =
-    'This tool runs entirely in your browser. Your file is read from your device, processed in memory, and saved back to your device — it is never uploaded to Qpdf.ca or anyone else.';
+    'This tool processes your file in your browser. It is read from your device, processed in memory and saved back to your device; it is not uploaded to Qpdf.ca or to any PDF-processing server.';
   if (t.engine === 'libreoffice') {
-    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from Qpdf.ca’s asset server.`;
+    return `${base} The first time you use it, your browser downloads the LibreOffice conversion engine (software only, about ${info.download}) from assets.qpdf.ca, Qpdf.ca’s asset server.`;
   }
   if (info?.download) {
     return `${base} The first time you use it, your browser downloads the ${info.label} (software only, about ${info.download}) from qpdf.ca and keeps it for offline use.`;
   }
-  return `${base} Once this page has loaded, the tool also works with your internet connection switched off.`;
+  return `${base} Once the page shows “Ready to work offline”, the tool also works without an internet connection.`;
 }
 
 function breadcrumbLd(crumbs) {
@@ -312,13 +312,24 @@ function staticContext(key) {
 
 function guideContext(g) {
   const crumbs = [HOME, { name: 'Guides', url: '/guides/' }, { name: g.title, url: g.path }];
+  // Unknown ids are errors (typos would otherwise vanish silently). Tools
+  // that exist but are disabled in this build, and draft guides, are skipped.
   const relatedTools = g.relatedTools
-    .map((id) => byId.get(id) || TOOLS.find((t) => t.slug === id))
-    .filter((t) => t && isToolEnabled(t))
+    .map((id) => {
+      const t = byId.get(id) || TOOLS.find((x) => x.slug === id);
+      if (!t) throw new Error(`content/guides/${g.slug}.md: unknown relatedTools entry "${id}" (use a tool id or slug from src/data/tools.mjs)`);
+      return t;
+    })
+    .filter((t) => isToolEnabled(t))
     .map(card);
   const all = guides();
+  const drafts = new Set(loadGuides({ includeDrafts: true }).filter((x) => x.draft).map((x) => x.slug));
   const relatedGuides = g.relatedGuides
-    .map((s) => all.find((x) => x.slug === s))
+    .map((s) => {
+      const hit = all.find((x) => x.slug === s);
+      if (!hit && !drafts.has(s)) throw new Error(`content/guides/${g.slug}.md: unknown relatedGuides entry "${s}"`);
+      return hit;
+    })
     .filter(Boolean)
     .map(guideCard);
   return {
@@ -337,6 +348,7 @@ function guideContext(g) {
           description: g.description,
           datePublished: g.published,
           dateModified: g.reviewed,
+          image: abs('/images/og-qpdf.png'),
           inLanguage: g.lang,
           author: { '@type': 'Organization', name: g.author },
           publisher: { '@type': 'Organization', name: 'Qpdf.ca', url: SITE.url },

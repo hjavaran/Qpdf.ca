@@ -1,5 +1,12 @@
 # Test report — Stage 1 (2026-11-04)
 
+> **Stage 2 Phase A (2026-11-05):** results after the Phase A changes —
+> 1,101 unit tests, 40 E2E cases including a redaction leak audit
+> (`redaction-audit.pdf`, `tests/e2e/redaction_audit.py`, requires
+> `pip install pymupdf`), Bates continuity, and new mobile LCP/CLS numbers —
+> are in [SEO-STAGE2-PHASE-A-REPORT.md](SEO-STAGE2-PHASE-A-REPORT.md). The
+> tables below are the Stage 1 baseline.
+
 All tests ran against the production build (`npm run build`) served locally by
 `scripts/qpdf/serve-dist.mjs`, which applies the same `_headers` (CSP,
 COOP/COEP) and `_redirects` as Cloudflare Pages. Browser: headless Chromium
