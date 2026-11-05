@@ -657,10 +657,12 @@ onPageReady(() => {
       : () => {};
 
   levelSelect?.addEventListener('change', () => {
+    // Custom opens its settings; any other level closes them (short page).
     if (levelSelect.value === 'custom') {
       setCustomSettingsOpen(true);
       return;
     }
+    setCustomSettingsOpen(false);
     options = applyHyperPreset(
       resolveCompressLevel(levelSelect.value),
       options
@@ -830,10 +832,10 @@ onPageReady(() => {
           const lock = fileLocks.get(file);
           const locked = isProtected(lock);
           const fileDiv = document.createElement('div');
-          fileDiv.className = 'bg-gray-700 p-3 rounded-lg text-sm';
+          fileDiv.className = 'bg-gray-700 p-3 rounded-lg text-sm qp-file-card';
 
           const headerRow = document.createElement('div');
-          headerRow.className = 'flex items-center justify-between';
+          headerRow.className = 'flex items-center justify-between gap-3';
 
           const infoContainer = document.createElement('div');
           infoContainer.className = 'flex flex-col flex-1 min-w-0';
@@ -848,7 +850,12 @@ onPageReady(() => {
           metaSpan.textContent = formatBytes(file.size);
 
           infoContainer.append(nameSpan, metaSpan);
-          headerRow.append(infoContainer);
+          // PDF document icon so it is obvious a file was added.
+          const fileIcon = document.createElement('span');
+          fileIcon.className = 'qp-file-ico';
+          fileIcon.setAttribute('aria-hidden', 'true');
+          fileIcon.append(createIcon('file-pdf', ''));
+          headerRow.append(fileIcon, infoContainer);
           fileDiv.append(headerRow);
 
           if (locked) {
@@ -912,6 +919,8 @@ onPageReady(() => {
     sharedPassword = '';
     sharedAttempt++;
     sharedMissed = false;
+    // Let the same file be chosen again after "Compress another file".
+    if (fileInput) fileInput.value = '';
     applyDefaults();
     updateUI();
   };

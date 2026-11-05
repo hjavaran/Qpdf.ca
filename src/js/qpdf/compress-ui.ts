@@ -5,29 +5,43 @@ import { downloadFile } from '../utils/helpers.js';
 
 const $ = (id: string) => document.getElementById(id);
 
-const LEVELS: Record<string, { label: string; desc: string }> = {
-  medium: { label: 'Recommended', desc: 'Balanced size and quality. A good choice for most files.' },
-  low: { label: 'Higher quality', desc: 'Gentler compression: larger files, but images stay crisper.' },
-  high: { label: 'Stronger', desc: 'Smallest files. Images are compressed harder and may lose some detail.' },
-  lossless: { label: 'Lossless', desc: 'No change to image quality. Smaller only where the file has wasted space.' },
-  custom: { label: 'Custom', desc: 'Fine-tune every option in Custom settings below.' },
+const LEVELS: Record<string, { name: string; tag: string; desc: string }> = {
+  low: { name: 'Low', tag: 'Best Quality', desc: 'Light compression that keeps images sharp.' },
+  medium: { name: 'Medium', tag: 'Recommended', desc: 'A good balance of size and quality for most files.' },
+  high: { name: 'High', tag: 'Smallest Files', desc: 'Maximum size reduction. Images may look softer.' },
+  lossless: { name: 'Lossless', tag: 'No Quality Loss', desc: 'Removes wasted space without touching image quality.' },
+  custom: { name: 'Custom', tag: '', desc: 'Choose every compression setting yourself.' },
 };
 
-// ── Segmented compression-level control (drives the hidden <select>) ─────────
+/** Visible label, e.g. "Medium (Recommended)". */
+export function levelLabel(v: string): string {
+  const l = LEVELS[v];
+  if (!l) return v;
+  return l.tag ? `${l.name} (${l.tag})` : l.name;
+}
+
+// ── Compression-level cards (radio group that drives the hidden <select>) ────
 export function initLevelControl(): void {
   const select = $('compression-level') as HTMLSelectElement | null;
   const group = $('qp-level-group');
-  const desc = $('qp-level-desc');
   if (!select || !group) return;
 
   const values = [...select.options].map((o) => o.value);
   const buttons = values.map((v) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'qp-seg-btn';
+    b.className = 'qp-seg-btn qp-lvl';
     b.setAttribute('role', 'radio');
     b.dataset.value = v;
-    b.textContent = LEVELS[v]?.label ?? v;
+    const l = LEVELS[v];
+    const dot = el('span', 'qp-lvl-dot');
+    dot.setAttribute('aria-hidden', 'true');
+    const body = el('span', 'qp-lvl-body');
+    const title = el('span', 'qp-lvl-title', l?.name ?? v);
+    if (l?.tag) title.append(' ', el('span', 'qp-lvl-tag', `(${l.tag})`));
+    body.append(title);
+    if (l?.desc) body.append(el('span', 'qp-lvl-desc', l.desc));
+    b.append(dot, body);
     b.addEventListener('click', () => choose(v));
     group.append(b);
     return b;
@@ -40,7 +54,6 @@ export function initLevelControl(): void {
       b.setAttribute('aria-checked', String(on));
       b.tabIndex = on ? 0 : -1;
     });
-    if (desc) desc.textContent = LEVELS[cur]?.desc ?? '';
   }
   function choose(v: string): void {
     if (select!.value === v) return;
@@ -122,6 +135,9 @@ export function formatPercent(p: number): string {
   return a === 0 ? '0%' : '<0.1%';
 }
 
+/** Below this saving (in %) the PDF counts as already optimized: nothing is downloaded. */
+export const MIN_SAVING_PCT = 1;
+
 const RING_R = 42;
 const RING_C = 2 * Math.PI * RING_R;
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -151,19 +167,17 @@ export function showCompressResult(view: CompressResultView, onReset: () => void
   if (!box) return;
   const saved = view.originalSize - view.compressedSize;
   const pct = view.originalSize > 0 ? (saved / view.originalSize) * 100 : 0;
-  const smaller = saved > 0;
+  // Savings under 1% are not worth a second copy of the file.
+  const smaller = saved > 0 && pct >= MIN_SAVING_PCT;
   const larger = saved < 0;
+  const tiny = saved > 0 && !smaller;
   const many = (view.count ?? 1) > 1;
 
   const headline = smaller
     ? many
       ? `Your ${view.count} PDFs are now ${formatPercent(pct)} smaller!`
       : `Your PDF is now ${formatPercent(pct)} smaller!`
-    : larger
-      ? `The result is ${formatPercent(pct)} larger than the original.`
-      : many
-        ? 'Your PDFs are already optimized.'
-        : 'Your PDF is already optimized.';
+    : 'No compression needed';
 
   box.replaceChildren();
   box.className = 'qp-res';
@@ -174,7 +188,7 @@ export function showCompressResult(view: CompressResultView, onReset: () => void
   const ring = el('div', 'qp-ring');
   ring.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle class="qp-ring-track" cx="50" cy="50" r="${RING_R}"/><circle class="qp-ring-bar" cx="50" cy="50" r="${RING_R}" stroke-dasharray="${RING_C.toFixed(2)}" stroke-dashoffset="${RING_C.toFixed(2)}" transform="rotate(-90 50 50)"/></svg>`;
   const centre = el('div', 'qp-ring-centre');
-  const num = el('span', 'qp-ring-num', smaller ? '0%' : formatPercent(0));
+  const num = el('span', 'qp-ring-num', '0%');
   centre.append(num, el('span', 'qp-ring-cap', 'SAVED'));
   ring.append(centre);
   const sr = el('span', 'sr-only', smaller ? `Saved ${formatPercent(pct)}` : 'No size reduction');
@@ -183,74 +197,118 @@ export function showCompressResult(view: CompressResultView, onReset: () => void
   const text = el('div', 'qp-res-text');
   const h = el('h2', 'qp-res-title', headline);
   const sizes = el('p', 'qp-res-sizes');
-  sizes.append(
-    el('span', 'qp-res-old', formatSize(view.originalSize)),
-    el('span', 'qp-res-arrow', '→'),
-    el('span', larger ? 'qp-res-old' : 'qp-res-new', formatSize(view.compressedSize))
-  );
-  sizes.setAttribute('aria-label', `From ${formatSize(view.originalSize)} to ${formatSize(view.compressedSize)}`);
+  if (smaller) {
+    sizes.append(
+      el('span', 'qp-res-old', formatSize(view.originalSize)),
+      el('span', 'qp-res-arrow', '→'),
+      el('span', 'qp-res-new', formatSize(view.compressedSize))
+    );
+    sizes.setAttribute('aria-label', `From ${formatSize(view.originalSize)} to ${formatSize(view.compressedSize)}`);
+  } else {
+    sizes.append(el('span', 'qp-res-old', `${formatSize(view.originalSize)} · already optimized`));
+  }
   text.append(h, sizes);
-  top.append(ring, text);
+  if (smaller) top.append(ring, text);
+  else {
+    const badge = el('div', 'qp-res-badge');
+    badge.setAttribute('aria-hidden', 'true');
+    badge.append(el('i', 'ph ph-seal-check'));
+    top.append(badge, text);
+  }
   box.append(top);
 
-  if (smaller === false && !larger) {
-    box.append(el('p', 'qp-res-note', 'No further savings were possible without changing the content. Try Stronger compression, remove pages you do not need, or convert colour scans to greyscale.'));
+  if (!smaller) {
+    box.append(
+      el(
+        'p',
+        'qp-res-note',
+        `${many ? 'These PDFs are' : 'This PDF is'} already optimized${larger ? ' — compressing would make it larger' : tiny ? ` — it could only shrink by ${formatPercent(pct)}` : ''}, so no new copy was downloaded. To try for a smaller file, choose High (Smallest Files), remove pages you do not need, or convert colour scans to greyscale.`
+      )
+    );
   }
   if (view.notes) box.append(el('p', 'qp-res-note', view.notes));
 
-  const actions = el('div', 'qp-res-actions');
-  const dl = el('button', 'qp-btn qp-btn-primary qp-res-dl') as HTMLButtonElement;
-  dl.type = 'button';
-  dl.id = 'qp-compress-download';
-  dl.append(el('i', 'ph ph-download-simple'), document.createTextNode(many ? ' Download again (ZIP)' : ' Download again'));
-  dl.addEventListener('click', () => downloadFile(view.blob, view.filename));
-  const again = el('button', 'qp-btn', 'Compress another file') as HTMLButtonElement;
-  again.type = 'button';
-  again.addEventListener('click', () => {
+  const grid = box.closest('.qp-cmp-grid');
+  const opts = $('compress-options');
+  const close = () => {
     box.classList.add('hidden');
     box.replaceChildren();
+    delete box.dataset.show;
     downloadedFor = null;
-    $('compress-options')?.removeAttribute('data-result');
+    opts?.removeAttribute('data-result');
+    grid?.removeAttribute('data-result');
+  };
+
+  const actions = el('div', 'qp-res-actions');
+  if (smaller) {
+    const dl = el('button', 'qp-btn qp-btn-primary qp-res-dl') as HTMLButtonElement;
+    dl.type = 'button';
+    dl.id = 'qp-compress-download';
+    dl.append(el('i', 'ph ph-download-simple'), document.createTextNode(many ? ' Download again (ZIP)' : ' Download again'));
+    dl.addEventListener('click', () => downloadFile(view.blob, view.filename));
+    actions.append(dl);
+  } else {
+    // Keep the same file(s) and go back to the settings to try another level.
+    const retry = el('button', 'qp-btn qp-btn-primary', 'Try another level') as HTMLButtonElement;
+    retry.type = 'button';
+    retry.id = 'qp-compress-retry';
+    retry.addEventListener('click', () => {
+      close();
+      opts?.classList.remove('hidden');
+      opts?.querySelector<HTMLElement>('.qp-lvl[aria-checked="true"]')?.focus();
+    });
+    actions.append(retry);
+  }
+  const again = el('button', 'qp-btn', many ? 'Compress more files' : 'Compress another file') as HTMLButtonElement;
+  again.type = 'button';
+  again.id = 'qp-compress-again';
+  again.addEventListener('click', () => {
+    close();
     onReset();
+    ($('drop-zone') ?? $('file-input'))?.scrollIntoView?.({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
   });
-  actions.append(dl, again);
+  actions.append(again);
   box.append(actions);
   const privacy = el('p', 'qp-res-fine');
-  privacy.textContent = `${many ? 'Your files were' : 'Your file was'} compressed on this device and saved as ${view.filename}. Nothing was uploaded.`;
+  privacy.textContent = smaller
+    ? `${many ? 'Your files were' : 'Your file was'} compressed on this device and saved as ${view.filename}. Nothing was uploaded.`
+    : `${many ? 'Your files were' : 'Your file was'} checked on this device. Nothing was uploaded.`;
   box.append(privacy);
 
-  const opts = $('compress-options');
   opts?.setAttribute('data-result', '1');
   opts?.classList.add('hidden');
+  grid?.setAttribute('data-result', smaller ? 'saved' : 'none');
+  box.classList.toggle('qp-res-none', !smaller);
   box.classList.remove('hidden');
   box.dataset.show = '1';
 
   // Animate the ring and the number from 0 to the final value.
-  const bar = box.querySelector<SVGCircleElement>('.qp-ring-bar')!;
-  const target = smaller ? Math.min(100, Math.max(0, pct)) : 0;
-  const finalOffset = RING_C * (1 - target / 100);
-  if (reduced() || !smaller) {
-    bar.style.strokeDashoffset = String(finalOffset);
-    num.textContent = smaller ? formatPercent(pct) : formatPercent(0);
-  } else {
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        bar.style.strokeDashoffset = String(finalOffset);
-      })
-    );
-    const t0 = performance.now();
-    const dur = 1000;
-    const tick = (t: number) => {
-      const k = Math.min(1, (t - t0) / dur);
-      const eased = 1 - Math.pow(1 - k, 3);
-      num.textContent = k < 1 ? `${Math.round(pct * eased)}%` : formatPercent(pct);
-      if (k < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
+  if (smaller) {
+    const bar = box.querySelector<SVGCircleElement>('.qp-ring-bar')!;
+    const finalOffset = RING_C * (1 - Math.min(100, Math.max(0, pct)) / 100);
+    if (reduced()) {
+      bar.style.strokeDashoffset = String(finalOffset);
+      num.textContent = formatPercent(pct);
+    } else {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          bar.style.strokeDashoffset = String(finalOffset);
+        })
+      );
+      const t0 = performance.now();
+      const dur = 1000;
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - k, 3);
+        num.textContent = k < 1 ? `${Math.round(pct * eased)}%` : formatPercent(pct);
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
   }
 
-  // Compression succeeded: save the file automatically (once).
-  autoDownload(view);
+  // Only save a file when it is actually smaller than the original.
+  if (smaller) autoDownload(view);
   (h as HTMLElement).tabIndex = -1;
   h.focus({ preventScroll: true });
   box.scrollIntoView?.({ behavior: reduced() ? 'auto' : 'smooth', block: 'nearest' });

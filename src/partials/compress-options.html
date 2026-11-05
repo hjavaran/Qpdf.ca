@@ -3,16 +3,39 @@
 
   <div class="qp-cmp-group">
     <span class="qp-cmp-label" id="qp-level-label">Compression level</span>
-    <!-- Source of truth for the level; the segmented control below drives it. -->
+    <!-- Source of truth for the level; the option cards below drive it. -->
     <select id="compression-level" autocomplete="off" aria-labelledby="qp-level-label" class="qp-cmp-select">
-      <option value="medium" selected>Recommended — balanced size and quality</option>
-      <option value="low">Higher quality — gentler compression</option>
-      <option value="high">Stronger compression — smallest file</option>
-      <option value="lossless">Lossless — no change to image quality</option>
-      <option value="custom">Custom settings</option>
+      <option value="low">Low (Best Quality)</option>
+      <option value="medium" selected>Medium (Recommended)</option>
+      <option value="high">High (Smallest Files)</option>
+      <option value="lossless">Lossless (No Quality Loss)</option>
+      <option value="custom">Custom</option>
     </select>
-    <div id="qp-level-group" role="radiogroup" aria-labelledby="qp-level-label" class="qp-seg" hidden></div>
-    <p id="qp-level-desc" class="qp-cmp-hint" aria-live="polite"></p>
+    <div id="qp-level-group" role="radiogroup" aria-labelledby="qp-level-label" class="qp-lvls" hidden></div>
+    <div class="qp-cmp-custom-wrap">
+      <!-- Opened by choosing the Custom level; kept for keyboard/legacy access. -->
+      <button id="toggle-custom-settings" type="button" class="qp-cmp-more" hidden aria-controls="custom-settings-panel">
+        <i data-lucide="settings" class="w-4 h-4"></i>
+        <span>Custom settings</span>
+        <i data-lucide="chevron-down" id="custom-settings-chevron" class="w-4 h-4"></i>
+      </button>
+
+      <div id="custom-settings-panel" class="hidden qp-cmp-custom">
+        <p class="qp-cmp-hint">
+          Fine-tune the compression engine. Picking a compression level resets these, except Override content protection, Convert to grayscale, Preserve PDF/A, and Brotli.
+        </p>
+        <label class="qp-cmp-check">
+          <input type="checkbox" id="override-protection" autocomplete="off" />
+          <span>
+            <span class="qp-cmp-check-title">Override content protection</span>
+            <span class="qp-cmp-hint">
+              By default Qpdf.ca protects content: digitally signed PDFs are left untouched and pages with text are never turned into images. Turning this on removes signatures from signed PDFs and lets “Rasterize pages” convert text into images (no longer selectable or searchable).
+            </span>
+          </span>
+        </label>
+        <div id="hyper-options" class="space-y-3"></div>
+      </div>
+    </div>
   </div>
 
   <div class="qp-cmp-group">
@@ -42,30 +65,6 @@
     <p class="qp-cmp-hint">
       Qpdf.ca looks for the best quality that fits and tells you if the target cannot be reached. Leave empty to use the level as is.
     </p>
-  </div>
-
-  <div class="qp-cmp-group">
-    <button id="toggle-custom-settings" type="button" class="qp-cmp-more" aria-controls="custom-settings-panel">
-      <i data-lucide="settings" class="w-4 h-4"></i>
-      <span>Custom settings</span>
-      <i data-lucide="chevron-down" id="custom-settings-chevron" class="w-4 h-4"></i>
-    </button>
-
-    <div id="custom-settings-panel" class="hidden qp-cmp-custom">
-      <p class="qp-cmp-hint">
-        Fine-tune the compression engine. Picking a compression level resets these, except Override content protection, Convert to grayscale, Preserve PDF/A, and Brotli.
-      </p>
-      <label class="qp-cmp-check">
-        <input type="checkbox" id="override-protection" autocomplete="off" />
-        <span>
-          <span class="qp-cmp-check-title">Override content protection</span>
-          <span class="qp-cmp-hint">
-            By default Qpdf.ca protects content: digitally signed PDFs are left untouched and pages with text are never turned into images. Turning this on removes signatures from signed PDFs and lets “Rasterize pages” convert text into images (no longer selectable or searchable).
-          </span>
-        </span>
-      </label>
-      <div id="hyper-options" class="space-y-3"></div>
-    </div>
   </div>
 
   <button id="process-btn" class="qp-btn qp-btn-primary qp-cmp-go" type="button">

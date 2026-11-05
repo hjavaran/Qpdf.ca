@@ -40,21 +40,70 @@ describe('compress results', () => {
     expect(downloadFile).toHaveBeenCalledWith(v.blob, 'a-compressed.pdf');
   });
 
-  it('reports an unchanged size neutrally', async () => {
+  it('does not download when the PDF is already optimized', async () => {
     const m = await load();
     m.showCompressResult(view(1000, 1000), () => {});
     const box = document.getElementById('qp-compress-result')!;
-    expect(box.textContent).toContain('Your PDF is already optimized.');
-    expect(box.textContent).not.toMatch(/smaller/);
-    expect(box.querySelector('.qp-ring-num')!.textContent).toBe('0%');
+    expect(box.textContent).toContain('No compression needed');
+    expect(box.textContent).toContain('already optimized');
+    expect(box.textContent).not.toMatch(/smaller!/);
+    expect(box.querySelector('#qp-compress-download')).toBeNull();
+    expect(box.querySelector('#qp-compress-retry')).not.toBeNull();
+    expect(downloadFile).not.toHaveBeenCalled();
   });
 
-  it('never claims a larger output is smaller', async () => {
+  it('treats a saving under 1% as already optimized', async () => {
+    const m = await load();
+    m.showCompressResult(view(100_000, 99_700), () => {});
+    const box = document.getElementById('qp-compress-result')!;
+    expect(box.textContent).toContain('No compression needed');
+    expect(box.textContent).toContain('0.3%');
+    expect(downloadFile).not.toHaveBeenCalled();
+  });
+
+  it('never downloads or claims savings for a larger output', async () => {
     const m = await load();
     m.showCompressResult(view(1000, 1100), () => {});
     const box = document.getElementById('qp-compress-result')!;
-    expect(box.textContent).toContain('10% larger');
+    expect(box.textContent).toContain('No compression needed');
     expect(box.textContent).not.toMatch(/smaller!/);
+    expect(downloadFile).not.toHaveBeenCalled();
+  });
+
+  it('hides the upload column after a result and restores it on reset', async () => {
+    document.body.innerHTML =
+      '<div class="qp-cmp-grid"><div class="qp-cmp-main"></div><div class="qp-cmp-side"><div id="compress-options"></div><div id="qp-compress-result" class="hidden"></div></div></div>';
+    const m = await load();
+    const onReset = vi.fn();
+    m.showCompressResult(view(2000, 1000), onReset);
+    const grid = document.querySelector('.qp-cmp-grid')!;
+    expect(grid.getAttribute('data-result')).toBe('saved');
+    (document.getElementById('qp-compress-again') as HTMLButtonElement).click();
+    expect(grid.hasAttribute('data-result')).toBe(false);
+    expect(onReset).toHaveBeenCalledTimes(1);
+    expect(document.getElementById('qp-compress-result')!.classList.contains('hidden')).toBe(true);
+  });
+
+  it('"Try another level" keeps the file and reopens the settings', async () => {
+    document.body.innerHTML =
+      '<div class="qp-cmp-grid"><div id="compress-options"></div><div id="qp-compress-result" class="hidden"></div></div>';
+    const m = await load();
+    const onReset = vi.fn();
+    m.showCompressResult(view(1000, 1000), onReset);
+    (document.getElementById('qp-compress-retry') as HTMLButtonElement).click();
+    const opts = document.getElementById('compress-options')!;
+    expect(opts.classList.contains('hidden')).toBe(false);
+    expect(opts.hasAttribute('data-result')).toBe(false);
+    expect(onReset).not.toHaveBeenCalled();
+  });
+
+  it('labels the levels like BentoPDF', async () => {
+    const m = await load();
+    expect(m.levelLabel('low')).toBe('Low (Best Quality)');
+    expect(m.levelLabel('medium')).toBe('Medium (Recommended)');
+    expect(m.levelLabel('high')).toBe('High (Smallest Files)');
+    expect(m.levelLabel('lossless')).toBe('Lossless (No Quality Loss)');
+    expect(m.levelLabel('custom')).toBe('Custom');
   });
 
   it('does not download on failure (nothing is rendered)', async () => {

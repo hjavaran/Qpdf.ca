@@ -414,19 +414,78 @@ const TESTS = [
 ];
 
 
+// Compress page UX: PDF icon on the file card, Custom opens/closes its settings,
+// the result replaces the upload box, and an already-optimized PDF is not downloaded.
+TESTS.push({
+  name: 'compress UI flow (icon, custom panel, result view, no re-download)',
+  slug: 'compress-pdf',
+  files: ['image-heavy.pdf'],
+  prepare: async (p) => {
+    await p.locator('#file-display-area .qp-file-ico .ph-file-pdf').waitFor({ state: 'visible', timeout: 10000 });
+    const labels = await p.$$eval('.qp-lvl', (els) => els.map((e) => e.querySelector('.qp-lvl-title').textContent.trim()));
+    const want = ['Low (Best Quality)', 'Medium (Recommended)', 'High (Smallest Files)', 'Lossless (No Quality Loss)', 'Custom'];
+    if (JSON.stringify(labels) !== JSON.stringify(want)) throw new Error('level labels: ' + labels.join(' | '));
+    if ((await p.getAttribute('.qp-lvl[data-value="medium"]', 'aria-checked')) !== 'true') throw new Error('medium not default');
+    const panel = p.locator('#custom-settings-panel');
+    if (await panel.isVisible()) throw new Error('custom settings open before choosing Custom');
+    await p.click('.qp-lvl[data-value="custom"]');
+    await panel.waitFor({ state: 'visible', timeout: 3000 });
+    await p.click('.qp-lvl[data-value="high"]');
+    await panel.waitFor({ state: 'hidden', timeout: 3000 });
+    await p.click('.qp-lvl[data-value="medium"]');
+  },
+  after: clickDownload,
+  validate: async (f, page) => {
+    const notes = [];
+    if (await page.locator('#drop-zone').isVisible()) throw new Error('upload box still visible after compressing');
+    if (!(await page.locator('#qp-compress-again').isVisible())) throw new Error('no "Compress another file" button');
+    notes.push('upload box hidden; Download again + Compress another file shown');
+    await page.click('#qp-compress-again');
+    await page.locator('#drop-zone').waitFor({ state: 'visible', timeout: 5000 });
+    if (await page.locator('#qp-compress-result').isVisible()) throw new Error('result still visible after reset');
+    notes.push('reset restores upload box');
+    // Second pass on the already-compressed output: nothing to gain, no download.
+    let downloads = 0;
+    page.on('download', () => downloads++);
+    await page.setInputFiles('#file-input', f);
+    await page.click('.qp-lvl[data-value="lossless"]');
+    await page.click('#process-btn');
+    await page.locator('#qp-compress-retry, #qp-compress-download').first().waitFor({ timeout: 300000 });
+    const card = await resultText(page);
+    if (await page.locator('#qp-compress-download').count()) {
+      notes.push(`second pass still saved ≥1% (not an optimized input): "${card.slice(0, 70)}"`);
+    } else {
+      await page.waitForTimeout(3000);
+      if (downloads) throw new Error('already-optimized PDF was downloaded');
+      if (!/No compression needed/.test(card)) throw new Error('missing "No compression needed": ' + card.slice(0, 100));
+      notes.push(`already-optimized: no download, "${card.slice(0, 60)}…"`);
+      await page.click('#qp-compress-retry');
+      await page.locator('#process-btn').waitFor({ state: 'visible', timeout: 5000 });
+      notes.push('Try another level returns to settings');
+    }
+    return notes.join('; ');
+  },
+});
+
 // Target-size presets must pass the page's target to the engine. The lossless level on a
 // 7.7 MB file stays far above 4 MB by itself, so only the target can bring it under.
 const MB = 1024 * 1024;
 TESTS.push({
-  name: 'control: lossless without target stays large',
+  name: 'control: lossless without target stays large (not downloaded)',
   slug: 'compress-pdf',
   files: ['image-heavy.pdf'],
   prepare: (p) => p.click('.qp-seg-btn[data-value="lossless"]'),
-  after: clickDownload,
-  validate: (f) => {
-    const a = fs.statSync(f).size;
-    if (a <= 4 * MB) throw new Error(`control too small (${a}); test would prove nothing`);
-    return `${(a / MB).toFixed(2)} MB (> 4 MB without a target)`;
+  noDownload: true,
+  validate: async (_f, page) => {
+    let downloads = 0;
+    page.on('download', () => downloads++);
+    await page.locator('#qp-compress-retry, #qp-compress-download').first().waitFor({ timeout: 300000 });
+    await page.waitForTimeout(2000);
+    const card = await resultText(page);
+    const m = card.match(/([\d.]+) MB · already optimized/);
+    if (!m || Number(m[1]) <= 4) throw new Error(`control too small; test would prove nothing: ${card.slice(0, 100)}`);
+    if (downloads || !/No compression needed/.test(card)) throw new Error('lossless <1% saving should not download: ' + card.slice(0, 100));
+    return `${m[1]} MB (> 4 MB without a target); "No compression needed", no download`;
   },
 });
 for (const n of [3, 4]) {
