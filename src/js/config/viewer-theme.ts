@@ -60,3 +60,9 @@ export const viewerTheme: ThemeConfig = {
     },
   },
 };
+
+/** Editor theme that follows the site's light/dark setting (UI only; PDF pages are unchanged). */
+export function getViewerTheme(): ThemeConfig {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return { ...viewerTheme, preference: dark ? 'dark' : 'light' } as ThemeConfig;
+}

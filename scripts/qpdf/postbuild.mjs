@@ -19,6 +19,7 @@ import {
   SITE,
   LIBREOFFICE_ENABLED,
   ANALYTICS_TOKEN,
+  WEB3FORMS_KEY,
 } from './context.mjs';
 import { TOOLS } from '../../src/data/tools.mjs';
 import { loadGuides, ROOT } from './guides.mjs';
@@ -86,7 +87,7 @@ for (const f of htmlFiles) {
 const urls = [
   { loc: '/', priority: '1.0' },
   ...ENABLED_TOOLS.map((t) => ({ loc: `/${t.slug}/`, priority: t.popular ? '0.9' : '0.7' })),
-  ...['tools', 'privacy', 'about', 'guides', 'privacy-policy', 'terms', 'site-index', 'licenses'].map((k) => ({
+  ...['tools', 'privacy', 'about', 'contact', 'guides', 'privacy-policy', 'terms', 'site-index', 'licenses'].map((k) => ({
     loc: PAGES[k].path,
     priority: ['tools', 'privacy'].includes(k) ? '0.8' : '0.4',
   })),
@@ -123,7 +124,7 @@ for (const t of TOOLS) {
 }
 redirects.push('/wasm-settings /tools/ 301', '/wasm-settings.html /tools/ 301');
 for (const key of ['about', 'privacy', 'terms']) redirects.push(`/${key}.html /${key}/ 301`);
-redirects.push('/faq /about/ 301', '/contact /about/ 301', '/licensing /licenses/ 301', '/index.html / 301');
+redirects.push('/faq /about/ 301', '/contact.html /contact/ 301', '/licensing /licenses/ 301', '/index.html / 301');
 fs.writeFileSync(path.join(DIST, '_redirects'), redirects.join('\n') + '\n');
 
 const extraOrigins = [];
@@ -137,7 +138,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self' blob: data:${extraOrigins.map((o) => ' ' + o).join('')}${ANALYTICS_TOKEN ? ' https://cloudflareinsights.com' : ''}`,
+  `connect-src 'self' blob: data:${extraOrigins.map((o) => ' ' + o).join('')}${ANALYTICS_TOKEN ? ' https://cloudflareinsights.com' : ''}${WEB3FORMS_KEY ? ' https://api.web3forms.com' : ''}`,
   "media-src 'self' blob:",
   "frame-src 'self' blob:",
   "child-src 'self' blob:",
@@ -261,7 +262,7 @@ const ENGINE_FILES = {
     '/vendor/ocr-fonts/NotoSans-Regular.ttf',
   ],
 };
-const SHARED = ['/vendor/embedpdf/fonts-latin@1.0.0/fonts/NotoSans-Regular.ttf', '/locales/en/common.json', '/locales/en/tools.json'];
+const SHARED = ['/theme-init.js', '/vendor/embedpdf/fonts-latin@1.0.0/fonts/NotoSans-Regular.ttf', '/locales/en/common.json', '/locales/en/tools.json'];
 const EXTRA_FOR = {
   'pdf-to-word': ['gs'],
   'pdf-to-pdfa': ['pymupdf'],
@@ -347,5 +348,6 @@ log(
     `largest ${heavy[0][0]} ${(heavy[0][1].bytes / 1048576).toFixed(1)} MiB`
 );
 log(`sitemap: ${urls.length} URLs · LibreOffice tools ${LIBREOFFICE_ENABLED ? 'enabled' : 'disabled (no asset host configured)'}`);
+log(`Contact form ${WEB3FORMS_KEY ? 'CONFIGURED (api.web3forms.com allowed in CSP)' : 'NOT configured (WEB3FORMS_ACCESS_KEY not set; form disabled)'}`);
 log(`Cloudflare Web Analytics ${ANALYTICS_TOKEN ? 'ENABLED (beacon + CSP allowance)' : 'disabled (CF_ANALYTICS_TOKEN not set)'}`);
 log(`build ${buildId} ready for Cloudflare Pages`);

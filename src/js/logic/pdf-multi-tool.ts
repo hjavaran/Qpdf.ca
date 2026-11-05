@@ -6,7 +6,7 @@ import { initializeGlobalShortcuts } from '../utils/shortcuts-init.js';
 import { repairPdfFile } from './repair-pdf.js';
 import { partitionIncomingFiles } from '../utils/multi-tool-file-input.js';
 import { convertImagesToPdfFile } from '../utils/images-to-pdf-lib.js';
-import { viewerTheme } from '../config/viewer-theme.js';
+import { getViewerTheme } from '../config/viewer-theme.js';
 import { t, trText, onPageReady } from '../i18n/i18n';
 import type { DocManagerPlugin } from '@/types';
 
@@ -219,7 +219,7 @@ function ensureViewer(): Promise<ViewerRegistry> {
       target,
       worker: true,
       wasmUrl: embedPdfWasmUrl,
-      theme: viewerTheme,
+      theme: getViewerTheme(),
       tabBar: 'never',
       organize: { standalone: true },
       documentManager: { maxDocuments: 1 },

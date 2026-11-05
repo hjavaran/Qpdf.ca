@@ -121,6 +121,7 @@ Tesseract files.
 
 - Files are read with the File API and processed in memory, in the page or
   Web Workers. Results are saved through temporary `blob:` URLs.
+- Dark mode (saved locally) and a contact form (Web3Forms; off until `WEB3FORMS_ACCESS_KEY` is set).
 - No ads, cookies or tracking. Optional cookieless Cloudflare Web Analytics (off unless `CF_ANALYTICS_TOKEN` is set; respects DNT/GPC). The CSP restricts
   `connect-src` to the site itself (plus the R2 asset origin when enabled).
 - Removed upstream network calls: GitHub star counter, ads hook, BentoPDF's

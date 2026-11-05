@@ -80,6 +80,7 @@ self.addEventListener('message', (event) => {
 
 function cacheFor(url) {
   if (url.origin !== self.location.origin) return ENGINES;
+  if (url.pathname === '/theme-init.js') return STATIC;
   if (url.pathname.startsWith('/assets/')) return ASSETS;
   if (ENGINE_PREFIXES.some((p) => url.pathname.startsWith(p))) return ENGINES;
   if (STATIC_PREFIXES.some((p) => url.pathname.startsWith(p))) return STATIC;

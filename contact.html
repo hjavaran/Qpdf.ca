@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{> head }}
+    <link href="/src/css/site.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{> navbar }}
+    <main class="qp-wrap">
+      <div class="qp-page-head">
+        {{> breadcrumbs }}
+        <h1 style="margin-top: 1rem">Contact us</h1>
+        <p>Questions, feedback or a bug to report? Send a message and the developer will read it.</p>
+      </div>
+
+      <div class="qp-contact">
+        <section class="qp-surface qp-form" aria-labelledby="contact-form-title">
+          <h2 id="contact-form-title" class="sr-only">Contact form</h2>
+
+          <div id="contact-form-wrap">
+            {{#unless contactConfigured}}
+            <div class="qp-alert qp-alert-warn" role="status" id="contact-not-configured">
+              <strong>The contact form is not set up yet.</strong> Messages cannot be sent until the site owner adds a
+              Web3Forms access key (see <code>docs/CONTACT-FORM.md</code>).
+            </div>
+            {{/unless}}
+            <div id="contact-error" class="qp-alert qp-alert-error" role="alert" hidden></div>
+
+            <form id="contact-form" novalidate autocomplete="on" {{#if contactConfigured}}data-key="{{web3formsKey}}"{{/if}}>
+              <div class="qp-field">
+                <label for="cf-name">Name</label>
+                <input class="qp-input" id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="cf-name-err" />
+                <p class="qp-field-error" id="cf-name-err"></p>
+              </div>
+              <div class="qp-field">
+                <label for="cf-email">Email</label>
+                <input class="qp-input" id="cf-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="200" required aria-describedby="cf-email-err" />
+                <p class="qp-field-error" id="cf-email-err"></p>
+              </div>
+              <div class="qp-field">
+                <label for="cf-subject">Subject <span class="qp-opt">(optional)</span></label>
+                <input class="qp-input" id="cf-subject" name="subject" type="text" maxlength="150" aria-describedby="cf-subject-err" />
+                <p class="qp-field-error" id="cf-subject-err"></p>
+              </div>
+              <div class="qp-field">
+                <label for="cf-message">Message</label>
+                <textarea class="qp-input" id="cf-message" name="message" maxlength="5000" required aria-describedby="cf-message-err cf-message-count"></textarea>
+                <p class="qp-field-error" id="cf-message-err"></p>
+                <p class="qp-charcount" id="cf-message-count" aria-hidden="true">0 / 5000</p>
+              </div>
+              <!-- Honeypot: invisible to people, tempting to bots (Web3Forms rejects submissions where it is set). -->
+              <div class="qp-hp" aria-hidden="true">
+                <label for="cf-botcheck">Leave this empty</label>
+                <input type="checkbox" id="cf-botcheck" name="botcheck" tabindex="-1" autocomplete="off" />
+              </div>
+              <button type="submit" class="qp-btn qp-btn-primary qp-submit" id="cf-submit" {{#unless contactConfigured}}disabled{{/unless}}>
+                <span class="qp-spinner" aria-hidden="true"></span>
+                <span id="cf-submit-label">Send message</span>
+              </button>
+              <p class="qp-meta" style="margin-top: 0.9rem">
+                Please do not include confidential information or documents — this form cannot send files.
+              </p>
+            </form>
+          </div>
+
+          <div id="contact-success" class="qp-success" role="status" tabindex="-1" hidden>
+            <div class="qp-success-mark" aria-hidden="true"><i class="ph ph-check"></i></div>
+            <h2>Message sent</h2>
+            <p>Thank you — your message has been delivered. If it needs a reply, you will hear back at the email address you provided.</p>
+            <button type="button" class="qp-btn" id="cf-again">Send another message</button>
+          </div>
+        </section>
+
+        <aside class="qp-block" aria-labelledby="contact-privacy-title">
+          <h2 id="contact-privacy-title"><i class="ph ph-shield-check" aria-hidden="true"></i> Your documents stay private</h2>
+          <p>
+            Qpdf’s PDF tools run entirely in your browser; your documents are never uploaded. This contact form is
+            different: the name, email address and message you type are sent over HTTPS to
+            <a href="https://web3forms.com/" rel="noopener">Web3Forms</a>, a form-delivery service, which forwards them
+            to the site owner by email.
+          </p>
+          <p style="margin-top: 0.6rem">
+            The form cannot attach files, and no PDF or PDF content is ever sent with it. See the
+            <a href="/privacy-policy/">privacy policy</a> for details.
+          </p>
+        </aside>
+      </div>
+    </main>
+    {{> footer }}
+    <script type="module" src="/src/js/qpdf/contact.ts"></script>
+  </body>
+</html>

@@ -36,6 +36,7 @@ Environment variables (Production and Preview):
 | `SITE_URL` | `https://qpdf.ca` | Canonical domain for canonicals, sitemap, Open Graph |
 | `SOURCE_URL` | `https://github.com/hjavaran/Qpdf.ca` | AGPL source link (optional override) |
 | `VITE_LIBREOFFICE_ASSET_URL` | *(empty)* | Set only after the R2 bucket exists |
+| `WEB3FORMS_ACCESS_KEY` | *(your Web3Forms access key)* | Optional but required for the contact form to work. See [CONTACT-FORM.md](CONTACT-FORM.md) |
 | `CF_ANALYTICS_TOKEN` | *(your 32-character Web Analytics site token)* | Optional. Enables Cloudflare Web Analytics and the matching CSP allowance. Keep Pages' one-click "Web Analytics" toggle off to avoid double counting |
 
 `.env.production` already contains the non-secret engine paths; nothing secret

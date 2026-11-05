@@ -40,7 +40,7 @@ const pdfinfo = (f) => {
 };
 const pdftext = (f) => sh('pdftotext', ['-layout', f, '-']);
 const py = (code) => sh('python3', ['-c', code]);
-const STATIC = /^\/(assets|wasm|vendor|pdfjs-viewer|pdfjs-annotation-viewer|images|locales|workers|libreoffice-wasm)\/|^\/(qpdf\.wasm|sRGB_IEC61966-2-1_no_black_scaling\.icc|favicon\.ico|site\.webmanifest|offline-manifest\.json|build-assets\.json|sw\.js|config\.json)$/;
+const STATIC = /^\/(assets|wasm|vendor|pdfjs-viewer|pdfjs-annotation-viewer|images|locales|workers|libreoffice-wasm)\/|^\/(qpdf\.wasm|sRGB_IEC61966-2-1_no_black_scaling\.icc|favicon\.ico|site\.webmanifest|offline-manifest\.json|build-assets\.json|sw\.js|config\.json|theme-init\.js)$/;
 
 const results = [];
 function record(name, ok, detail, extra = {}) {

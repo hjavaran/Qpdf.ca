@@ -8,6 +8,36 @@ for (const a of document.querySelectorAll<HTMLAnchorElement>('[data-nav]')) {
   if (href !== '/' && path.startsWith(href)) a.setAttribute('aria-current', 'page');
 }
 
+// ── Theme (light default; saved in localStorage; applied early by /theme-init.js) ──
+const root = document.documentElement;
+const themeBtn = document.getElementById('qp-theme-toggle');
+const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+const isDark = () => root.getAttribute('data-theme') === 'dark';
+function syncThemeUi(): void {
+  themeBtn?.setAttribute('aria-pressed', String(isDark()));
+  if (themeColor) themeColor.content = isDark() ? '#151517' : '#f8f7f4';
+}
+function setTheme(dark: boolean, persist: boolean): void {
+  root.classList.add('qp-theme-anim');
+  window.setTimeout(() => root.classList.remove('qp-theme-anim'), 260);
+  if (dark) root.setAttribute('data-theme', 'dark');
+  else root.removeAttribute('data-theme');
+  if (persist) {
+    try {
+      localStorage.setItem('qpdf.theme', dark ? 'dark' : 'light');
+    } catch {
+      /* storage blocked: theme applies for this page view only */
+    }
+  }
+  syncThemeUi();
+  window.dispatchEvent(new CustomEvent('qpdf:themechange', { detail: { dark } }));
+}
+syncThemeUi();
+themeBtn?.addEventListener('click', () => setTheme(!isDark(), true));
+window.addEventListener('storage', (e) => {
+  if (e.key === 'qpdf.theme') setTheme(e.newValue === 'dark', false);
+});
+
 const btn = document.querySelector<HTMLButtonElement>('.qp-menu-btn');
 const menu = document.getElementById('qp-mobile-nav');
 if (btn && menu) {

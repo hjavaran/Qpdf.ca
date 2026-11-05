@@ -19,6 +19,13 @@ export const ANALYTICS_TOKEN = /^[a-f0-9]{32}$/i.test(env.CF_ANALYTICS_TOKEN || 
   ? env.CF_ANALYTICS_TOKEN
   : '';
 
+/** Web3Forms public access key for the contact form (public by design). Optional. */
+export const WEB3FORMS_KEY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+  env.WEB3FORMS_ACCESS_KEY || ''
+)
+  ? env.WEB3FORMS_ACCESS_KEY
+  : '';
+
 export const LIBREOFFICE_ENABLED = Boolean(env.VITE_LIBREOFFICE_ASSET_URL);
 
 export const ENGINE_INFO = {
@@ -184,6 +191,8 @@ function base() {
     toolCount: ENABLED_TOOLS.length,
     analyticsToken: ANALYTICS_TOKEN,
     analyticsEnabled: Boolean(ANALYTICS_TOKEN),
+    web3formsKey: WEB3FORMS_KEY,
+    contactConfigured: Boolean(WEB3FORMS_KEY),
     libreofficeEnabled: LIBREOFFICE_ENABLED,
     guides: all.map(guideCard),
     hasGuides: all.length > 0,
@@ -192,7 +201,7 @@ function base() {
       guides: all.filter((g) => g.category === c.key).map(guideCard),
     })).filter((c) => c.guides.length > 0),
     thirdParty: thirdParty(),
-    infoPages: ['privacy', 'privacy-policy', 'about', 'terms', 'licenses', 'tools', 'guides', 'site-index'].map(
+    infoPages: ['privacy', 'privacy-policy', 'about', 'contact', 'terms', 'licenses', 'tools', 'guides', 'site-index'].map(
       (k) => ({ key: k, url: PAGES[k].path, name: PAGES[k].crumb || PAGES[k].title })
     ),
   };

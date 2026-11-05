@@ -74,6 +74,13 @@ export const PAGES = {
       'A complete, human-readable index of every page on Qpdf: PDF tools by category, guides and information pages.',
     crumb: 'Site index',
   },
+  contact: {
+    path: '/contact/',
+    title: 'Contact Qpdf — Questions, Feedback and Support',
+    description:
+      'Send a message to the Qpdf developer: questions, feedback or bug reports. Contact messages are sent securely for delivery; your PDFs never are.',
+    crumb: 'Contact',
+  },
   licenses: {
     path: '/licenses/',
     title: 'Open-Source Licences and Credits — Qpdf',
@@ -101,4 +108,5 @@ export const NAV = [
   { label: 'Privacy', href: '/privacy/' },
   { label: 'Guides', href: '/guides/' },
   { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
 ];
