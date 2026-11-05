@@ -89,6 +89,13 @@ With the two LibreOffice blobs served from a separate local origin with CORS
 (as R2 would), DOCX → PDF (17 s) and RTF → PDF (6 s) converted correctly under
 the production CSP and COEP headers, with no unexpected requests.
 
+On 2026-11-05 the live site was checked with the real R2 host: both engine
+files return 200 from `assets.qpdf.ca` with `access-control-allow-origin:
+https://qpdf.ca`; `/word-to-pdf/`, `/excel-to-pdf/`, `/powerpoint-to-pdf/` and
+`/odt-to-pdf/` return 200; the sitemap lists 137 URLs; and a DOCX → PDF
+conversion in a headless browser produced a PDF with the expected text, contacting
+only qpdf.ca, assets.qpdf.ca and Cloudflare Web Analytics.
+
 ### Manual / visual checks
 
 Homepage (desktop and 390 px mobile), tool pages, Edit PDF, Edit PDF Text,

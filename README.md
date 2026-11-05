@@ -8,7 +8,7 @@ never uploaded. It is a static site designed for Cloudflare Pages.
 
 - 112 working tools (compress, merge, split, organize, edit, redact, sign,
   protect/unlock, OCR, PDF/A, conversions…), plus 13 LibreOffice-based Office
-  converters that switch on once an R2 asset host is configured.
+  converters (enabled in production, served from `assets.qpdf.ca` on R2).
 - Light, minimal design; animated maple-leaf background; favourites stored
   locally (Compress PDF is the default favourite, seeded once).
 - Offline support with a per-tool **“Ready to work offline”** indicator.
@@ -65,7 +65,7 @@ npm run test:e2e
 - PDF engines: **pdf-lib**, **PDF.js**, **qpdf** (WASM), **PDFium** (BentoPDF
   editcore / EmbedPDF viewer), **Hyper Compress**, **CoherentPDF**,
   **PyMuPDF on Pyodide**, **Ghostscript**, **Tesseract.js**, **wasm-vips**,
-  **LibreOffice WASM** (optional)
+  **LibreOffice WASM** (engine files on R2)
 - Service worker for offline use; no backend, database or accounts
 
 ## Project layout

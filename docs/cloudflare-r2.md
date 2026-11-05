@@ -1,4 +1,17 @@
-# LibreOffice engine on Cloudflare R2 (optional)
+# LibreOffice engine on Cloudflare R2
+
+> **Status (2026-11-05): enabled in production.** Bucket `qpdf-assets`, custom
+> domain `assets.qpdf.ca`, CORS limited to `https://qpdf.ca` and
+> `https://www.qpdf.ca`. Both engine files are uploaded to
+> `libreoffice/bentopdf-2.8.11/`, and `VITE_LIBREOFFICE_ASSET_URL` is set in the
+> Pages Production environment. The 13 Office converters are live and the
+> sitemap has 137 URLs. A DOCX → PDF conversion was verified on qpdf.ca in a
+> browser (the only hosts contacted were qpdf.ca, assets.qpdf.ca and Cloudflare
+> Web Analytics). The steps below are kept for rebuilding the setup.
+>
+> The files can also be uploaded without Wrangler: download them from the URL
+> in `cloudflare/upload-libreoffice-to-r2.sh`, check the SHA-256 values, and drag
+> a `libreoffice/bentopdf-2.8.11/` folder into the bucket in the dashboard.
 
 ## Why R2 is needed
 
@@ -32,7 +45,7 @@ browser downloads the engine from R2 and converts the document locally.
   DOCX→PDF and RTF→PDF converted successfully under the production COOP/COEP
   and CSP headers.
 
-## Setup (requires your Cloudflare account and approval of any charges)
+## Setup (already done for qpdf.ca; needs a Cloudflare account and approval of any charges)
 
 1. **Create a bucket**: Dashboard → R2 → Create bucket, e.g. `qpdf-assets`
    (location: automatic). R2 needs a payment method on file even within the
@@ -59,7 +72,10 @@ browser downloads the engine from R2 and converts the document locally.
    VITE_LIBREOFFICE_ASSET_URL=https://assets.qpdf.ca/libreoffice/bentopdf-2.8.11/
    ```
 
-   and redeploy. The build log shows `LibreOffice tools enabled`.
+   (Production, and Preview if wanted) and redeploy. The build log shows
+   `LibreOffice tools enabled`. If the pages 301-redirect to `/tools/` and the
+   sitemap stays at 124 URLs, the variable did not reach the build: check it is
+   under Production, spelled exactly, and that the redeploy started after saving.
 5. **Verify**: open `https://qpdf.ca/word-to-pdf/`, convert a test DOCX, and
    confirm in DevTools that the only cross-origin requests are `GET`s for
    `soffice.wasm.gz` / `soffice.data.gz` from `assets.qpdf.ca`.

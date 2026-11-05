@@ -11,8 +11,8 @@ environment had no Cloudflare credentials and no access to the qpdf.ca DNS.
    way). Qpdf is AGPL-3.0; users of the website must be able to obtain its
    source. The footer links to `SOURCE_URL` (default
    `https://github.com/hjavaran/Qpdf.ca`). See [LICENSING.md](LICENSING.md).
-2. Decide whether to enable the Office converters now (needs R2, see
-   [cloudflare-r2.md](cloudflare-r2.md)) or later.
+2. Office converters: enabled in production via R2 (see
+   [cloudflare-r2.md](cloudflare-r2.md)). Without the variable they are left out of the build.
 3. Have the privacy policy and terms reviewed by someone qualified, if desired.
 
 ## 1. Create the Pages project (Git integration)
@@ -35,7 +35,7 @@ Environment variables (Production and Preview):
 | `NODE_VERSION` | `22` | Also pinned in `.nvmrc` |
 | `SITE_URL` | `https://qpdf.ca` | Canonical domain for canonicals, sitemap, Open Graph |
 | `SOURCE_URL` | `https://github.com/hjavaran/Qpdf.ca` | AGPL source link (optional override) |
-| `VITE_LIBREOFFICE_ASSET_URL` | *(empty)* | Set only after the R2 bucket exists |
+| `VITE_LIBREOFFICE_ASSET_URL` | `https://assets.qpdf.ca/libreoffice/bentopdf-2.8.11/` | Enables the 13 Office converters. Set (production) once the R2 files are uploaded; leave empty to build without them |
 | `WEB3FORMS_ACCESS_KEY` | *(your Web3Forms access key)* | Optional but required for the contact form to work. See [CONTACT-FORM.md](CONTACT-FORM.md) |
 | `CF_ANALYTICS_TOKEN` | *(your 32-character Web Analytics site token)* | Optional. Enables Cloudflare Web Analytics and the matching CSP allowance. Keep Pages' one-click "Web Analytics" toggle off to avoid double counting |
 
@@ -99,6 +99,6 @@ and analytics keys). Build settings and variables live in the Cloudflare dashboa
 
 The core site fits Cloudflare's free tier: static asset requests and bandwidth
 on Pages are free, and the build (~1.5 minutes) is far below the monthly build
-allowance. The optional R2 bucket stores about 75 MB, well inside R2's free
+allowance. The R2 bucket (LibreOffice engine) stores about 75 MB, well inside R2's free
 storage allowance, and R2 does not charge for egress. Check current pricing on
-Cloudflare's website before enabling R2, and set billing alerts.
+Cloudflare's website and keep billing alerts on.
