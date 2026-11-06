@@ -44,6 +44,13 @@ Categories (`scripts/qpdf/guides.mjs`):
 | `legal`            | For legal professionals         |
 | `comparisons`      | Software comparisons            |
 
+## Linking guides from tool pages
+
+A tool can show a "Related guide(s)" box by listing guide slugs in
+`src/data/tools.mjs`: `guides: ['some-guide']`, or `{ slug: 'some-guide', hint:
+'One-line caution' }` when the link needs a warning. Draft or unknown slugs are
+skipped, so the page never links to a 404.
+
 ## Build-time validation
 
 `npm run build` stops with a message naming the file when a guide has:
