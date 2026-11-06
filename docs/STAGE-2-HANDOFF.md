@@ -37,10 +37,25 @@ future session needs to know to do that without touching the architecture.
 Categories ready for Stage 2: `pdf-basics`, `privacy-security`,
 `immigration`, `legal`, `comparisons`. Empty categories are hidden.
 
-Published so far (both short and original):
+Published so far:
 
 - `/guides/check-if-pdf-tool-uploads-files/`
 - `/guides/make-a-pdf-smaller/`
+- Immigration (Stage 2 Step 6, see
+  [SEO-STAGE2-IMMIGRATION-PUBLISHING-REPORT.md](SEO-STAGE2-IMMIGRATION-PUBLISHING-REPORT.md)):
+  `/guides/ircc-pdf-upload-limits/`, `/guides/compress-bank-statements-ircc/`,
+  `/guides/merge-documents-ircc/`, `/guides/ircc-pdf-please-wait-error/`,
+  `/guides/ircc-pdf-validation-barcodes/`
+
+Withheld as a draft (`draft: true`, not built): `rcic-client-pdf-privacy`
+(RCIC document privacy checklist). It needs qualified regulatory review of the
+current CICC record-retention instrument before it is published; remove
+`draft: true` afterwards and re-check every source and the dates.
+
+Tool pages can link to guides: add `guides: ['guide-slug']` (or
+`{ slug, hint }` for a one-line caution) to the tool in `src/data/tools.mjs`.
+Drafts and unknown slugs are skipped silently. Currently used by Compress PDF,
+Compress PDF to 4 MB, Merge PDF and Fill PDF Form.
 
 ## Suggested Stage 2 structure
 

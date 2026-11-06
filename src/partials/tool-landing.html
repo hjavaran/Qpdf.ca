@@ -25,6 +25,15 @@
           </ul>
         </div>
         {{/if}}
+        {{#if tool.guideLinks.length}}
+        <div class="qp-block">
+          <h2>{{#if tool.guideLinks.[1]}}Related guides{{else}}Related guide{{/if}}</h2>
+          <ul>
+            {{#each tool.guideLinks}}<li><a class="qp-link" href="{{url}}">{{title}}</a>{{#if hint}}<br /><span class="qp-meta">{{hint}}</span>{{/if}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
       </div>
     </div>
     {{#if tool.related.length}}

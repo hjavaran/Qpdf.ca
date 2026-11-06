@@ -243,6 +243,16 @@ function toolContext(t) {
     .map((id) => byId.get(id))
     .filter((r) => r && isToolEnabled(r))
     .map(card);
+  // Optional guide links (tools.mjs `guides`: slug or { slug, hint }); guides that are
+  // missing or still drafts are skipped so a tool page never links to a 404.
+  const publishedGuides = guides();
+  const guideLinks = (t.guides || [])
+    .map((g) => {
+      const slug = typeof g === 'string' ? g : g.slug;
+      const hit = publishedGuides.find((x) => x.slug === slug);
+      return hit ? { url: hit.path, title: hit.title, hint: typeof g === 'string' ? undefined : g.hint } : null;
+    })
+    .filter(Boolean);
   const crumbs = [HOME, { name: 'Tools', url: '/tools/' }, { name: t.name, url }];
   const info = ENGINE_INFO[t.engine] || ENGINE_INFO.core;
   return {
@@ -273,6 +283,7 @@ function toolContext(t) {
       url,
       categoryName: cat?.name,
       related,
+      guideLinks,
       privacyNote: privacyNote(t),
       engineLabel: info.label,
       engineDownload: info.download,
