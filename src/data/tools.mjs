@@ -107,7 +107,7 @@ export const TOOLS = [
       'Official forms are not supporting documents: do not compress, merge or re-save IRCC or other government forms that have a Validate button or 2D barcode. Upload those exactly as Adobe Acrobat Reader saved them.',
     ],
     related: ['compress-pdf-to-4mb', 'compress-pdf-to-3mb', 'compress-pdf-to-2mb', 'merge-pdf', 'split-pdf', 'remove-metadata'],
-    guides: ['ircc-pdf-upload-limits', 'compress-bank-statements-ircc'],
+    guides: ['ircc-pdf-upload-limits', 'compress-bank-statements-ircc', 'federal-court-pdf-efiling'],
     kw: 'reduce size shrink smaller optimize optimise file size email upload limit ircc',
     engine: 'core',
   },
@@ -806,6 +806,7 @@ export const TOOLS = [
     ],
     related: ['page-numbers', 'header-footer', 'merge-pdf', 'redact-pdf'],
     kw: 'legal production discovery litigation numbering exhibit law firm',
+    guides: ['bates-numbering-without-adobe'],
     engine: 'core',
   },
   {
@@ -897,6 +898,7 @@ export const TOOLS = [
     ],
     related: ['table-of-contents', 'merge-pdf', 'split-pdf', 'add-page-labels'],
     kw: 'outline navigation toc bookmark',
+    guides: ['prepare-pdf-exhibits', 'federal-court-pdf-efiling', 'ontario-court-of-appeal-pdf'],
     engine: 'core',
   },
   {
@@ -1960,6 +1962,7 @@ export const TOOLS = [
     ],
     related: ['sanitize-pdf', 'view-metadata', 'redact-pdf', 'remove-annotations'],
     kw: 'metadata author xmp properties privacy clean scrub',
+    guides: ['pdf-metadata-disclosure-checklist'],
     engine: 'core',
   },
   {
@@ -1981,6 +1984,7 @@ export const TOOLS = [
     ],
     related: ['remove-metadata', 'redact-pdf', 'edit-attachments', 'remove-annotations'],
     kw: 'clean scrub javascript hidden data security',
+    guides: [{ slug: 'pdf-metadata-disclosure-checklist', hint: 'Sanitizing does not redact page text and removes links and accessibility tags, so do not run it on a finished court record without checking the result.' }],
     engine: 'core',
   },
   {
@@ -2010,6 +2014,7 @@ export const TOOLS = [
     ],
     related: ['sanitize-pdf', 'remove-metadata', 'flatten-pdf', 'edit-pdf'],
     kw: 'redact redaction black out blackout censor remove sensitive privilege legal',
+    guides: ['permanent-pdf-redaction'],
     engine: 'core',
   },
   {
@@ -2047,6 +2052,7 @@ export const TOOLS = [
     ],
     related: ['deskew-pdf', 'pdf-to-text', 'bookmark', 'compress-pdf'],
     kw: 'ocr searchable scan recognize text character recognition tesseract',
+    guides: ['prepare-pdf-exhibits'],
     engine: 'tesseract',
   },
   {
