@@ -1,5 +1,6 @@
 ---
 title: "How to Permanently Redact a PDF (Not Just Draw Black Boxes)"
+metaTitle: "How to Permanently Redact a PDF | Qpdf.ca"
 description: "Remove sensitive PDF content properly, understand hidden copies and OCR risks, and verify every redaction before disclosure."
 category: privacy-security
 published: 2026-11-06
@@ -39,7 +40,7 @@ For example, removing a client's address from page 3 does not remove the same ad
 
 ## How QPDF.ca's Redact PDF tool works—and where its tests stop
 
-[Redact PDF](/redact-pdf/) supports area marks and text marks. QPDF.ca's own tests (Stage 2, Phase A) used synthetic PDFs inspected for visible text, hidden OCR text, image pixels, annotations, attachments, bookmarks, metadata and underlying PDF objects. These were implementation tests, **not an independent security audit or a guarantee for every real-world PDF**.
+[Redact PDF](/redact-pdf/) supports area marks and text marks. QPDF.ca's own tests (November 2026) used synthetic PDFs inspected for visible text, hidden OCR text, image pixels, annotations, attachments, bookmarks, metadata and underlying PDF objects. These were implementation tests, **not an independent security audit or a guarantee for every real-world PDF**.
 
 **Area (box) redaction:** In those tests, content inside the marked rectangle was genuinely removed, including selectable text, OCR text, scanned-image pixels and an in-area annotation. Crucially, an area mark **did not remove copies elsewhere**, including outside comments, bookmarks, attachments or document properties. Do not treat a successful-looking box as whole-document cleanup.
 

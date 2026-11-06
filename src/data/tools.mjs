@@ -934,7 +934,10 @@ export const TOOLS = [
       'Flatten the form afterwards only if the recipient wants a non-editable copy, and keep the fillable original.',
     ],
     related: ['flatten-pdf', 'sign-pdf', 'form-creator'],
-    guides: [{ slug: 'ircc-pdf-please-wait-error', hint: 'An IRCC form that only shows “Please wait”? This tool will not fix it, and IRCC forms with a Validate button or 2D barcode must not be filled here.' }],
+    guides: [
+      { slug: 'ircc-pdf-please-wait-error', hint: 'An IRCC form that only shows “Please wait”? This tool will not fix it, and IRCC forms with a Validate button or 2D barcode must not be filled here.' },
+      { slug: 'ircc-pdf-validation-barcodes', hint: 'Why validated IRCC forms must be completed and saved in Adobe Acrobat Reader, not in this tool.' },
+    ],
     kw: 'fill form fields xfa acroform',
     engine: 'core',
   },
@@ -1940,6 +1943,10 @@ export const TOOLS = [
       'Flattening is not redaction: text hidden under comments or boxes stays in the file. Use Redact PDF to remove content.',
     ],
     related: ['form-filler', 'redact-pdf', 'sign-pdf', 'remove-annotations'],
+    guides: [
+      { slug: 'ircc-pdf-validation-barcodes', hint: 'Do not flatten IRCC forms that have a Validate button or 2D barcode.' },
+      { slug: 'pdf-metadata-disclosure-checklist', hint: 'Flattening is not redaction: hidden text and metadata stay in the file.' },
+    ],
     kw: 'flatten form fields annotations permanent lock',
     engine: 'core',
   },

@@ -58,9 +58,37 @@ async function newContext(browser) {
     } catch {
       post = -1;
     }
-    ctx.requests.push({ url: r.url(), method: r.method(), post, t: Date.now(), sw: !!r.serviceWorker() });
+    const entry = { url: r.url(), method: r.method(), post, t: Date.now(), sw: !!r.serviceWorker() };
+    if (ANALYTICS && isAnalytics(entry.url)) {
+      try {
+        entry.body = r.postDataBuffer()?.toString('latin1') ?? '';
+      } catch {
+        entry.body = '';
+      }
+      analyticsLog.push({ url: entry.url, method: entry.method, bytes: post, body: entry.body.slice(0, 4000) });
+    }
+    ctx.requests.push(entry);
   });
   return ctx;
+}
+
+// Production runs (QPDF_URL=https://qpdf.ca) also load Cloudflare Web Analytics.
+// With QPDF_ALLOW_ANALYTICS=1 its two endpoints are tolerated, but only as
+// small payloads that contain no PDF data and no fixture file name; every
+// payload is saved to artifacts/analytics-requests.json for review. Without
+// the flag the audit stays strict (same-origin static GETs only).
+const ANALYTICS = process.env.QPDF_ALLOW_ANALYTICS === '1';
+const analyticsLog = [];
+const ANALYTICS_MAX_BODY = 32 * 1024;
+function isAnalytics(url) {
+  return url === 'https://static.cloudflareinsights.com/beacon.min.js' || url.startsWith('https://static.cloudflareinsights.com/beacon.min.js?') || url === 'https://cloudflareinsights.com/cdn-cgi/rum';
+}
+function analyticsProblem(r) {
+  if (r.url.startsWith('https://static.cloudflareinsights.com/')) return r.method === 'GET' && !r.post ? '' : `${r.method} with body to analytics script`;
+  if (r.method !== 'POST') return `${r.method} to analytics endpoint`;
+  if (r.post > ANALYTICS_MAX_BODY) return `analytics payload ${r.post} B > ${ANALYTICS_MAX_BODY} B`;
+  if (/%PDF-|\.pdf\b|\.jpe?g\b/i.test(r.body || '')) return 'analytics payload mentions PDF data or a file name';
+  return '';
 }
 
 function auditRequests(ctx, since) {
@@ -68,6 +96,11 @@ function auditRequests(ctx, since) {
   for (const r of ctx.requests.filter((x) => x.t >= since)) {
     if (r.url.startsWith('data:') || r.url.startsWith('blob:')) continue;
     const u = new URL(r.url);
+    if (ANALYTICS && isAnalytics(r.url)) {
+      const p = analyticsProblem(r);
+      if (p) bad.push(p);
+      continue;
+    }
     if (u.origin !== ORIGIN) bad.push(`cross-origin ${r.method} ${r.url}`);
     else if (r.method !== 'GET') bad.push(`${r.method} ${u.pathname}`);
     else if (r.post) bad.push(`body on ${u.pathname}`);
@@ -368,6 +401,31 @@ const TESTS = [
       const i = pdfinfo(f);
       if (/Jane Testperson/.test(i.raw)) throw new Error('author still present');
       return `author="${i.author}" title="${i.title}"`;
+    },
+  },
+  {
+    // Every location the page says it cleans (document properties, document
+    // XMP, PieceInfo, file IDs) must be empty afterwards; page-level XMP is
+    // documented as possibly remaining, so it is only reported.
+    name: 'remove metadata (XMP, PieceInfo, file ID)',
+    slug: 'remove-pdf-metadata',
+    files: ['metadata-rich.pdf'],
+    validate: (f) => {
+      const r = JSON.parse(
+        sh('python3', [
+          '-c',
+          `import json,sys,pymupdf
+d=pymupdf.open(sys.argv[1])
+blob=b''.join((d.xref_object(x) or '').encode('latin1','replace')+(d.xref_stream(x) or b'') for x in range(1,d.xref_length()) if not d.xref_is_image(x))
+blob+=d.pdf_trailer().encode('latin1','replace')+open(sys.argv[1],'rb').read()
+def has(m): return m.encode() in blob or m.encode().hex().upper().encode() in blob.upper()
+print(json.dumps({m:has(m) for m in ['META-INFO-900','XMP-DOC-901','PIECE-INFO-902','ID-MARKER-904','XMP-PAGE-903']}|{'pages':d.page_count}))`,
+          f,
+        ])
+      );
+      const left = ['META-INFO-900', 'XMP-DOC-901', 'PIECE-INFO-902', 'ID-MARKER-904'].filter((m) => r[m]);
+      if (left.length) throw new Error(`still present: ${left.join(', ')}`);
+      return `properties, document XMP, PieceInfo and file ID removed; page-level XMP ${r['XMP-PAGE-903'] ? 'remains (as documented)' : 'also removed'}; ${r.pages} pages`;
     },
   },
   {
@@ -747,5 +805,9 @@ try {
 }
 const failed = results.filter((r) => !r.ok);
 fs.writeFileSync(path.join(ART, 'results.json'), JSON.stringify(results, null, 2));
+if (ANALYTICS) {
+  fs.writeFileSync(path.join(ART, 'analytics-requests.json'), JSON.stringify(analyticsLog, null, 1));
+  console.log(`analytics requests: ${analyticsLog.length} (largest body ${Math.max(0, ...analyticsLog.map((a) => a.bytes))} B), saved to analytics-requests.json`);
+}
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 process.exitCode = failed.length ? 1 : 0;

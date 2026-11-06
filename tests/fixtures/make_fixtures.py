@@ -271,11 +271,41 @@ def large(target_mb, name):
     c.save()
 
 
+def metadata_rich_pdf(src, path):
+    """Synthetic markers in every metadata location Remove PDF Metadata targets.
+
+    Info dictionary (META-INFO-900), document-level XMP (XMP-DOC-901), catalog
+    PieceInfo (PIECE-INFO-902) and a trailer /ID, plus page-level XMP
+    (XMP-PAGE-903), which the tool is documented NOT to remove.
+    """
+    from pypdf.generic import ArrayObject, ByteStringObject, DecodedStreamObject, DictionaryObject, NameObject, TextStringObject
+
+    def xmp(marker):
+        s = DecodedStreamObject()
+        s.set_data(('<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?><x:xmpmeta xmlns:x="adobe:ns:meta/">'
+                    '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" '
+                    f'xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:creator>{marker}</dc:creator></rdf:Description>'
+                    '</rdf:RDF></x:xmpmeta><?xpacket end="w"?>').encode())
+        s.update({NameObject("/Type"): NameObject("/Metadata"), NameObject("/Subtype"): NameObject("/XML")})
+        return s
+
+    w = PdfWriter(clone_from=src)
+    w.add_metadata({"/Author": "META-INFO-900", "/Title": "META-INFO-900 title", "/Producer": "META-INFO-900 producer"})
+    w._root_object[NameObject("/Metadata")] = w._add_object(xmp("XMP-DOC-901"))
+    w._root_object[NameObject("/PieceInfo")] = DictionaryObject({
+        NameObject("/QPDFTest"): DictionaryObject({NameObject("/Private"): TextStringObject("PIECE-INFO-902")})})
+    w.pages[0][NameObject("/Metadata")] = w._add_object(xmp("XMP-PAGE-903"))
+    w._ID = ArrayObject([ByteStringObject(b"ID-MARKER-904-AAAA"), ByteStringObject(b"ID-MARKER-904-BBBB")])
+    with open(path, "wb") as f:
+        w.write(f)
+
+
 if __name__ == "__main__":
     text_pdf(p("text.pdf"))
     text_pdf(p("text-b.pdf"), pages=2, title="Second Test Document")
     text_pdf(p("redaction.pdf"), pages=2, title="Redaction Test", secret=True)
     redaction_audit_pdf(p("redaction-audit.pdf"))
+    metadata_rich_pdf(p("text.pdf"), p("metadata-rich.pdf"))
     text_pdf(p("multipage-40.pdf"), pages=40, title="Forty Page Document")
     image_pdf(p("image-heavy.pdf"))
     scanned_pdf(p("scanned.pdf"))

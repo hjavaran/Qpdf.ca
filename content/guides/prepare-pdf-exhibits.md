@@ -13,7 +13,7 @@ sources:
     publisher: "Supreme Court of British Columbia"
     accessed: 2026-11-06
   - title: "Amended Consolidated General Practice Guidelines"
-    url: https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
+    url: https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
     publisher: "Federal Court of Canada"
     accessed: 2026-11-06
   - title: "General Practice Direction"

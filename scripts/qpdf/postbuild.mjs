@@ -172,7 +172,7 @@ for (const t of TOOLS) {
   if (t.id !== t.slug || !ENABLED_TOOLS.includes(t)) redirects.push(`/${t.id} ${target} 301`, `/${t.id}/ ${target} 301`);
   redirects.push(`/${t.id}.html ${target} 301`);
 }
-redirects.push('/compress-pdf-to-1mb /compress-pdf/ 301', '/compress-pdf-to-1mb/ /compress-pdf/ 301', '/compress-pdf-to-1mb.html /compress-pdf/ 301', '/wasm-settings /tools/ 301', '/wasm-settings.html /tools/ 301');
+redirects.push('/compress-pdf-to-1mb /compress-pdf/ 301', '/compress-pdf-to-1mb/ /compress-pdf/ 301', '/compress-pdf-to-1mb.html /compress-pdf/ 301', '/wasm-settings /tools/ 301', '/wasm-settings/ /tools/ 301', '/wasm-settings.html /tools/ 301');
 for (const key of ['about', 'privacy', 'terms']) redirects.push(`/${key}.html /${key}/ 301`);
 redirects.push('/faq /about/ 301', '/contact.html /contact/ 301', '/licensing /licenses/ 301', '/index.html / 301');
 fs.writeFileSync(path.join(DIST, '_redirects'), redirects.join('\n') + '\n');

@@ -13,7 +13,7 @@ sources:
     publisher: "Federal Court of Canada"
     accessed: 2026-11-06
   - title: "Amended Consolidated General Practice Guidelines"
-    url: https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
+    url: https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
     publisher: "Federal Court of Canada"
     accessed: 2026-11-06
 ---
@@ -22,7 +22,7 @@ sources:
 
 For an ordinary **non-confidential Federal Court** filing, prepare a readable PDF that is searchable, carries the required page numbering and bookmarks, is not password protected, and is **no larger than 100 MB** for the Court's standard E-Filing System. If it is too large after appropriate compression, divide it into the fewest necessary volumes. **Do not use the ordinary portal for documents subject to a confidentiality order or direction.**
 
-These instructions concern the **Federal Court of Canada**, not the **Federal Court of Appeal**. The Federal Court's [E-Filing instructions](https://www.fct-cf.ca/en/pages/online-access/e-filing) explicitly say its system does not accept Federal Court of Appeal filings. The [Amended Consolidated General Practice Guidelines, June 20, 2025](https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf), particularly paragraph 19, provide additional formatting rules. Check any specialized guidelines and orders applying to your proceeding.
+These instructions concern the **Federal Court of Canada**, not the **Federal Court of Appeal**. The Federal Court's [E-Filing instructions](https://www.fct-cf.ca/en/pages/online-access/e-filing) explicitly say its system does not accept Federal Court of Appeal filings. The [Amended Consolidated General Practice Guidelines, June 20, 2025](https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf), particularly paragraph 19, provide additional formatting rules. Check any specialized guidelines and orders applying to your proceeding.
 
 ## Use the correct filing channel
 
@@ -48,7 +48,7 @@ Large PDFs are processed using your device's resources in the browser for QPDF.c
 
 ## Make the pages searchable and citations predictable
 
-The Federal Court requires typed text in filed PDFs to be searchable. Paragraph 19(g) of the [practice guidelines](https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf) also directs parties to OCR electronic filings that contain scanned content or images. Where possible, export directly from Word or another digital source instead of printing and rescanning it. For unavoidable scans, run [OCR PDF](/ocr-pdf/) on a copy and test text searches across several pages.
+The Federal Court requires typed text in filed PDFs to be searchable. Paragraph 19(g) of the [practice guidelines](https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf) also directs parties to OCR electronic filings that contain scanned content or images. Where possible, export directly from Word or another digital source instead of printing and rescanning it. For unavoidable scans, run [OCR PDF](/ocr-pdf/) on a copy and test text searches across several pages.
 
 Paragraph 19(d) calls for **visible, consecutive page numbering beginning on the first page of each PDF**, with the numbers corresponding to the electronic PDF pages and pinpoint references in submissions. Use [Add Page Numbers](/add-page-numbers-to-pdf/) if appropriate, but confirm the placement and sequence match the format required in your filing. A separate PDF Page Label setting is not a substitute for a printed number where visible numbering is required.
 
@@ -66,7 +66,7 @@ Service and proof-of-service requirements depend on the document and the applica
 
 A practical workflow is to prepare the document and proof of service as separate working files, confirm they are suitable for combination (including any signature considerations), then use [Merge PDF](/merge-pdf/) and add a distinct `Proof of Service` bookmark. Verify that all pages of the proof appear and remain readable. If a court direction or document type calls for different treatment, follow that direction.
 
-This distinction matters: the underlying obligation to serve a document or file proof where required may be mandatory, while the **single-file and bookmark arrangement described in Guideline 35 uses “should.”** See [Federal Court Guideline 35, page 12](https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf).
+This distinction matters: the underlying obligation to serve a document or file proof where required may be mandatory, while the **single-file and bookmark arrangement described in Guideline 35 uses “should.”** See [Federal Court Guideline 35, page 12](https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf).
 
 ## Confidential documents require a different route
 

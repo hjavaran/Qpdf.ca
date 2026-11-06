@@ -46,7 +46,7 @@ The four operations below solve different problems. They are **not interchangeab
 
 ### Remove PDF Metadata: document properties, not page content
 
-[Remove PDF Metadata](/remove-pdf-metadata/) removes document properties, document-level XMP, file IDs and PieceInfo, as checked in QPDF.ca's own Stage 2 tests. It does **not** remove the main page content, comments, attachments, form entries or bookmarks. XMP attached to individual pages or images may remain. A cleared Author field is therefore **not proof** that all metadata has been removed.
+[Remove PDF Metadata](/remove-pdf-metadata/) removes document properties, document-level XMP, file IDs and PieceInfo, as checked in QPDF.ca's own tests with synthetic PDFs (November 2026). It does **not** remove the main page content, comments, attachments, form entries or bookmarks. XMP attached to individual pages or images may remain. A cleared Author field is therefore **not proof** that all metadata has been removed.
 
 Use it when a released, non-evidentiary copy should not carry ordinary document-level properties. Verify its output and consider whether provenance fields are needed first.
 
