@@ -32,6 +32,8 @@
         <h1 class="text-2xl font-bold text-white mb-2">{{tool.name}}</h1>
         <p class="text-gray-400 mb-6">
           Reduce large PDFs below 4 MB while keeping text sharp and searchable.
+          Meant for supporting documents such as scans, statements and letters —
+          not for IRCC forms that have a Validate button or 2D barcode.
         </p>
 
         <div class="qp-cmp-grid">
@@ -88,7 +90,7 @@
 
         </div>
         <div class="qp-cmp-side">
-        {{> compress-options targetSize="4" targetUnit="mb" }}
+        {{> compress-options targetSize="3.8" targetUnit="mb" targetLimit="4 MB" }}
         </div>
         </div>
       </div>

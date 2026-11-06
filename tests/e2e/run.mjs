@@ -374,10 +374,37 @@ const TESTS = [
     name: 'bates numbering',
     slug: 'bates-numbering',
     files: ['text.pdf', 'text-b.pdf'],
+    // One uninterrupted sequence across both files (3 + 2 pages), one ID per page.
     validate: (f) => {
-      const t = f.endsWith('.pdf') ? pdftext(f) : '';
-      const m = t.match(/[A-Z]*0{2,}\d+/g);
-      return f.endsWith('.zip') ? 'zip of numbered files' : `bates ids: ${(m || []).slice(0, 3).join(', ')}`;
+      const out = py(`
+import zipfile, io, json, subprocess, sys
+f = ${JSON.stringify(f)}
+docs = []
+if f.endswith('.zip'):
+    z = zipfile.ZipFile(f)
+    for n in z.namelist():
+        if n.lower().endswith('.pdf'):
+            docs.append((n, z.read(n)))
+else:
+    docs.append((f, open(f, 'rb').read()))
+res = []
+for name, data in docs:
+    pages = []
+    n = int([l for l in subprocess.run(['pdfinfo', '-'], input=data, capture_output=True).stdout.decode().splitlines() if l.startswith('Pages:')][0].split()[1])
+    for i in range(1, n + 1):
+        t = subprocess.run(['pdftotext', '-f', str(i), '-l', str(i), '-', '-'], input=data, capture_output=True).stdout.decode()
+        import re
+        pages.append(re.findall(r'[A-Z]*0{2,}\\d+', t))
+    res.append([name, pages])
+print(json.dumps(res))
+`);
+      const docs = JSON.parse(out);
+      const ids = docs.flatMap(([, pages]) => pages.map((p) => (p.length === 1 ? p[0] : `?${p.length}`)));
+      const nums = ids.map((x) => Number(x.replace(/\D/g, '')));
+      if (ids.length !== 5) throw new Error(`expected 5 numbered pages, got ${ids.length}: ${ids}`);
+      if (ids.some((x) => x.startsWith('?'))) throw new Error(`pages without exactly one Bates ID: ${ids}`);
+      for (let i = 1; i < nums.length; i++) if (nums[i] !== nums[i - 1] + 1) throw new Error(`sequence breaks: ${ids.join(', ')}`);
+      return `${docs.length} files, continuous sequence ${ids[0]}–${ids[ids.length - 1]} (${docs.map(([n, p]) => `${n.split('/').pop()}: ${p.length} pages`).join(', ')})`;
     },
   },
   {
@@ -488,7 +515,9 @@ TESTS.push({
     return `${m[1]} MB (> 4 MB without a target); "No compression needed", no download`;
   },
 });
-for (const n of [3, 4]) {
+// Presets sit a little below the limit so the result also fits portals that
+// require files *smaller than* the limit and count 1 MB as 1,000,000 bytes.
+for (const [n, preset] of [[3, '2.85'], [4, '3.8']]) {
   TESTS.push({
     name: `compress to ${n} MB preset hits target`,
     slug: `compress-pdf-to-${n}mb`,
@@ -496,16 +525,16 @@ for (const n of [3, 4]) {
     prepare: async (p) => {
       const v = await p.inputValue('#target-size');
       const u = await p.inputValue('#target-size-unit');
-      if (v !== String(n) || u !== 'mb') throw new Error(`page preset is ${v} ${u}, expected ${n} mb`);
+      if (v !== preset || u !== 'mb') throw new Error(`page preset is ${v} ${u}, expected ${preset} mb`);
       await p.click('.qp-seg-btn[data-value="lossless"]');
     },
     after: clickDownload,
     validate: async (f, page) => {
       const a = fs.statSync(f).size;
-      if (a > n * MB) throw new Error(`${(a / MB).toFixed(2)} MB exceeds ${n} MB target`);
+      if (a >= n * 1e6) throw new Error(`${a} bytes is not below ${n},000,000 bytes`);
       expectPages(4)(f);
       const card = await resultText(page);
-      return `${(a / MB).toFixed(2)} MB ≤ ${n} MB; card: "${card.slice(0, 60)}…${/target/i.test(card) ? ' [mentions target]' : ''}"`;
+      return `${a.toLocaleString()} B < ${n},000,000 B (preset ${preset} MB); card: "${card.slice(0, 60)}…${/target/i.test(card) ? ' [mentions target]' : ''}"`;
     },
   });
 }
@@ -526,11 +555,23 @@ TESTS.push({
   },
 });
 
+// Area (box) redactions show a "Check for other copies" notice before download.
+async function acceptAreaNotice(p) {
+  const dialog = p.locator('[role="dialog"]', { hasText: 'Check for other copies' });
+  try {
+    await dialog.waitFor({ timeout: 4000 });
+    await dialog.locator('button:text-is("Download")').click();
+  } catch {
+    /* text mark: no notice */
+  }
+}
+
 TESTS.push({
   name: 'redact text (true removal)',
   slug: 'redact-pdf',
   files: ['redaction.pdf'],
   click: 'text=Download Edited PDF',
+  after: acceptAreaNotice,
   prepare: async (p) => {
     await p.waitForTimeout(5000);
     await p.locator('button:text-is("Redact")').first().click();
@@ -556,6 +597,99 @@ TESTS.push({
     if (/SECRET-12345/.test(t) || raw) throw new Error('redacted text still present');
     if (!/Redaction Test/.test(t)) throw new Error('unredacted text lost');
     return 'SECRET-12345 removed from text layer and file bytes; other text kept';
+  },
+});
+
+// Redaction leak audit: one area mark over the band that holds searchable
+// text, a scanned image, an invisible OCR layer, a FreeText annotation and
+// text previously hidden under a drawn black box (fixture:
+// redaction-audit.pdf). tests/e2e/redaction_audit.py lists every place each
+// secret can still be found afterwards.
+const AUDIT_IN_AREA = ['SECRET-TEXT-111', 'SECRET-OCR-333', 'ANNOT-IN-AREA-555', 'SECRET-UNDER-BOX-777'];
+// Also repeated outside the box (bookmark, comment, attachment, properties).
+const HAS_OUTSIDE_COPY = ['SECRET-TEXT-111', 'SECRET-OCR-333'];
+TESTS.push({
+  name: 'redact audit (text, scan, OCR layer, annotation, bookmark, attachment, metadata)',
+  slug: 'redact-pdf',
+  files: ['redaction-audit.pdf'],
+  click: 'text=Download Edited PDF',
+  prepare: async (p) => {
+    await p.waitForTimeout(5000);
+    await p.locator('button:text-is("Redact")').first().click();
+    await p.waitForTimeout(600);
+    await p.locator('button[aria-label="Redact"]').first().click();
+    const img = p.locator('img[src^="blob:"]').first();
+    await img.scrollIntoViewIfNeeded();
+    await p.waitForTimeout(500);
+    const box = await img.boundingBox();
+    const s = box.width / 612;
+    // PDF y 400–600 from the bottom = 192–392 from the top.
+    const [x0, x1, y0, y1] = [box.x + 60 * s, box.x + 560 * s, box.y + 190 * s, box.y + 394 * s];
+    await p.mouse.move(x0, y0);
+    await p.mouse.down();
+    await p.mouse.move(x1, y1, { steps: 10 });
+    await p.mouse.up();
+    await p.waitForTimeout(800);
+    await p.locator('button[aria-label="Apply Redaction"]').first().click();
+    await p.waitForTimeout(1500);
+  },
+  // Area marks show a notice that copies elsewhere are not searched.
+  after: async (p) => {
+    const dialog = p.locator('[role="dialog"]', { hasText: 'Check for other copies' });
+    await dialog.waitFor({ timeout: 10000 });
+    await dialog.locator('button:text-is("Download")').click();
+  },
+  validate: (f) => {
+    const r = JSON.parse(sh('python3', [path.join(ROOT, 'tests/e2e/redaction_audit.py'), fx('redaction-audit.pdf'), f]));
+    fs.writeFileSync(path.join(ART, 'redaction-audit.json'), JSON.stringify(r, null, 1));
+    // Known, disclosed limitation: area marks do not scrub copies outside the box.
+    const outside = HAS_OUTSIDE_COPY.flatMap((k) => r.after[k].filter((w) => w !== 'text-layer').map((w) => `${k}:${w}`));
+    const leaks = AUDIT_IN_AREA.filter((k) => (HAS_OUTSIDE_COPY.includes(k) ? r.after[k].includes('text-layer') : r.after[k].length)).map((k) => `${k}: ${r.after[k].join('+')}`);
+    const img = r.images_after[0];
+    if (img && img.unchanged) leaks.push('scanned image pixels unchanged');
+    if (img && img.dark_fraction_in_secret_region > 0.02 && img.dark_fraction_in_secret_region < 0.9) {
+      leaks.push(`scanned image still has text-like pixels (${img.dark_fraction_in_secret_region})`);
+    }
+    for (const k of ['KEEP-THIS-TEXT', 'KEEP-BELOW-TEXT']) if (!r.after[k].includes('text-layer')) leaks.push(`${k} lost`);
+    if (leaks.length) throw new Error('redaction leak: ' + leaks.join('; '));
+    const other = r.after['ATTACH-OTHER-666'].length ? 'unrelated attachment kept (expected)' : 'unrelated attachment removed';
+    return `no in-area secret recoverable; image ${img ? (img.unchanged ? 'unchanged' : 'pixels replaced') : 'removed'}; ${other}; copies outside the box (disclosed, not scrubbed for area marks): ${outside.join(', ') || 'none'}`;
+  },
+});
+
+// Text mark (select the words): the secret's copies in bookmarks, comments,
+// attachments and properties must be scrubbed too.
+TESTS.push({
+  name: 'redact audit, text mark (copies in bookmarks, comments, attachments, metadata)',
+  slug: 'redact-pdf',
+  files: ['redaction-audit.pdf'],
+  click: 'text=Download Edited PDF',
+  prepare: async (p) => {
+    await p.waitForTimeout(5000);
+    await p.locator('button:text-is("Redact")').first().click();
+    await p.waitForTimeout(600);
+    await p.locator('button[aria-label="Redact"]').first().click();
+    const img = p.locator('img[src^="blob:"]').first();
+    await img.scrollIntoViewIfNeeded();
+    await p.waitForTimeout(500);
+    const box = await img.boundingBox();
+    const s = box.width / 612;
+    // Select only "SECRET-TEXT-111" (after "Account: "), baseline PDF y=570 → ~217 from the top.
+    await p.mouse.move(box.x + 139 * s, box.y + 217 * s);
+    await p.mouse.down();
+    await p.mouse.move(box.x + 262 * s, box.y + 218 * s, { steps: 10 });
+    await p.mouse.up();
+    await p.waitForTimeout(800);
+    await p.locator('button[aria-label="Apply Redaction"]').first().click();
+    await p.waitForTimeout(1500);
+  },
+  validate: (f) => {
+    const r = JSON.parse(sh('python3', [path.join(ROOT, 'tests/e2e/redaction_audit.py'), fx('redaction-audit.pdf'), f]));
+    fs.writeFileSync(path.join(ART, 'redaction-audit-text.json'), JSON.stringify(r, null, 1));
+    const where = r.after['SECRET-TEXT-111'];
+    if (where.length) throw new Error('SECRET-TEXT-111 still in: ' + where.join('+'));
+    for (const k of ['KEEP-THIS-TEXT', 'KEEP-BELOW-TEXT']) if (!r.after[k].includes('text-layer')) throw new Error(`${k} lost`);
+    return 'SECRET-TEXT-111 removed from page, bookmark, comment, attachment, properties and raw bytes';
   },
 });
 

@@ -13,6 +13,7 @@ import {
   PAGES,
 } from './scripts/qpdf/context.mjs';
 import { loadGuides } from './scripts/qpdf/guides.mjs';
+import { lucideSubsetPlugin } from './scripts/qpdf/lucide-subset.mjs';
 
 // QPDF build configuration.
 //
@@ -142,6 +143,7 @@ export default defineConfig(() => {
       format: 'es' as const,
     },
     plugins: [
+      lucideSubsetPlugin(__dirname),
       handlebars({
         partialDirectory: resolve(__dirname, 'src/partials'),
         context: (pagePath: string) => getPageContext(pagePath),

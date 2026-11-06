@@ -41,7 +41,7 @@ status.className = 'qp-offline';
 status.setAttribute('role', 'status');
 status.setAttribute('aria-live', 'polite');
 status.dataset.state = 'idle';
-status.textContent = 'Checking offline support…';
+status.textContent = 'Checking offline…';
 
 const toolId = document.querySelector<HTMLElement>('[data-qp-tool]')?.dataset.qpTool;
 const fav = document.createElement('button');

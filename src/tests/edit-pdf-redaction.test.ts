@@ -21,7 +21,12 @@ vi.mock('../js/utils/disabled-tools.js', () => ({
   getEditorDisabledCategories: (): string[] => [],
 }));
 
-const { trackAppliedRedactions, redactionScrubTerms, scrubRedactedText } =
+const {
+  trackAppliedRedactions,
+  redactionScrubTerms,
+  scrubRedactedText,
+  hasAppliedAreaRedactions,
+} =
   await import('../js/logic/edit-pdf-page.js');
 
 function mockRedactionPlugin() {
@@ -182,5 +187,17 @@ describe('scrubRedactedText', () => {
     expect(redactDocumentData).toHaveBeenCalledTimes(1);
     expect(redactDocumentData.mock.calls[0][1]).toEqual(['abc', 'de']);
     expect([...out]).toEqual([1, 2]);
+  });
+});
+
+describe('hasAppliedAreaRedactions', () => {
+  it('is false when every applied mark carries its text', () => {
+    expect(hasAppliedAreaRedactions(['Jane Doe', 'SIN 123'])).toBe(false);
+    expect(hasAppliedAreaRedactions([])).toBe(false);
+  });
+
+  it('is true when an applied mark has no text (area/box mark)', () => {
+    expect(hasAppliedAreaRedactions(['Jane Doe', undefined])).toBe(true);
+    expect(hasAppliedAreaRedactions(['  '])).toBe(true);
   });
 });

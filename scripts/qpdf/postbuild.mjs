@@ -84,6 +84,25 @@ for (const f of htmlFiles) {
   if (s !== before) fs.writeFileSync(f, s);
 }
 
+// ── 2a. Homepage: preload the DM Sans weights used by the hero ────────────
+// Without this the large hero heading first paints in a fallback font and
+// re-wraps when DM Sans arrives (measured CLS 0.22 on throttled mobile).
+// Other pages showed no font-related shift, so they are left alone.
+const fontPreloads = fs
+  .readdirSync(path.join(DIST, 'assets'))
+  .filter((f) => /^dm-sans-latin-(400|700)-normal-[\w-]+\.woff2$/.test(f))
+  .sort()
+  .map((f) => `<link rel="preload" href="/assets/${f}" as="font" type="font/woff2" crossorigin />`)
+  .join('\n    ');
+if (!fontPreloads.includes('-400-') || !fontPreloads.includes('-700-')) {
+  throw new Error('postbuild: DM Sans 400/700 woff2 files not found in dist/assets');
+}
+{
+  const f = path.join(DIST, 'index.html');
+  const s = fs.readFileSync(f, 'utf8');
+  if (!s.includes('rel="preload" href="/assets/dm-sans')) fs.writeFileSync(f, s.replace('<title>', `${fontPreloads}\n    <title>`));
+}
+
 // ── 2b. External links: new tab, noopener noreferrer, nofollow (except wealththeory.ca) ──
 const THIRD_PARTY_DIR = /^\/(pdfjs-viewer|pdfjs-annotation-viewer|libreoffice-wasm|wasm|vendor)\//;
 const isOwnHost = (h) => h === 'qpdf.ca' || h.endsWith('.qpdf.ca');

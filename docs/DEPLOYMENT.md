@@ -2,8 +2,9 @@
 
 Qpdf is a static site. Cloudflare Pages builds it from GitHub and serves it
 from `dist/`. No Workers, Functions, databases or paid services are required
-for the core site. Status on 2026-11-04: **not yet deployed** — this
-environment had no Cloudflare credentials and no access to the qpdf.ca DNS.
+for the core site. Status on 2026-11-05: **live at https://qpdf.ca**, built by
+Cloudflare Pages from the `main` branch (verified: `/sitemap.xml` and
+`/robots.txt` return 200 with valid content; the sitemap matches a local build).
 
 ## Before the first public deployment (required)
 
@@ -22,7 +23,7 @@ select `hjavaran/Qpdf.ca`.
 
 | Setting | Value |
 | --- | --- |
-| Production branch | `main` (merge `claude/lucid-clarke-k9jwjr` first) |
+| Production branch | `main` (other branches get Preview deployments) |
 | Framework preset | None |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
@@ -76,8 +77,11 @@ Then, in a browser:
 
 1. Open `https://qpdf.ca/compress-pdf/`, wait for **Ready to work offline**,
    disconnect Wi-Fi, compress a test PDF, download it.
-2. Check `https://qpdf.ca/merge-pdf/` → `/merge` and `/merge-pdf.html` redirect
-   correctly, and `https://qpdf.ca/does-not-exist` shows the 404 page.
+2. Check that `https://qpdf.ca/merge-pdf` (no slash) and `/merge-pdf.html`
+   redirect to `/merge-pdf/`, `https://www.qpdf.ca/` redirects to
+   `https://qpdf.ca/`, and `https://qpdf.ca/does-not-exist` returns the 404
+   page with status 404. (Upstream ids that differ from Qpdf slugs, such as
+   `/extract-pages`, redirect too; `/merge` was never a page and returns 404.)
 3. Submit `https://qpdf.ca/sitemap.xml` in Google Search Console and Bing
    Webmaster Tools.
 

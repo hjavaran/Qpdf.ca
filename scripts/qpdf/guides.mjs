@@ -92,6 +92,26 @@ export function loadGuides({ includeDrafts = false } = {}) {
     if (!GUIDE_CATEGORIES.some((c) => c.key === data.category)) {
       throw new Error(`${file}: unknown category "${data.category}"`);
     }
+    const isoDate = /^\d{4}-\d{2}-\d{2}$/;
+    for (const key of ['published', 'reviewed']) {
+      const v = data[key] instanceof Date ? data[key].toISOString().slice(0, 10) : data[key];
+      if (v !== undefined && !isoDate.test(String(v))) {
+        throw new Error(`content/guides/${file}: "${key}" must be a YYYY-MM-DD date, got "${v}"`);
+      }
+    }
+    for (const key of ['relatedTools', 'relatedGuides', 'sources']) {
+      if (data[key] !== undefined && !Array.isArray(data[key])) {
+        throw new Error(`content/guides/${file}: "${key}" must be a list`);
+      }
+    }
+    for (const src of data.sources || []) {
+      if (!src || !src.title || !/^https:\/\//.test(src.url || '')) {
+        throw new Error(`content/guides/${file}: every source needs a title and an https:// url`);
+      }
+    }
+    if (String(data.description).length > 170) {
+      console.warn(`[guides] ${file}: description is ${String(data.description).length} characters (aim for ≤ 160)`);
+    }
     const env = {};
     const html = md.render(body, env);
     const words = body.split(/\s+/).filter(Boolean).length;
@@ -106,6 +126,7 @@ export function loadGuides({ includeDrafts = false } = {}) {
       categoryName: GUIDE_CATEGORIES.find((c) => c.key === data.category).name,
       published: iso(data.published),
       reviewed: iso(data.reviewed || data.published),
+      draft: !!data.draft,
       author: data.author || 'Qpdf.ca',
       lang: data.lang || 'en-CA',
       translations: data.translations || {},
@@ -117,6 +138,12 @@ export function loadGuides({ includeDrafts = false } = {}) {
       readingMinutes: Math.max(1, Math.round(words / 220)),
       html,
     });
+  }
+  for (const g of guides) {
+    if (g.reviewed < g.published) throw new Error(`content/guides: ${g.slug}: "reviewed" is earlier than "published"`);
+  }
+  if (new Set(guides.map((g) => g.slug)).size !== guides.length) {
+    throw new Error('content/guides: two guides share the same slug');
   }
   guides.sort((a, b) => (a.published < b.published ? 1 : -1));
   return guides;

@@ -130,6 +130,82 @@ def form_pdf(path):
     c.save()
 
 
+def redaction_audit_pdf(path):
+    """One page with a synthetic secret in every place a redaction can leak.
+
+    The band between y=400 and y=600 (PDF points from the bottom) is the area
+    the E2E test marks for redaction. Inside it: searchable text, a scanned
+    image with text in its pixels, an invisible OCR text layer, text hidden
+    under a drawn black box, an overlapping vector shape and a FreeText
+    annotation. Outside it: control text that must survive, a sticky note,
+    a bookmark, two attachments and document properties that repeat secrets.
+    """
+    from pypdf.generic import DictionaryObject, NameObject, NumberObject, TextStringObject, ArrayObject, FloatObject
+
+    tmp = path + ".tmp"
+    c = canvas.Canvas(tmp, pagesize=LETTER)
+    c.setTitle("Audit SECRET-TEXT-111")
+    c.setSubject("SECRET-OCR-333")
+    c.setAuthor("Jane Testperson")
+    c.setFont("Helvetica-Bold", 18)
+    c.drawString(72, 720, "Redaction Audit Fixture")
+    c.setFont("Helvetica", 12)
+    c.drawString(72, 680, "KEEP-THIS-TEXT visible control line")
+    # 1. searchable text (with an overlapping vector shape)
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(72, 570, "Account: SECRET-TEXT-111")
+    c.setFillColorRGB(0.2, 0.4, 0.9)
+    c.rect(300, 560, 200, 30, stroke=0, fill=1)
+    c.setFillColorRGB(0, 0, 0)
+    # 2. scanned image with text in its pixels + 3. invisible OCR layer
+    img = Image.new("L", (1400, 360), 245)
+    ImageDraw.Draw(img).text((40, 120), "SECRET-IMG-222", fill=10, font=ImageFont.load_default(size=110))
+    buf = io.BytesIO()
+    img.convert("RGB").save(buf, "JPEG", quality=90)
+    buf.seek(0)
+    c.drawImage(ImageReader(buf), 72, 430, 468, 120)
+    t = c.beginText(90, 480)
+    t.setTextRenderMode(3)
+    t.setFont("Helvetica", 30)
+    t.textLine("SECRET-OCR-333")
+    c.drawText(t)
+    # 4. text that was only covered by a drawn black box (fake redaction)
+    c.setFont("Helvetica", 12)
+    c.drawString(72, 410, "SECRET-UNDER-BOX-777")
+    c.rect(68, 405, 160, 18, stroke=0, fill=1)
+    # control text below the band
+    c.drawString(72, 300, "KEEP-BELOW-TEXT control line")
+    c.bookmarkPage("secret")
+    c.bookmarkPage("clean")
+    c.addOutlineEntry("Section about SECRET-TEXT-111", "secret", level=0)
+    c.addOutlineEntry("Clean section", "clean", level=0)
+    c.showPage()
+    c.save()
+
+    w = PdfWriter(clone_from=PdfReader(tmp))
+    os.remove(tmp)
+    page = w.pages[0]
+
+    def annot(subtype, rect, contents, extra=None):
+        d = DictionaryObject({
+            NameObject("/Type"): NameObject("/Annot"),
+            NameObject("/Subtype"): NameObject(subtype),
+            NameObject("/Rect"): ArrayObject([FloatObject(v) for v in rect]),
+            NameObject("/Contents"): TextStringObject(contents),
+            NameObject("/F"): NumberObject(4),
+        })
+        for k, v in (extra or {}).items():
+            d[NameObject(k)] = v
+        w.add_annotation(page, d)
+
+    annot("/FreeText", [320, 500, 520, 530], "ANNOT-IN-AREA-555", {"/DA": TextStringObject("/Helv 12 Tf 0 g")})
+    annot("/Text", [520, 100, 540, 120], "Reviewer note mentions SECRET-TEXT-111")
+    w.add_attachment("notes.txt", b"Attachment that repeats SECRET-TEXT-111\n")
+    w.add_attachment("other.txt", b"Unrelated attachment ATTACH-OTHER-666\n")
+    with open(path, "wb") as f:
+        w.write(f)
+
+
 def encrypt(src, dst, password="test-pass-123"):
     r = PdfReader(src)
     w = PdfWriter(clone_from=r)
@@ -199,6 +275,7 @@ if __name__ == "__main__":
     text_pdf(p("text.pdf"))
     text_pdf(p("text-b.pdf"), pages=2, title="Second Test Document")
     text_pdf(p("redaction.pdf"), pages=2, title="Redaction Test", secret=True)
+    redaction_audit_pdf(p("redaction-audit.pdf"))
     text_pdf(p("multipage-40.pdf"), pages=40, title="Forty Page Document")
     image_pdf(p("image-heavy.pdf"))
     scanned_pdf(p("scanned.pdf"))

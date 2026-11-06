@@ -44,6 +44,25 @@ Categories (`scripts/qpdf/guides.mjs`):
 | `legal`            | For legal professionals         |
 | `comparisons`      | Software comparisons            |
 
+## Build-time validation
+
+`npm run build` stops with a message naming the file when a guide has:
+
+- a missing `title`, `description`, `category` or `published`;
+- an unknown `category`;
+- `published` / `reviewed` not written as `YYYY-MM-DD`, or `reviewed` earlier
+  than `published`;
+- a `relatedTools` entry that is not a tool id or slug in `src/data/tools.mjs`
+  (tools that exist but are switched off in a build are skipped silently);
+- a `relatedGuides` entry that is neither a published guide nor a draft;
+- a source without a `title` or without an `https://` `url`;
+- two guides with the same slug.
+
+A `description` over 170 characters only produces a warning. After the build,
+`npm run check:dist` also checks the guide's canonical URL, single H1,
+Article structured data (headline, dates, no ratings/reviews), internal links,
+and that its sitemap entry carries `<lastmod>` (= `reviewed`).
+
 ## Writing rules
 
 - Use `##` for sections and `###` for sub-sections. Do not add an `#` H1.
