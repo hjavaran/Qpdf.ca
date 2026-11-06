@@ -78,9 +78,12 @@ dashboard commit label for showing what code is live.
 ## 3. GitHub branch and commit information
 
 - Audited commit: `f573ab6f4f62e0a261f2ad56cf4d90f45cd0a499` (`main`).
-- Fix branch: `claude/loving-thompson-9obh1o`, based on `f573ab6`; one commit
-  with the fixes in §12 plus this report; a pull request was opened for review
-  (link in the PR list; **not merged, not deployed**).
+- Fix branch: `claude/loving-thompson-9obh1o`, based on `f573ab6`.
+  - Fix commit `8fe8cb2` (the changes in §12 and this report), plus a
+    follow-up commit adding this link.
+  - Pull request: https://github.com/hjavaran/Qpdf.ca/pull/4, **open, not
+    merged, not deployed**. Merging it deploys to production through
+    Cloudflare Pages.
 
 ## 4. Technical SEO audit (live site)
 
