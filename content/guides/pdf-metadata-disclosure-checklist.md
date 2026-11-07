@@ -6,7 +6,7 @@ category: privacy-security
 published: 2026-11-06
 reviewed: 2026-11-06
 relatedTools: [remove-pdf-metadata, sanitize-pdf, redact-pdf, flatten-pdf]
-relatedGuides: [permanent-pdf-redaction, prepare-pdf-exhibits, ircc-pdf-validation-barcodes]
+relatedGuides: [permanent-pdf-redaction, prepare-pdf-exhibits, rcic-client-pdf-privacy, ircc-pdf-validation-barcodes]
 sources:
   - title: "Interpretation Bulletin: Safeguards"
     url: https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/pipeda-compliance-help/pipeda-interpretation-bulletins/interpretations_08_sg/

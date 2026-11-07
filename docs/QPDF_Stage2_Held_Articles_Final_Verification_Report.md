@@ -2,7 +2,7 @@
 
 **Verification date:** November 7, 2026 (all sources below were fetched and read on this date unless stated otherwise)
 **Branch:** `claude/trusting-brown-b1fjfd`, started from `main` at `9f4a89a` (merge of PR #4)
-**Status:** Both articles remain `draft: true`. Nothing was published, merged or deployed.
+**Status:** Both articles were approved for publication by the owner on 2026-11-07 and `draft: true` has been removed from both. The pull request is **open for review; nothing is merged or deployed**, so the pages are not live until it is merged and Cloudflare deploys.
 
 This is an evidence-based source review. It is not a lawyer's, RCIC's or court's opinion, and it does not mean the College of Immigration and Citizenship Consultants (CICC), the BC Supreme Court or any other body has approved the articles or QPDF.ca.
 
@@ -15,7 +15,7 @@ This is an evidence-based source review. It is not a lawyer's, RCIC's or court's
 
 Each can be approved on its own. Approving one does not require approving the other.
 
-**Needed from you:** see §10.
+**Needed from you:** review and merge the pull request when you are satisfied (§10).
 
 ## 1. Repository starting point
 
@@ -179,35 +179,62 @@ Neither article claims, or should be described as having, CICC, court, or profes
 
 **Not re-read today:** the CICC Code interpretation guide and IRCC Help Centre page 1523 (cited in the RCIC article; their earlier access dates are unchanged).
 
-## 10. Test results, GitHub and next action
+## 10. Publication, tests and GitHub (after owner approval)
 
-- **Tests:** not run for publication, because publication has not been authorized. Front matter of both drafts was validated with the repository's own guide loader (§11).
-- **GitHub:** branch `claude/trusting-brown-b1fjfd`. Draft edits and this report are committed and pushed to that branch only. **No pull request was opened.**
+**Approval:** the owner approved both articles in the Claude Code conversation on 2026-11-07. The verification above was not repeated.
 
-### Exact next action needed from you
+### Changes made for publication
 
-Reply in this conversation with one of:
+- `draft: true` removed from both guides. `published` and `reviewed` are both **2026-11-07** (the date of the source review and of approval).
+- Both articles keep the qualifications described in §2 and §5: the s. 85(7)(o) interpretation question, the College's position that the Client File Management Regulation applies, the recommendation to confirm current obligations with the College or a qualified professional, the verified October 1, 2026 PD-73 changes, the 5/2 business-day filing window, and the must/should distinctions. Each now also states that it has **not** been reviewed or approved by the CICC, a lawyer, an RCIC (RCIC guide) or the Court (PD-72 guide).
+- Tool-page links (existing `guides` field in `src/data/tools.mjs`):
+  - to the RCIC guide: Redact PDF, Sanitize PDF, Remove PDF Metadata;
+  - to the PD-72 guide: Merge PDF, Compress PDF, OCR PDF, Edit PDF Bookmarks, Add Page Numbers, Add Page Labels.
+- Guide-to-guide links: the RCIC guide links to the metadata, redaction and bank-statement guides, and those three link back to it; *Prepare PDF exhibits* links to the PD-72 guide, which already linked to it.
+- **Rendering fix found during verification:** the Markdown renderer's typographic mode turned "Rule 8-1(15)(c)" into "Rule 8-1(15)©". The parenthesis is now escaped in the source. No other occurrence exists in either article, and the renderer was not changed.
 
-1. "Approve RCIC only", "Approve PD-72 only", or "Approve both" (my recommendation: **PD-72 is ready now; RCIC is ready with the qualification stated, and is best published after an RCIC or privacy-lawyer skim if you can get one**); or
-2. "Keep both as drafts" / questions about §8.
+### Results (production-style build, `VITE_LIBREOFFICE_ASSET_URL` set as in production)
 
-On approval I will remove `draft: true` only from the approved article(s), set the real publication and review dates, add tool-page and guide links, update the sitemap through the existing build, run `npm run build`, `npm run check:dist`, `npm run test:run` and `npm run test:e2e`, and open a PR without merging. If both are approved, I expect the sitemap to go from **148 to 150** URLs (to be confirmed against the actual build).
+| Check | Result |
+| --- | --- |
+| `npm run build` | Pass. 1,489 files (was 1,487), 205.5 MiB. |
+| Sitemap | **150 URLs = 148 baseline + 2.** The only additions are `/guides/rcic-client-pdf-privacy/` and `/guides/bc-supreme-court-pd72-pdf/`, both `lastmod` 2026-11-07. |
+| `npm run check:dist` | Pass: 151 pages, 150 sitemap URLs. Five warnings about third-party URL strings inside vendored engine bundles, which are unrelated to this change. |
+| `npm run test:run` | 1,101 / 1,101 (73 files). |
+| `npm run test:e2e` | 41 / 41, including the network-privacy audit and redaction audits. Needed `python3 tests/fixtures/make_fixtures.py`, `pip install pymupdf pyhanko` and `npm run serve:dist`. |
+| Metadata | Both pages: self-canonical, `index, follow`, one H1, unique title (57 and 61 characters) and description, Article + BreadcrumbList JSON-LD with the dates above and no ratings or reviews. |
+| Listings | Both appear in the guides hub and the site index. |
+| Layout | Playwright at 390 px and 1280 px, 13 pages each (both guides, hub, site index, 9 linking tool pages): HTTP 200, one H1, no horizontal scroll, no page errors. The PD-72 table was checked visually on a phone. |
+| Draft leakage | No draft guides remain; no page links to a withheld guide. |
 
-## 11. Front-matter validation (drafts)
+Not tested: Safari, Firefox, real phones, Lighthouse, the live Cloudflare deployment.
 
-Run on 2026-11-07 with `loadGuides({ includeDrafts: true })` from `scripts/qpdf/guides.mjs` (the same parser the build uses), after `npm ci`:
+### GitHub
+
+- Branch: `claude/trusting-brown-b1fjfd`, based on the latest `main` (`9f4a89a`).
+- Pull request: see the PR link in the final message. It is **not merged** and nothing was deployed.
+
+### After you merge
+
+1. Confirm the Cloudflare deployment, then open the two production URLs and check the sitemap shows 150 URLs.
+2. Consider the optional professional skim of the RCIC retention paragraphs and the PD-72 timing paragraph (§7, §8).
+3. Re-check PD-72, PD-73 and the College's regulations page periodically; both topics change.
+
+### Publication URLs (once deployed)
+
+- https://qpdf.ca/guides/rcic-client-pdf-privacy/
+- https://qpdf.ca/guides/bc-supreme-court-pd72-pdf/
+
+## 11. Front-matter validation
+
+Run on 2026-11-07 with the repository's own guide loader and again by the full build:
 
 | Check | `rcic-client-pdf-privacy` | `bc-supreme-court-pd72-pdf` |
 | --- | --- | --- |
 | Front matter parses, required keys present | Pass | Pass |
-| `draft` | `true` | `true` |
-| `published` / `reviewed` (`reviewed >= published`) | 2026-11-05 / 2026-11-05 (unchanged until approval) | 2026-11-06 / 2026-11-06 (unchanged until approval) |
-| `<title>` length | 57 | 61 (new `metaTitle`; the default would have been 78) |
+| `draft` | removed | removed |
+| `published` / `reviewed` | 2026-11-07 / 2026-11-07 | 2026-11-07 / 2026-11-07 |
+| `<title>` length | 57 | 61 |
 | Description length | 157 | 128 |
 | Sources (each has title and https URL) | 9 | 7 |
-| `relatedTools` all exist in `src/data/tools.mjs` | Pass | Pass |
-| `relatedGuides` exist | Pass | Pass |
-
-Also: the default load returns 13 published guides and excludes both drafts; a repository-wide search finds **no** published page, tool config or script linking to either draft URL.
-
-Not run, because nothing was authorized for publication: `npm run build`, `npm run check:dist`, `npm run test:run`, `npm run test:e2e`, rendering and sitemap checks. The sitemap baseline of 148 URLs comes from PR #3/#4's reports and has not been re-measured in this session.
+| `relatedTools` and `relatedGuides` resolve | Pass | Pass |

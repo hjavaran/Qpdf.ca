@@ -3,9 +3,8 @@ title: "BC Supreme Court Electronic Application Records: PD-72 PDF Checklist"
 metaTitle: "BC Supreme Court PD-72 Electronic Records Checklist | Qpdf.ca"
 description: "Check PD-72 scope, 50 MB limit, OCR, bookmarks, page labels and CSO submission for eligible BC associate-judge chambers matters."
 category: legal
-published: 2026-11-06
-reviewed: 2026-11-06
-draft: true   # withheld until the owner approves publication; sources re-checked 2026-11-07 (see docs/QPDF_Stage2_Held_Articles_Final_Verification_Report.md)
+published: 2026-11-07
+reviewed: 2026-11-07
 relatedTools: [merge-pdf, ocr-pdf, edit-pdf-bookmarks, add-page-numbers-to-pdf, add-page-labels, compress-pdf]
 relatedGuides: [prepare-pdf-exhibits, pdf-metadata-disclosure-checklist]
 sources:
@@ -68,7 +67,7 @@ The distinction between **must** and **should** comes from Appendix A's actual w
 
 ## Assemble the record in the right order
 
-Begin with the required material under the relevant court rules, then apply PD-72's electronic arrangement. Appendix A describes the cover page as the **first item** and a numbered hyperlinked index as the **second item**. For a Supreme Court Civil Rules application, Rule 8-1(15)(b) then lists, in order: a copy of the filed notice of application; every application response served on the applicant; every filed pleading and any filed affidavit or other evidence to be relied on at the hearing; and any affidavit or other evidence the applicant has been served with by a respondent (plus each filed pleading, for a summary trial application under Rule 9-7). Rule 8-1(15)(c) allows a draft order, a written argument (subject to Rule 8-1(16)), a list of authorities and a draft bill of costs. Family Rule 10-6(14)(b) has its own list, with additional items, so check the rule that applies to your matter. Organize exhibits and any included authorities so a reader can follow the index without guessing.
+Begin with the required material under the relevant court rules, then apply PD-72's electronic arrangement. Appendix A describes the cover page as the **first item** and a numbered hyperlinked index as the **second item**. For a Supreme Court Civil Rules application, Rule 8-1(15)(b) then lists, in order: a copy of the filed notice of application; every application response served on the applicant; every filed pleading and any filed affidavit or other evidence to be relied on at the hearing; and any affidavit or other evidence the applicant has been served with by a respondent (plus each filed pleading, for a summary trial application under Rule 9-7). Rule 8-1(15)\(c) allows a draft order, a written argument (subject to Rule 8-1(16)), a list of authorities and a draft bill of costs. Family Rule 10-6(14)(b) has its own list, with additional items, so check the rule that applies to your matter. Organize exhibits and any included authorities so a reader can follow the index without guessing.
 
 Unlike the standard paper application-record rules, PD-72 paragraph 5 disapplies the ring-binder requirement and the rule that prohibits including affidavits of service, authorities and other documents. More importantly, if a party intends to rely on case law or other authorities at the hearing, the party **must include copies** in the electronic application record. Appendix A further says an electronic book of authorities, when necessary, should be bookmarked, searchable and sequentially paginated; Appendix A says parties "may additionally hyperlink to external sources", but external links do not replace the copies required by paragraph 4. The BC government's April 2026 Court Services Online guide takes a different line: it says parties should not hyperlink to external sources, because the associate judge cannot mark them up in the PDF. If in doubt, include complete copies of the authorities and do not rely on external links.
 
@@ -124,4 +123,4 @@ A paper copy of the application record is **not required** when a compliant PD-7
 - [ ] The file is not password protected or restricted, and opens in a different PDF viewer.
 - [ ] The filing window under the current Rule 8-1(15)(e) or 10-6(14)(e) and the CSO submission confirmation have been checked separately from PDF formatting.
 
-For general document assembly, see [preparing PDF exhibits and application records](/guides/prepare-pdf-exhibits/). These tools assist with PDF preparation; they do not certify compliance with PD-72 or guarantee acceptance by the Registry.
+For general document assembly, see [preparing PDF exhibits and application records](/guides/prepare-pdf-exhibits/). These tools assist with PDF preparation; they do not certify compliance with PD-72 or guarantee acceptance by the Registry. This guide has not been reviewed or approved by the Court or a lawyer, and is not legal advice.

@@ -6,7 +6,7 @@ category: legal
 published: 2026-11-06
 reviewed: 2026-11-06
 relatedTools: [merge-pdf, reorder-pdf-pages, ocr-pdf, add-page-numbers-to-pdf, add-page-labels, edit-pdf-bookmarks, compress-pdf, split-pdf]
-relatedGuides: [federal-court-pdf-efiling, ontario-court-of-appeal-pdf, bates-numbering-without-adobe, make-a-pdf-smaller, ircc-pdf-validation-barcodes]
+relatedGuides: [bc-supreme-court-pd72-pdf, federal-court-pdf-efiling, ontario-court-of-appeal-pdf, bates-numbering-without-adobe, make-a-pdf-smaller, ircc-pdf-validation-barcodes]
 sources:
   - title: "Practice Direction PD-72"
     url: https://www.bccourts.ca/supreme_court/practice_and_procedure/practice_directions/civil/PD-72_Electronic_Application_Records.pdf
@@ -48,7 +48,7 @@ For a contentious evidentiary record, consider recording file hashes and an audi
 
 Decide where the material will be filed and which rule applies. Requirements differ significantly:
 
-- The [BC Supreme Court PD-72 pilot](https://www.bccourts.ca/supreme_court/practice_and_procedure/practice_directions/civil/PD-72_Electronic_Application_Records.pdf) permits a **single** electronic application record of **50 MB or less** for eligible applications scheduled for 30 minutes or less before an associate judge in chambers.
+- The [BC Supreme Court PD-72 pilot](https://www.bccourts.ca/supreme_court/practice_and_procedure/practice_directions/civil/PD-72_Electronic_Application_Records.pdf) permits a **single** electronic application record of **50 MB or less** for eligible applications scheduled for 30 minutes or less before an associate judge in chambers. See the [PD-72 PDF checklist](/guides/bc-supreme-court-pd72-pdf/) for the must/should requirements and the October 2026 virtual-chambers (PD-73) changes.
 - The [Federal Court](/guides/federal-court-pdf-efiling/) has an ordinary E-Filing PDF limit of **100 MB** and specific page-numbering, bookmark and confidential-filing rules.
 - The [Court of Appeal for Ontario](/guides/ontario-court-of-appeal-pdf/) generally restricts non-video files to **512 MiB and 500 pages**, with its own scanning and navigation standards.
 

@@ -2,11 +2,10 @@
 title: "RCIC Document Privacy Checklist for Client PDFs"
 description: "A practical RCIC checklist for safeguarding client PDFs, assessing local processing, verifying redaction and managing records under applicable privacy rules."
 category: immigration
-published: 2026-11-05
-reviewed: 2026-11-05
-draft: true   # withheld until the owner approves publication; sources re-checked 2026-11-07 (see docs/QPDF_Stage2_Held_Articles_Final_Verification_Report.md)
+published: 2026-11-07
+reviewed: 2026-11-07
 relatedTools: [redact-pdf, remove-pdf-metadata, sanitize-pdf, compress-pdf]
-relatedGuides: [compress-bank-statements-ircc, ircc-pdf-validation-barcodes]
+relatedGuides: [pdf-metadata-disclosure-checklist, permanent-pdf-redaction, compress-bank-statements-ircc, ircc-pdf-validation-barcodes]
 sources:
   - title: "Code of Professional Conduct for College of Immigration and Citizenship Consultants Licensees"
     url: https://laws-lois.justice.gc.ca/eng/regulations/SOR-2022-128/FullText.html
@@ -164,6 +163,6 @@ A practical monthly file-handling review can ask:
 - Does our documented retention schedule reflect **currently operative** requirements?
 - Do we have a process for lost devices, wrong-recipient disclosures, suspicious access and incident reporting under laws that actually apply?
 
-QPDF.ca provides useful document-processing functions. It does **not** confer CICC approval, guarantee PIPEDA or provincial privacy compliance, provide legal advice, or replace a practice's security and records-management controls.
+QPDF.ca provides useful document-processing functions. This guide has **not** been reviewed or approved by the CICC, a lawyer or an RCIC. QPDF.ca does **not** confer CICC approval, guarantee PIPEDA or provincial privacy compliance, provide legal advice, or replace a practice's security and records-management controls.
 
 **Professional-review point:** before publishing a firm-wide policy or treating any retention period as mandatory, have a qualified professional verify the operative College by-laws and the privacy rules applicable to the practice's location, transfers and services.
