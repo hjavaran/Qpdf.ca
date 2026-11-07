@@ -79,7 +79,7 @@ function cloneCard(id: string): HTMLElement | null {
   const src = sourceCards.get(id);
   if (!src) return null;
   const card = src.cloneNode(true) as HTMLElement;
-  card.classList.remove('is-fav', 'is-default-fav');
+  card.classList.remove('is-fav');
   return card;
 }
 
@@ -107,10 +107,6 @@ function renderFavorites(): void {
   for (const id of ids) {
     const card = cloneCard(id);
     if (!card) continue;
-    if (id === 'compress-pdf') {
-      card.classList.add('is-default-fav');
-      card.title = 'Compress PDF is a favourite by default. Select the star to remove it.';
-    }
     favGrid.append(card);
   }
   // No empty favourites block: the section appears once a tool is saved.

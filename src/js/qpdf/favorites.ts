@@ -1,15 +1,15 @@
 // Favourite tools, stored only in this browser (localStorage).
 //
 // Rules (product requirement):
-//  - First-time visitors get Compress PDF as their only favourite.
-//  - Once the stored list exists it is never re-seeded, so removing
-//    Compress PDF is permanent for that browser.
+//  - Nothing is saved automatically: a visitor with no stored list has no
+//    favourites, and the homepage shows no Favourites section until they
+//    explicitly save a tool.
+//  - Lists already stored in a browser are kept exactly as they are.
 //  - Nothing about favourites is ever sent to a server.
 //  - If storage is unavailable (private mode, blocked), favourites still
-//    work for the current page view and fall back to the default next time.
+//    work for the current page view and are simply not remembered.
 
 export const FAVORITES_KEY = 'qpdf.favorites.v1';
-export const DEFAULT_FAVORITES = ['compress-pdf'];
 
 type Listener = (ids: string[]) => void;
 
@@ -43,13 +43,8 @@ const listeners = new Set<Listener>();
 
 export function getFavorites(): string[] {
   if (current) return current;
-  const stored = readStorage();
-  if (stored === null) {
-    current = [...DEFAULT_FAVORITES];
-    writeStorage(current); // seed once; never re-seeded afterwards
-  } else {
-    current = stored;
-  }
+  // No stored list means no favourites. Reading never writes to storage.
+  current = readStorage() ?? [];
   return current;
 }
 

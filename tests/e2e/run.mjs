@@ -764,21 +764,61 @@ const LARGE_TESTS = [25, 50, 100].map((mb) => ({
 }));
 
 async function favoritesTest(browser) {
+  // 1. New visitor: nothing is seeded and no Favourites section is shown.
+  {
+    const ctx = await newContext(browser);
+    const page = await ctx.newPage();
+    try {
+      await page.goto(`${BASE}/`);
+      const favIds = async () => page.$$eval('#qp-fav-grid .qp-card', (els) => els.map((e) => e.dataset.tool));
+      const sectionHidden = () => page.$eval('#qp-fav-section', (el) => el.hidden);
+      const stored = () => page.evaluate(() => localStorage.getItem('qpdf.favorites.v1'));
+      if (!(await sectionHidden()) || (await favIds()).length) throw new Error(`new visitor sees favourites: ${await favIds()}`);
+      if ((await stored()) !== null) throw new Error(`new visitor storage was seeded: ${await stored()}`);
+      record('favourites: new visitor has none, section hidden, nothing stored', true);
+      // Explicit save shows the section and persists across reload.
+      await page.click('#qp-popular-grid [data-fav="merge-pdf"]');
+      if ((await favIds()).join() !== 'merge-pdf' || (await sectionHidden())) throw new Error(`after save: ${await favIds()}`);
+      await page.reload();
+      if ((await favIds()).join() !== 'merge-pdf') throw new Error(`after reload: ${await favIds()}`);
+      // Removing the last favourite hides the section again and it stays empty.
+      await page.click('#qp-fav-grid [data-fav="merge-pdf"]');
+      if (!(await sectionHidden())) throw new Error('section still visible after removing last favourite');
+      await page.reload();
+      if (!(await sectionHidden()) || (await stored()) !== '[]') throw new Error(`after removal + reload: ${await stored()}`);
+      record('favourites: explicit save shows section, persists, removal hides it', true, `stored=${await stored()}`);
+    } catch (e) {
+      record('favourites: new visitor flow', false, e.message);
+    } finally {
+      await ctx.close();
+    }
+  }
+  // 2. Existing visitor: a previously stored list is kept exactly.
+  {
+    const ctx = await newContext(browser);
+    const page = await ctx.newPage();
+    try {
+      await page.addInitScript(() => {
+        if (!sessionStorage.getItem('qp-e2e-seeded')) {
+          localStorage.setItem('qpdf.favorites.v1', JSON.stringify(['compress-pdf', 'split-pdf', 'protect-pdf']));
+          sessionStorage.setItem('qp-e2e-seeded', '1');
+        }
+      });
+      await page.goto(`${BASE}/`);
+      const ids = await page.$$eval('#qp-fav-grid .qp-card', (els) => els.map((e) => e.dataset.tool));
+      const stored = await page.evaluate(() => localStorage.getItem('qpdf.favorites.v1'));
+      if (ids.join() !== 'compress-pdf,split-pdf,protect-pdf' || stored !== '["compress-pdf","split-pdf","protect-pdf"]') throw new Error(`existing favourites changed: ${ids} / ${stored}`);
+      record('favourites: existing saved list preserved (incl. a non-popular tool)', true, ids.join(', '));
+    } catch (e) {
+      record('favourites: existing list preserved', false, e.message);
+    } finally {
+      await ctx.close();
+    }
+  }
   const ctx = await newContext(browser);
   const page = await ctx.newPage();
   try {
     await page.goto(`${BASE}/`);
-    const favIds = async () => page.$$eval('#qp-fav-grid .qp-card', (els) => els.map((e) => e.dataset.tool));
-    let ids = await favIds();
-    if (ids[0] !== 'compress-pdf' || ids.length !== 1) throw new Error(`first visit favourites: ${ids}`);
-    // add Merge, remove Compress, reload: Compress must not come back
-    await page.click('#qp-popular-grid [data-fav="merge-pdf"]');
-    await page.click('#qp-fav-grid [data-fav="compress-pdf"]');
-    await page.reload();
-    ids = await favIds();
-    if (ids.includes('compress-pdf') || !ids.includes('merge-pdf')) throw new Error(`after removal + reload: ${ids}`);
-    const stored = await page.evaluate(() => localStorage.getItem('qpdf.favorites.v1'));
-    record('favourites: Compress default, removal persists', true, `stored=${stored}`);
     // search
     await page.fill('#qp-search', 'password');
     const hits = await page.$$eval('#qp-results-grid .qp-card', (els) => els.map((e) => e.dataset.tool));
