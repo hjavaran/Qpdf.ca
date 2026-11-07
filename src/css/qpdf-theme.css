@@ -118,7 +118,7 @@
   --qp-ink: #17171a;
   --qp-text: #2f2e2b;
   --qp-muted: #67655f;
-  --qp-faint: #75736d;
+  --qp-faint: #6e6c66; /* ≥ 4.5:1 on --qp-bg, --qp-surface and --qp-surface-2 (WCAG AA) */
   --qp-accent: #b8202f;
   --qp-accent-hover: #9a1b28;
   --qp-accent-text: #a51d2b;
@@ -910,11 +910,37 @@ input[type='range'] {
 #back-to-tools + h1 { padding-top: calc(30px + 1rem); }
 .qp-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  /* One line in every state: the space above the heading is reserved for a
+     single row, and a wrapping toolbar pushed the whole page down while
+     offline files downloaded (CLS ~0.14 on phones). */
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
   margin: 0 0 1rem;
+}
+.qp-toolbar .qp-offline { min-width: 0; }
+.qp-offline-msg {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.qp-offline button { flex: none; white-space: nowrap; }
+.qp-offline-short { display: none; }
+.qp-toolbar .qp-tool-fav { flex: none; }
+@media (max-width: 640px) {
+  .qp-offline-long { display: none; }
+  .qp-offline-short { display: inline; }
+  /* Star only; the label stays available to screen readers. */
+  .qp-toolbar .qp-tool-fav span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }
 .qp-offline {
   display: inline-flex;

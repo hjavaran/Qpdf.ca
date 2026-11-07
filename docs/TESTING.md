@@ -6,6 +6,15 @@
 > `pip install pymupdf`), Bates continuity, and new mobile LCP/CLS numbers —
 > are in [SEO-STAGE2-PHASE-A-REPORT.md](SEO-STAGE2-PHASE-A-REPORT.md). The
 > tables below are the Stage 1 baseline.
+>
+> **Stage 2 final audit (2026-11-06):** 41 E2E cases (adds `metadata-rich.pdf`:
+> document properties, document XMP, PieceInfo and file ID). The suite can run
+> against production with
+> `QPDF_URL=https://qpdf.ca QPDF_ALLOW_ANALYTICS=1 node tests/e2e/run.mjs`:
+> the flag tolerates only Cloudflare Web Analytics' beacon script and small RUM
+> POSTs (no PDF data or file names) and writes them to
+> `tests/e2e/artifacts/analytics-requests.json`; without it the audit stays
+> strict. Results: [SEO-STAGE2-FINAL-AUDIT.md](SEO-STAGE2-FINAL-AUDIT.md).
 
 All tests ran against the production build (`npm run build`) served locally by
 `scripts/qpdf/serve-dist.mjs`, which applies the same `_headers` (CSP,

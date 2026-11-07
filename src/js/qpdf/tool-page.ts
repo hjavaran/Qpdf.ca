@@ -74,14 +74,34 @@ if (heading?.parentElement) {
   else heading.before(bar);
 }
 
+// The upload <input> in every tool template is an invisible overlay on the
+// drop zone with no <label>, so give it an accessible name.
+const fileInput = document.querySelector<HTMLInputElement>('#file-input');
+if (fileInput && !fileInput.labels?.length && !fileInput.hasAttribute('aria-label') && !fileInput.hasAttribute('aria-labelledby')) {
+  fileInput.setAttribute('aria-label', fileInput.multiple ? 'Choose files' : 'Choose a file');
+}
+
 // ── Offline readiness ───────────────────────────────────────────────────
-function setStatus(state: 'idle' | 'loading' | 'ready' | 'error', text: string, action?: HTMLElement) {
+// `short` replaces `text` on phones (.qp-offline-short in qpdf-theme.css) so
+// the toolbar stays one line high in every state and the page below it does
+// not move while offline files download (CLS).
+function setStatus(state: 'idle' | 'loading' | 'ready' | 'error', text: string, action?: HTMLElement, short: string = text) {
   status.dataset.state = state;
-  status.replaceChildren(document.createTextNode(text));
-  if (action) {
-    status.append(' ');
-    status.append(action);
+  const msg = document.createElement('span');
+  msg.className = 'qp-offline-msg';
+  if (short === text) {
+    msg.textContent = text;
+  } else {
+    const long = document.createElement('span');
+    long.className = 'qp-offline-long';
+    long.textContent = text;
+    const sh = document.createElement('span');
+    sh.className = 'qp-offline-short';
+    sh.textContent = short;
+    msg.append(long, sh);
   }
+  status.replaceChildren(msg);
+  if (action) status.append(action);
 }
 
 // Must match cacheFor() in public/sw.js.
@@ -112,7 +132,7 @@ async function warm(entry: OfflineEntry, m: OfflineManifest, missing: string[]):
       if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
       await (await caches.open(cacheNameFor(url, m))).put(url, res);
       done++;
-      setStatus('loading', `Preparing offline use… ${Math.round((done / total) * 100)}%`);
+      setStatus('loading', `Preparing offline use… ${Math.round((done / total) * 100)}%`, undefined, `Preparing offline… ${Math.round((done / total) * 100)}%`);
     }
   };
   await Promise.all(Array.from({ length: Math.min(4, total) }, worker));
@@ -120,7 +140,7 @@ async function warm(entry: OfflineEntry, m: OfflineManifest, missing: string[]):
 
 async function initOffline(): Promise<void> {
   if (!('caches' in window) || !('serviceWorker' in navigator) || !window.isSecureContext) {
-    setStatus('idle', 'Offline mode not supported in this browser');
+    setStatus('idle', 'Offline mode not supported in this browser', undefined, 'Offline not supported');
     return;
   }
   const reg = await registerServiceWorker();
@@ -140,7 +160,7 @@ async function initOffline(): Promise<void> {
   if (!entry) {
     // Only the LibreOffice converters have no offline entry: their engine is
     // fetched from assets.qpdf.ca the first time and then kept by the browser.
-    setStatus('idle', 'First use automatically downloads the converter in your browser. Your file never leaves your device.');
+    setStatus('idle', 'Converter downloads on first use. Files stay on your device.', undefined, 'Converter downloads on first use');
     return;
   }
   const controlled = await Promise.race([
@@ -152,7 +172,7 @@ async function initOffline(): Promise<void> {
     if (navigator.serviceWorker.controller) {
       setStatus('ready', 'Ready to work offline');
     } else {
-      setStatus('idle', 'Reload the page once to enable offline use');
+      setStatus('idle', 'Reload the page once to enable offline use', undefined, 'Reload once for offline use');
     }
   };
   if (missing.length === 0) {
@@ -163,13 +183,13 @@ async function initOffline(): Promise<void> {
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
   const constrained = !!conn?.saveData || /(^|-)2g|3g/.test(conn?.effectiveType ?? '');
   const start = async () => {
-    setStatus('loading', 'Preparing offline use…');
+    setStatus('loading', 'Preparing offline use…', undefined, 'Preparing offline…');
     try {
       await warm(entry, manifest, missing);
       ready();
     } catch (err) {
       console.warn('[Qpdf] Offline preparation failed:', err);
-      setStatus('error', 'Could not prepare offline use. Check your connection.');
+      setStatus('error', 'Could not prepare offline use. Check your connection.', undefined, 'Offline setup failed');
     }
   };
   if (entry.bytes <= manifest.autoLimit && !constrained && controlled) {
@@ -177,9 +197,10 @@ async function initOffline(): Promise<void> {
   } else {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.textContent = `Download for offline use (${fmtMB(missingBytes)})`;
+    btn.textContent = `Download (${fmtMB(missingBytes)})`;
+    btn.setAttribute('aria-label', `Download for offline use (${fmtMB(missingBytes)})`);
     btn.addEventListener('click', start, { once: true });
-    setStatus('idle', 'Works offline after a one-time download.', btn);
+    setStatus('idle', 'Works offline after a one-time download.', btn, 'Offline use:');
   }
 }
 

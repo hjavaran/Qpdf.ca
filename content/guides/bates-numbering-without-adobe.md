@@ -12,7 +12,7 @@ sources:
     publisher: "QPDF.ca"
     accessed: 2026-11-06
   - title: "Amended Consolidated General Practice Guidelines"
-    url: https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
+    url: https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf
     publisher: "Federal Court of Canada"
     accessed: 2026-11-06
   - title: "General Practice Direction"
@@ -93,7 +93,7 @@ The critical check is the boundary: the second PDF begins at `CASE-000004`, not 
 
 ## Do Canadian courts require Bates numbering?
 
-Not universally. Requirements vary by proceeding, judge, registry and production agreement. For example, the [Federal Court's June 2025 general practice guidelines](https://www.fct-cf.gc.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf) focus on PDF page numbering, bookmarks and pinpoint navigation for electronic filings; they do not establish a blanket Bates-stamping rule for all Canadian proceedings. The [Court of Appeal for Ontario's practice direction](https://www.ontariocourts.ca/coa/how-to-proceed-court/general/) likewise contains its own page-reference and electronic-navigation requirements. A Bates sequence does not override them.
+Not universally. Requirements vary by proceeding, judge, registry and production agreement. For example, the [Federal Court's June 2025 general practice guidelines](https://www.fct-cf.ca/Content/assets/pdf/base/2025-06-20__Amended-Consolidated-General-Practice-Guidelines.pdf) focus on PDF page numbering, bookmarks and pinpoint navigation for electronic filings; they do not establish a blanket Bates-stamping rule for all Canadian proceedings. The [Court of Appeal for Ontario's practice direction](https://www.ontariocourts.ca/coa/how-to-proceed-court/general/) likewise contains its own page-reference and electronic-navigation requirements. A Bates sequence does not override them.
 
 For records being filed rather than produced to another party, check the specific [court PDF formatting guide](/guides/federal-court-pdf-efiling/) or [Ontario appellate guide](/guides/ontario-court-of-appeal-pdf/) first. If you need a single PDF after applying identifiers, [Merge PDF](/merge-pdf/) may help, but recheck the resulting pages and any signed material.
 

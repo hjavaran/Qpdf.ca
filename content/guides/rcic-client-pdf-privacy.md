@@ -4,14 +4,14 @@ description: "A practical RCIC checklist for safeguarding client PDFs, assessing
 category: immigration
 published: 2026-11-05
 reviewed: 2026-11-05
-draft: true   # withheld: operative CICC retention instrument/status needs qualified regulatory review (see docs/SEO-STAGE2-IMMIGRATION-PUBLISHING-REPORT.md)
+draft: true   # withheld pending qualified regulatory/privacy review; retention section corrected 2026-11-06 (see docs/SEO-STAGE2-FINAL-AUDIT.md §6)
 relatedTools: [redact-pdf, remove-pdf-metadata, sanitize-pdf, compress-pdf]
 relatedGuides: [compress-bank-statements-ircc, ircc-pdf-validation-barcodes]
 sources:
   - title: "Code of Professional Conduct for College of Immigration and Citizenship Consultants Licensees"
     url: https://laws-lois.justice.gc.ca/eng/regulations/SOR-2022-128/FullText.html
     publisher: Department of Justice Canada
-    accessed: 2026-11-05
+    accessed: 2026-11-06
   - title: "PIPEDA fair information principles"
     url: https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/p_principle/
     publisher: Office of the Privacy Commissioner of Canada
@@ -20,14 +20,22 @@ sources:
     url: https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/r_o_p/prov-pipeda/
     publisher: Office of the Privacy Commissioner of Canada
     accessed: 2026-11-05
-  - title: "Client File Management Regulation 2021-001 (historical Council document)"
+  - title: "Client File Management Regulation 2021-001"
     url: https://college-ic.ca/ICCRC/Assets/Documents/Regulations/Client%20File%20Management%20Regulation.pdf
-    publisher: Immigration Consultants of Canada Regulatory Council (archived document on College website)
-    accessed: 2026-11-05
+    publisher: Immigration Consultants of Canada Regulatory Council (continued; listed by the College of Immigration and Citizenship Consultants)
+    accessed: 2026-11-06
+  - title: "By-Laws, Regulations and Policies"
+    url: https://college-ic.ca/about-the-college/regulations-and-policies
+    publisher: College of Immigration and Citizenship Consultants
+    accessed: 2026-11-06
+  - title: "College of Immigration and Citizenship Consultants Act (S.C. 2019, c. 29, s. 292), section 85"
+    url: https://laws-lois.justice.gc.ca/eng/acts/C-33.6/FullText.html
+    publisher: Department of Justice Canada
+    accessed: 2026-11-06
   - title: "Code of Professional Conduct Interpretation Guide 2022-001"
     url: https://college-ic.ca/ICCRC/Assets/Documents/Protecting%20the%20Public/Code-of-Professional-Conduct/PC_Code%20Guide-EN.pdf
     publisher: College of Immigration and Citizenship Consultants
-    accessed: 2026-11-05
+    accessed: 2026-11-06
   - title: "How do I fill out and validate IRCC application forms with 2D barcodes?"
     url: https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=1523
     publisher: Immigration, Refugees and Citizenship Canada
@@ -130,9 +138,11 @@ Before sending a client PDF to IRCC, another professional or the client, verify 
 
 ## Retention and secure destruction: check the current rules
 
-The **historical** [ICCRC Client File Management Regulation 2021-001, section 7.2](https://college-ic.ca/ICCRC/Assets/Documents/Regulations/Client%20File%20Management%20Regulation.pdf), available on the College's website, states that a client file is to be retained in a secure, accessible location for at least **six years after closure**. The College's [2022 Code interpretation guide](https://college-ic.ca/ICCRC/Assets/Documents/Protecting%20the%20Public/Code-of-Professional-Conduct/PC_Code%20Guide-EN.pdf) also refers to retention for **six years following completion of services**.
+The College's [By-Laws, Regulations and Policies page](https://college-ic.ca/about-the-college/regulations-and-policies) still lists the **Client File Management Regulation 2021-001**, made by the former Immigration Consultants of Canada Regulatory Council (ICCRC) and approved on November 17, 2021. The College states that By-law 2021-2 "remains in effect and applies to all College licensees" and that references to the Council are to be read as references to the College. Under paragraph 85(o) of the [*College of Immigration and Citizenship Consultants Act*](https://laws-lois.justice.gc.ca/eng/acts/C-33.6/FullText.html), every Council by-law and every regulation made by the Council's board remains in effect, to the extent it is consistent with the Act, until a College by-law made under section 80 comes into force.
 
-**Do not adopt either wording as an unconditional, independently confirmed November 2026 rule.** The current operative by-law, subsequent amendments and how the closure/completion dates apply to a particular RCIC practice require confirmation. The [Code's section 37](https://laws-lois.justice.gc.ca/eng/regulations/SOR-2022-128/FullText.html) points to record-preservation requirements under College by-laws but does not itself state a six-year number.
+[Section 7.2 of that Regulation](https://college-ic.ca/ICCRC/Assets/Documents/Regulations/Client%20File%20Management%20Regulation.pdf) says: "A Client File shall be retained in a secure and accessible location for a minimum of six (6) years after the File has been closed." Section 7.1 says a file may be closed only once fees or refunds are settled, client property has been returned, and the client has been told in writing that the retainer has ended. The College's [2022 Code interpretation guide](https://college-ic.ca/ICCRC/Assets/Documents/Protecting%20the%20Public/Code-of-Professional-Conduct/PC_Code%20Guide-EN.pdf) uses different words: files are to be "retained for 6 years following the completion of immigration or citizenship consulting services". Because the Regulation ties the period to **closing the file under section 7.1**, which can be later than the end of the services, calculate the period from the closing date and record that date.
+
+[Section 37 of the Code](https://laws-lois.justice.gc.ca/eng/regulations/SOR-2022-128/FullText.html) requires licensees to "keep and preserve records in accordance with the by-laws made under the Act"; it does not itself state a number of years. Before relying on this, check the College's regulations page for any newer by-law or regulation, and ask the College or a qualified adviser if your practice has unusual circumstances.
 
 Your practice should maintain a **written retention schedule** based on the current governing College rules, applicable privacy legislation, tax or litigation obligations and valid preservation requirements. The [OPC's retention principle](https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/p_principle/) says not to keep personal information longer than necessary for applicable purposes. That does not authorize premature destruction of records subject to another legal requirement.
 
