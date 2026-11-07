@@ -6,7 +6,7 @@ category: privacy-security
 published: 2026-11-06
 reviewed: 2026-11-06
 relatedTools: [redact-pdf, remove-pdf-metadata, sanitize-pdf]
-relatedGuides: [pdf-metadata-disclosure-checklist, prepare-pdf-exhibits, check-if-pdf-tool-uploads-files]
+relatedGuides: [pdf-metadata-disclosure-checklist, prepare-pdf-exhibits, rcic-client-pdf-privacy, check-if-pdf-tool-uploads-files]
 sources:
   - title: "Interpretation Bulletin: Safeguards"
     url: https://www.priv.gc.ca/en/privacy-topics/privacy-laws-in-canada/the-personal-information-protection-and-electronic-documents-act-pipeda/pipeda-compliance-help/pipeda-interpretation-bulletins/interpretations_08_sg/

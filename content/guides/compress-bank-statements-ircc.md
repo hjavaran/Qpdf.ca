@@ -6,7 +6,7 @@ category: immigration
 published: 2026-11-06
 reviewed: 2026-11-06
 relatedTools: [compress-pdf, compress-pdf-to-4mb]
-relatedGuides: [ircc-pdf-upload-limits, merge-documents-ircc]
+relatedGuides: [ircc-pdf-upload-limits, merge-documents-ircc, rcic-client-pdf-privacy]
 sources:
   - title: "My documents are too large to upload. How do I reduce the file size?"
     url: https://ircc.canada.ca/english/helpcentre/answer.asp?qnum=1213
