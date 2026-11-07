@@ -10,7 +10,7 @@ never uploaded. It is a static site designed for Cloudflare Pages.
   protect/unlock, OCR, PDF/A, conversions…), plus 13 LibreOffice-based Office
   converters (enabled in production, served from `assets.qpdf.ca` on R2).
 - Light, minimal design; animated maple-leaf background; favourites stored
-  locally (Compress PDF is the default favourite, seeded once).
+  locally (nothing is saved until you star a tool).
 - Offline support with a per-tool **“Ready to work offline”** indicator.
 - Every processing engine is self-hosted — no third-party CDN requests.
 - Technical SEO: one landing page per tool, canonical URLs on `https://qpdf.ca`,

@@ -96,6 +96,31 @@ export const POPULAR = POPULAR_ORDER.map((id) => byId.get(id))
   .filter((t) => t && isToolEnabled(t))
   .map(card);
 
+// Homepage "Popular tools": a short, hand-picked set (the 404 page keeps the
+// longer POPULAR list). Every other tool stays reachable through /tools/.
+const HOME_POPULAR_ORDER = [
+  'compress-pdf', 'merge-pdf', 'split-pdf', 'edit-pdf',
+  'sign-pdf', 'redact-pdf', 'ocr-pdf', 'jpg-to-pdf',
+];
+export const HOME_POPULAR = HOME_POPULAR_ORDER.map((id) => byId.get(id))
+  .filter((t) => t && isToolEnabled(t))
+  .map(card);
+
+// Compact search index for the homepage. The homepage no longer renders every
+// tool card, so instant search builds its result cards from this data (the
+// /tools/ directory is the crawlable listing). `k` holds only the extra
+// keywords; the page script rebuilds the same haystack as `card.kw`.
+export const SEARCH_INDEX_JSON = JSON.stringify(
+  ENABLED_TOOLS.map((t) => ({
+    id: t.id,
+    u: toolUrl(t),
+    n: t.name,
+    i: t.icon,
+    s: t.short,
+    k: (t.kw || '').toLowerCase(),
+  }))
+).replace(/</g, '\\u003c');
+
 function privacyNote(t) {
   const info = ENGINE_INFO[t.engine];
   const base =
@@ -197,6 +222,8 @@ function base() {
     baseUrl: '/',
     categories: CATEGORY_GROUPS,
     popular: POPULAR,
+    homePopular: HOME_POPULAR,
+    searchIndexJson: SEARCH_INDEX_JSON,
     toolCount: ENABLED_TOOLS.length,
     analyticsToken: ANALYTICS_TOKEN,
     analyticsEnabled: Boolean(ANALYTICS_TOKEN),
