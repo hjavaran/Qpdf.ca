@@ -1,6 +1,8 @@
 // Homepage and /tools/ directory: favourites, instant search, category filter.
-// All tool cards are rendered at build time (crawlable HTML); this script
-// only enhances them.
+// The /tools/ directory renders every tool card at build time (crawlable
+// HTML). The homepage renders only its popular cards and ships a compact JSON
+// index (#qp-search-data); search results and favourites are built from it.
+// This script only enhances server-rendered HTML.
 import {
   getFavorites,
   toggleFavorite,
@@ -13,8 +15,8 @@ const $$ = <T extends Element>(sel: string, root: ParentNode = document) =>
   Array.from(root.querySelectorAll<T>(sel));
 
 const directory = $<HTMLElement>('#qp-directory');
+const favSection = $<HTMLElement>('#qp-fav-section');
 const favGrid = $<HTMLElement>('#qp-fav-grid');
-const favEmpty = $<HTMLElement>('#qp-fav-empty');
 const search = $<HTMLInputElement>('#qp-search');
 const results = $<HTMLElement>('#qp-results');
 const resultsGrid = $<HTMLElement>('#qp-results-grid');
@@ -22,17 +24,63 @@ const resultsCount = $<HTMLElement>('#qp-results-count');
 const noResults = $<HTMLElement>('#qp-no-results');
 const homeGroups = $<HTMLElement>('#qp-home-groups');
 
-/** One canonical card per tool, taken from the directory. */
+interface IndexEntry {
+  id: string;
+  u: string; // url
+  n: string; // name
+  i: string; // icon class
+  s: string; // short description
+  k: string; // extra keywords
+}
+
+/** Card markup is defined once (tool-card.html); clones are patched from data. */
+const prototype = $<HTMLElement>('.qp-card');
+
+function cardFromEntry(e: IndexEntry): HTMLElement | null {
+  if (!prototype) return null;
+  const card = prototype.cloneNode(true) as HTMLElement;
+  card.className = 'qp-card';
+  card.dataset.tool = e.id;
+  card.dataset.kw = [e.n, e.s, e.k].join(' ').toLowerCase();
+  const icon = card.querySelector('.qp-card-icon i');
+  if (icon) icon.className = `ph ${e.i}`;
+  const link = card.querySelector<HTMLAnchorElement>('.qp-card-name');
+  if (link) {
+    link.href = e.u;
+    link.textContent = e.n;
+  }
+  const desc = card.querySelector('.qp-card-desc');
+  if (desc) desc.textContent = e.s;
+  const star = card.querySelector<HTMLButtonElement>('[data-fav]');
+  if (star) star.dataset.fav = e.id;
+  return card;
+}
+
+/** One canonical card per tool: the directory's cards, or the JSON index. */
 const sourceCards = new Map<string, HTMLElement>();
-for (const card of $$<HTMLElement>('#qp-directory .qp-card')) {
-  const id = card.dataset.tool;
-  if (id && !sourceCards.has(id)) sourceCards.set(id, card);
+if (directory) {
+  for (const card of $$<HTMLElement>('.qp-card', directory)) {
+    const id = card.dataset.tool;
+    if (id && !sourceCards.has(id)) sourceCards.set(id, card);
+  }
+} else {
+  try {
+    const raw = $<HTMLScriptElement>('#qp-search-data')?.textContent ?? '[]';
+    for (const e of JSON.parse(raw) as IndexEntry[]) {
+      const card = cardFromEntry(e);
+      if (card && !sourceCards.has(e.id)) sourceCards.set(e.id, card);
+    }
+  } catch {
+    /* No index: search stays empty; the tool directory is still linked. */
+  }
 }
 
 function cloneCard(id: string): HTMLElement | null {
   const src = sourceCards.get(id);
   if (!src) return null;
-  return src.cloneNode(true) as HTMLElement;
+  const card = src.cloneNode(true) as HTMLElement;
+  card.classList.remove('is-fav', 'is-default-fav');
+  return card;
 }
 
 function syncStars(): void {
@@ -65,7 +113,8 @@ function renderFavorites(): void {
     }
     favGrid.append(card);
   }
-  if (favEmpty) favEmpty.hidden = ids.length > 0;
+  // No empty favourites block: the section appears once a tool is saved.
+  if (favSection) favSection.hidden = favGrid.childElementCount === 0;
   syncStars();
 }
 
@@ -131,9 +180,6 @@ function runSearch(): void {
 }
 
 if (search) {
-  if (window.matchMedia('(max-width: 520px)').matches) {
-    search.placeholder = 'Search PDF tools';
-  }
   search.addEventListener('input', runSearch);
   search.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {

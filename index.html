@@ -14,109 +14,77 @@
       {{> maple-leaf }}
       <section class="qp-hero" aria-labelledby="qp-hero-title">
         <div class="qp-wrap">
-          <p class="qp-pill" data-trust>
-            <span>Processed locally</span><span class="qp-dot" aria-hidden="true"></span><span>No file uploads</span><span class="qp-dot" aria-hidden="true"></span><span>Free to use</span>
-          </p>
-          <h1 id="qp-hero-title" style="margin-top: 1rem">Your Documents Are Confidential. <em>Your PDF Tools Should Be Too.</em></h1>
-          <p class="qp-lede">
-            Compress, merge, edit, redact, and sign PDFs directly in your browser. No uploads. No servers handling your documents. Your files stay on your device.
-          </p>
-        </div>
-      </section>
+          <h1 id="qp-hero-title">Simple. <em>Private.</em></h1>
+          <p class="qp-lede">All the PDF tools you need, right in your browser. No uploads. No accounts. Just works.</p>
 
-      <section class="qp-wrap" aria-label="Find a PDF tool">
-        <div class="qp-surface qp-panel" id="qp-tools-panel">
-          <div class="qp-search" role="search">
+          <div class="qp-search qp-search-hero" role="search">
             <i class="ph ph-magnifying-glass qp-search-icon" aria-hidden="true"></i>
             <label for="qp-search" class="sr-only">Search {{toolCount}} PDF tools</label>
-            <input id="qp-search" type="search" autocomplete="off" spellcheck="false" placeholder="What do you need to do? Try “compress”, “merge” or “sign”" />
+            <input id="qp-search" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Search PDF tools..." />
             <kbd aria-hidden="true">/</kbd>
           </div>
 
-          <p class="qp-privacy-note">
-            <i class="ph ph-lock-simple" aria-hidden="true"></i>
-            <span><strong>The private way to work with PDFs.</strong> Your files stay on your device — never uploaded to our servers. <a href="/privacy/">How it works</a></span>
-          </p>
+          <ul class="qp-trust" aria-label="Why Qpdf.ca">
+            <li><i class="ph ph-lock-simple" aria-hidden="true"></i>Files stay on your device</li>
+            <li><i class="ph ph-check" aria-hidden="true"></i>Free to use</li>
+          </ul>
+        </div>
+      </section>
 
-          <div id="qp-results" hidden>
-            <div class="qp-section-title"><h2 id="qp-results-title">Results</h2><span class="qp-hint" id="qp-results-count" aria-live="polite"></span></div>
-            <div class="qp-grid" id="qp-results-grid"></div>
-            <p class="qp-empty" id="qp-no-results" hidden>No tools match that search. Try a simpler word such as “image”, “page” or “password”, or <a class="qp-link" href="/tools/">browse all tools</a>.</p>
-          </div>
+      <section class="qp-wrap qp-tools" id="qp-tools-panel" aria-label="PDF tools">
+        <div id="qp-results" hidden>
+          <div class="qp-section-title"><h2 id="qp-results-title">Results</h2><span class="qp-hint" id="qp-results-count" aria-live="polite"></span></div>
+          <div class="qp-grid" id="qp-results-grid"></div>
+          <p class="qp-empty" id="qp-no-results" hidden>No tools match that search. Try a simpler word such as “image”, “page” or “password”, or <a class="qp-link" href="/tools/">browse all tools</a>.</p>
+        </div>
 
-          <div id="qp-home-groups">
+        <div id="qp-home-groups">
+          <section id="qp-fav-section" aria-labelledby="qp-fav-title" hidden>
             <div class="qp-section-title">
               <h2 id="qp-fav-title">Your favourites</h2>
               <span class="qp-hint">Saved in this browser only</span>
             </div>
-            <div class="qp-grid" id="qp-fav-grid" aria-labelledby="qp-fav-title">
-              {{#each popular}}{{#if (eq id "compress-pdf")}}{{> tool-card }}{{/if}}{{/each}}
-            </div>
-            <p class="qp-empty" id="qp-fav-empty" hidden>No favourites yet. Select the star on any tool to keep it here.</p>
+            <div class="qp-grid" id="qp-fav-grid" aria-labelledby="qp-fav-title"></div>
+          </section>
 
-            <div class="qp-section-title"><h2 id="qp-popular-title">Popular tools</h2><a class="qp-link" href="#all-tools" style="font-size: 0.86rem">All {{toolCount}} tools ↓</a></div>
-            <div class="qp-grid" id="qp-popular-grid" aria-labelledby="qp-popular-title">
-              {{#each popular}}{{> tool-card }}{{/each}}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="qp-wrap" id="all-tools" aria-labelledby="qp-all-title" style="padding-top: 3rem">
-        <div class="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 class="qp-h2" id="qp-all-title">All PDF tools</h2>
-            <p class="qp-sub">{{toolCount}} tools, grouped by what you want to do.</p>
-          </div>
-        </div>
-        <div class="qp-chips" style="margin-top: 1rem" role="group" aria-label="Filter by category">
-          <button type="button" class="qp-chip" data-cat="all" aria-pressed="true">All</button>
-          {{#each categories}}<button type="button" class="qp-chip" data-cat="{{key}}" aria-pressed="false">{{name}}</button>
-          {{/each}}
-        </div>
-        <div id="qp-directory">
-          {{#each categories}}
-          <section class="qp-cat" id="cat-{{key}}" data-cat="{{key}}" aria-labelledby="cat-{{key}}-title">
-            <div class="qp-cat-head">
-              <h3 id="cat-{{key}}-title">{{name}}</h3>
-              <p>{{blurb}}</p>
-            </div>
-            <div class="qp-grid">
-              {{#each tools}}{{> tool-card }}{{/each}}
+          <section aria-labelledby="qp-popular-title">
+            <div class="qp-section-title"><h2 id="qp-popular-title">Popular tools</h2></div>
+            <div class="qp-grid qp-grid-home" id="qp-popular-grid" aria-labelledby="qp-popular-title">
+              {{#each homePopular}}{{> tool-card }}{{/each}}
             </div>
           </section>
-          {{/each}}
+
+          <p class="qp-browse">
+            <a class="qp-btn" href="/tools/">Browse all {{toolCount}} PDF tools <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+          </p>
         </div>
       </section>
 
-      <section class="qp-wrap" aria-labelledby="qp-how-title" style="padding-top: 3.5rem">
-        <h2 class="qp-h2" id="qp-how-title">How local processing works</h2>
-        <p class="qp-sub" style="max-width: 62ch">
-          Qpdf.ca sends your browser the software, not the other way around. The PDF engines run inside the page using JavaScript and WebAssembly, so your document never needs to travel to a server.
-        </p>
-        <div class="qp-steps" style="margin-top: 1.25rem">
-          <div class="qp-step">
+      <section class="qp-wrap qp-how" aria-labelledby="qp-how-title">
+        <h2 class="qp-h2" id="qp-how-title">How it works</h2>
+        <ol class="qp-steps">
+          <li class="qp-step">
             <h3>Choose a file</h3>
-            <p>Your browser reads the PDF from your device into memory. Nothing is sent over the network.</p>
-          </div>
-          <div class="qp-step">
-            <h3>Process in your browser</h3>
-            <p>The tool works on your device’s processor. Supported tools keep working even with Wi-Fi switched off.</p>
-          </div>
-          <div class="qp-step">
-            <h3>Save the result</h3>
-            <p>The finished PDF is created in memory and saved straight to your device. Close the tab and it is gone.</p>
-          </div>
-        </div>
-        <div class="flex flex-wrap gap-3" style="margin-top: 1.25rem">
-          <a class="qp-btn" href="/privacy/#test-it-yourself"><i class="ph ph-wifi-slash" aria-hidden="true"></i> Test it yourself offline</a>
-          <a class="qp-btn" href="/privacy/">Privacy &amp; security details</a>
-          {{#if hasGuides}}<a class="qp-btn" href="/guides/">Read the guides</a>{{/if}}
-        </div>
+            <p>Select a file from your device.</p>
+          </li>
+          <li class="qp-step">
+            <h3>Process privately</h3>
+            <p>Your browser handles the document locally.</p>
+          </li>
+          <li class="qp-step">
+            <h3>Download the result</h3>
+            <p>Save the finished file directly to your device.</p>
+          </li>
+        </ol>
+        <p class="qp-how-links">
+          <a class="qp-link" href="/privacy/">How local processing works</a>
+          <a class="qp-link" href="/privacy/#test-it-yourself">Test it offline</a>
+        </p>
       </section>
     </main>
 
     {{> footer }}
+    <script type="application/json" id="qp-search-data">{{{searchIndexJson}}}</script>
     <script type="module" src="/src/js/qpdf/home.ts"></script>
   </body>
 </html>
