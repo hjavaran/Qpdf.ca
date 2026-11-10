@@ -1,0 +1,194 @@
+{{!-- Homepage "How it works" motion graphic ("Closed circuit").
+     A document leaves a stack of files, is redacted in a workspace and drops
+     into Downloads, all inside one frame labelled "Your device". The Local
+     meter is busy only while the document is processed; the Network meter
+     stays flat at 0 B. Used inside .qp-how-grid[data-qp-motion] (index.html);
+     the step cards there carry the text, so this artwork is aria-hidden. --}}
+{{> motion-base }}
+<style>
+.qp-how-grid { display: grid; gap: 1rem; margin-top: 1rem; }
+.qp-how-grid .qp-steps { margin: 0; }
+.qp-how-grid .mo-circuit { order: -1; }
+@media (min-width: 960px) {
+  .qp-how-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 2rem; align-items: center; }
+  .qp-how-grid .mo-circuit { order: 0; }
+  .qp-how-grid .qp-steps { grid-template-columns: 1fr; }
+}
+.mo-circuit { --mo-t: 12s; }
+.mo-circuit .mo-stage { aspect-ratio: 640 / 330; }
+.mo-circuit .mo-meters { display: flex; align-items: center; gap: 1rem; }
+.mo-circuit .mo-meter { display: inline-flex; align-items: center; gap: 0.45rem; }
+.mo-circuit .mo-spark { width: 40px; height: 14px; overflow: hidden; }
+.mo-circuit .mo-spark path { fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mo-circuit .mo-flat { stroke: var(--mo-line); }
+.mo-circuit .mo-wave path { stroke: var(--qp-accent); }
+.mo-circuit .mo-net path { stroke: var(--mo-line); }
+.mo-circuit .mo-bytes { font-variant-numeric: tabular-nums; color: var(--qp-muted); font-weight: 600; }
+@media (max-width: 400px) { .mo-circuit .mo-wide { display: none; } }
+.mo-circuit .mo-track { fill: none; stroke: var(--mo-line); stroke-dasharray: 2 5; stroke-linecap: round; }
+.mo-circuit .mo-work { fill: var(--mo-soft); stroke: var(--qp-accent); stroke-opacity: 0.25; stroke-dasharray: 4 5; }
+.mo-circuit .mo-sel { fill: none; stroke: var(--qp-accent); stroke-width: 1.5; }
+.mo-circuit .mo-scan-glow { fill: url(#moa-scan); }
+.mo-circuit #moa-scan stop { stop-color: var(--qp-accent); }
+.mo-circuit .mo-scan-line { fill: var(--qp-accent); }
+
+.mo-circuit .mo-cap {
+  position: absolute; top: 72%; transform: translate(-50%, -50%);
+  font-size: 0.72rem; font-weight: 500; color: var(--mo-label); white-space: nowrap;
+}
+.mo-circuit .mo-cap-in { top: 71.5%; font-weight: 600; color: var(--qp-muted); }
+.mo-circuit .mo-stack .mo-paper { fill: var(--mo-stack); }
+.mo-circuit .mo-stack .mo-ln, .mo-circuit .mo-stack .mo-ttl { opacity: 0.55; }
+@media (max-width: 479px) { .mo-circuit .mo-cap { font-size: 0.65rem; } }
+
+/* Stations 1-2-3 (HTML so the digits stay legible at phone sizes). */
+.mo-circuit .mo-stations { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.mo-circuit .mo-stations li { position: absolute; top: 89.7%; width: 24px; height: 24px; margin: -12px 0 0 -12px; }
+.mo-circuit .mo-stations span {
+  position: absolute; inset: 0; display: grid; place-items: center; border-radius: 8px;
+  font-size: 0.75rem; font-weight: 700; line-height: 1;
+  background: var(--mo-frame); border: 1px solid var(--mo-line); color: var(--qp-muted);
+}
+.mo-circuit .mo-stations .mo-on { background: var(--qp-accent); border-color: var(--qp-accent); color: #fff; opacity: 0; }
+
+/* Static summary frame: the document is mid-process. */
+.mo-circuit .mo-doc { transform: translate(272px, 70px); }
+.mo-circuit .mo-sel, .mo-circuit .mo-scan, .mo-circuit .mo-done, .mo-circuit .mo-flat { opacity: 0; }
+.mo-circuit .mo-stations li:nth-child(2) .mo-on { opacity: 1; }
+
+/* Motion (12 s loop). */
+[data-mo] .mo-circuit .mo-doc { animation-name: moa-doc; }
+[data-mo] .mo-circuit .mo-sel { animation-name: moa-sel; }
+[data-mo] .mo-circuit .mo-work { animation-name: moa-work; }
+[data-mo] .mo-circuit .mo-scan { animation-name: moa-scan; }
+[data-mo] .mo-circuit .mo-red1 { animation-name: moa-red1; }
+[data-mo] .mo-circuit .mo-red2 { animation-name: moa-red2; }
+[data-mo] .mo-circuit .mo-done { animation-name: moa-done; }
+[data-mo] .mo-circuit .mo-flat { animation-name: moa-flat; }
+[data-mo] .mo-circuit .mo-wave { animation-name: moa-wave; }
+[data-mo] .mo-circuit .mo-wave path { animation: moa-scroll 0.9s linear infinite paused; }
+[data-mo='play'] .mo-circuit .mo-wave path { animation-play-state: running; }
+[data-mo] .mo-circuit .mo-stations li:nth-child(1) .mo-on { animation-name: moa-s1; }
+[data-mo] .mo-circuit .mo-stations li:nth-child(2) .mo-on { animation-name: moa-s2; }
+[data-mo] .mo-circuit .mo-stations li:nth-child(3) .mo-on { animation-name: moa-s3; }
+.qp-how-grid[data-mo] .qp-step h3::before {
+  animation: 12s cubic-bezier(0.45, 0, 0.2, 1) infinite both paused;
+}
+.qp-how-grid[data-mo='play'] .qp-step h3::before { animation-play-state: running; }
+.qp-how-grid[data-mo] .qp-step:nth-child(1) h3::before { animation-name: moa-c1; }
+.qp-how-grid[data-mo] .qp-step:nth-child(2) h3::before { animation-name: moa-c2; }
+.qp-how-grid[data-mo] .qp-step:nth-child(3) h3::before { animation-name: moa-c3; }
+@media (prefers-reduced-motion: reduce) {
+  .mo-circuit .mo-wave path, .qp-how-grid .qp-step h3::before { animation: none !important; }
+}
+
+@keyframes moa-doc {
+  0%, 6% { transform: translate(62px, 70px); opacity: 1; }
+  22%, 62% { transform: translate(272px, 70px); }
+  72% { transform: translate(482px, 70px); }
+  80%, 92% { transform: translate(482px, 128px); opacity: 1; }
+  95% { transform: translate(482px, 128px); opacity: 0; }
+  95.1% { transform: translate(62px, 70px); opacity: 0; }
+  100% { transform: translate(62px, 70px); opacity: 1; }
+}
+@keyframes moa-sel { 0%, 4% { opacity: 0; } 10%, 15% { opacity: 1; } 21%, 100% { opacity: 0; } }
+@keyframes moa-work { 0%, 21% { opacity: 0; } 27%, 58% { opacity: 1; } 64%, 100% { opacity: 0; } }
+@keyframes moa-scan {
+  0%, 29% { transform: translateY(8px); opacity: 0; }
+  31%, 42% { opacity: 1; }
+  45%, 100% { transform: translateY(118px); opacity: 0; }
+}
+@keyframes moa-red1 { 0%, 45% { transform: scaleX(0); } 51%, 94.9% { transform: scaleX(1); } 95.1%, 100% { transform: scaleX(0); } }
+@keyframes moa-red2 { 0%, 51% { transform: scaleX(0); } 57%, 94.9% { transform: scaleX(1); } 95.1%, 100% { transform: scaleX(0); } }
+@keyframes moa-done {
+  0%, 80% { opacity: 0; transform: scale(0.6); }
+  84%, 91% { opacity: 1; transform: scale(1); }
+  95%, 100% { opacity: 0; transform: scale(1); }
+}
+@keyframes moa-flat { 0%, 24% { opacity: 1; } 27%, 58% { opacity: 0; } 61%, 100% { opacity: 1; } }
+@keyframes moa-wave { 0%, 24% { opacity: 0; } 27%, 58% { opacity: 1; } 61%, 100% { opacity: 0; } }
+@keyframes moa-scroll { to { transform: translateX(-16px); } }
+@keyframes moa-s1 { 0%, 18% { opacity: 1; } 22%, 96% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes moa-s2 { 0%, 20% { opacity: 0; } 24%, 60% { opacity: 1; } 64%, 100% { opacity: 0; } }
+@keyframes moa-s3 { 0%, 62% { opacity: 0; } 66%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
+@keyframes moa-c1 {
+  0%, 18% { background: var(--qp-accent); color: #fff; }
+  22%, 96% { background: var(--qp-surface-2); color: var(--qp-muted); }
+  100% { background: var(--qp-accent); color: #fff; }
+}
+@keyframes moa-c2 {
+  0%, 20% { background: var(--qp-surface-2); color: var(--qp-muted); }
+  24%, 60% { background: var(--qp-accent); color: #fff; }
+  64%, 100% { background: var(--qp-surface-2); color: var(--qp-muted); }
+}
+@keyframes moa-c3 {
+  0%, 62% { background: var(--qp-surface-2); color: var(--qp-muted); }
+  66%, 92% { background: var(--qp-accent); color: #fff; }
+  96%, 100% { background: var(--qp-surface-2); color: var(--qp-muted); }
+}
+</style>
+<div class="mo-circuit">
+  <div class="mo-frame">
+    <div class="mo-art" aria-hidden="true">
+      <div class="mo-bar">
+        <span class="mo-label">Your device</span>
+        <span class="mo-meters">
+          <span class="mo-meter">Local
+            <svg class="mo-spark" viewBox="0 0 40 14"><path class="mo-flat mo-a" d="M0 7H40" /><g class="mo-wave mo-a"><path d="M-48 7h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4h4l2-5 2 9 2-6 2 2h4" /></g></svg>
+          </span>
+          <span class="mo-meter mo-net">Network
+            <svg class="mo-spark" viewBox="0 0 40 14"><path d="M0 7H40" /></svg>
+            <span class="mo-bytes">0 B<span class="mo-wide"> sent</span></span>
+          </span>
+        </span>
+      </div>
+      <div class="mo-stage">
+        <svg viewBox="0 0 640 330" focusable="false">
+          <defs>
+            <pattern id="moa-dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="mo-dot" cx="8" cy="8" r="1" /></pattern>
+            <linearGradient id="moa-scan" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-opacity="0" />
+              <stop offset="1" stop-opacity="0.22" />
+            </linearGradient>
+          </defs>
+          <rect width="640" height="330" fill="url(#moa-dots)" />
+          <path class="mo-track" d="M110 296H530" />
+          <rect class="mo-work mo-a" x="240" y="50" width="160" height="164" rx="18" />
+          <g class="mo-stack">
+            <g transform="translate(74 82)"><path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /></g>
+            <g transform="translate(68 76)"><path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /><path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" /><rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" /><g class="mo-ln"><rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" /><rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" /></g></g>
+          </g>
+          <path class="mo-tray-b" d="M466 206 474 194H586L594 206Z" />
+          <g class="mo-doc mo-a">
+            <rect class="mo-sel mo-a" x="-7" y="-7" width="110" height="138" rx="11" />
+            <path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" />
+              <path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" />
+              <rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" />
+              <g class="mo-ln">
+                <rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" />
+                <rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" />
+                <rect x="12" y="88" width="70" height="4" rx="2" /><rect x="12" y="98" width="38" height="4" rx="2" />
+              </g>
+              <rect class="mo-tag" x="12" y="110" width="16" height="5" rx="2" />
+            <rect class="mo-red mo-red1 mo-a" x="10" y="55" width="70" height="10" rx="2" />
+            <rect class="mo-red mo-red2 mo-a" x="10" y="75" width="58" height="10" rx="2" />
+            <g class="mo-scan mo-a">
+              <rect class="mo-scan-glow" x="3" y="-14" width="90" height="14" />
+              <rect class="mo-scan-line" x="3" y="-0.75" width="90" height="1.5" rx=".75" />
+            </g>
+          </g>
+          <rect class="mo-tray-f" x="458" y="206" width="144" height="60" rx="12" />
+          <g class="mo-done mo-a"><circle cx="574" cy="132" r="12" /><path d="m568.5 132.5 3.8 3.7 7.2-7.4" /></g>
+        </svg>
+        <span class="mo-cap" style="left: 17.19%">Your files</span>
+        <span class="mo-cap" style="left: 50%">Your browser</span>
+        <span class="mo-cap mo-cap-in" style="left: 82.81%">Downloads</span>
+        <ol class="mo-stations">
+          <li style="left: 17.19%"><span>1</span><span class="mo-on mo-a">1</span></li>
+          <li style="left: 50%"><span>2</span><span class="mo-on mo-a">2</span></li>
+          <li style="left: 82.81%"><span>3</span><span class="mo-on mo-a">3</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

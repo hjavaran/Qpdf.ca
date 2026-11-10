@@ -62,6 +62,7 @@
 
       <section class="qp-wrap qp-how" aria-labelledby="qp-how-title">
         <h2 class="qp-h2" id="qp-how-title">How it works</h2>
+        <div class="qp-how-grid qp-mo" data-qp-motion>
         <ol class="qp-steps">
           <li class="qp-step">
             <h3>Choose a file</h3>
@@ -76,6 +77,8 @@
             <p>Save the finished file directly to your device.</p>
           </li>
         </ol>
+        {{> motion-circuit }}
+        </div>
         <p class="qp-how-links">
           <a class="qp-link" href="/privacy/">How local processing works</a>
           <a class="qp-link" href="/privacy/#test-it-yourself">Test it offline</a>

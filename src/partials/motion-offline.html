@@ -1,0 +1,178 @@
+{{!-- /privacy/ "Test it yourself" motion graphic ("Offline bench").
+     A tool page reaches "Ready to work offline", Wi-Fi is switched off, and
+     a PDF is still compressed and saved to Downloads. Sits inside the dark
+     .qp-demo panel (dark in both themes). The numbered steps beside it carry
+     the text, so the artwork is aria-hidden. --}}
+{{> motion-base }}
+<style>
+.mo-bench {
+  --mo-t: 14s;
+  --mo-frame: #1d1d21;
+  --mo-page: #f4f2ed;
+  --mo-page-edge: #d6d3cb;
+  --mo-page-line: #dedbd3;
+  --mo-page-title: #b3afa5;
+  --mo-tray: #26262b;
+  --mo-stack: #202024;
+  --mo-line: #45454d;
+  --mo-dot: rgb(255 255 255 / 0.05);
+  --mo-label: #9c9a93;
+  --mo-ok: #4ade80;
+  margin: 1.25rem 0 1.4rem;
+}
+.mo-bench .mo-frame { border-color: rgb(255 255 255 / 0.1); box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.6); }
+.mo-bench .mo-bar { border-color: rgb(255 255 255 / 0.08); background: #222227; gap: 0.6rem; }
+.mo-bench .mo-win-dots { display: inline-flex; gap: 5px; }
+.mo-bench .mo-win-dots i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a41; }
+.mo-bench .mo-addr {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  padding: 0.3rem 0.7rem; border-radius: 999px; background: #18181b; color: #b9b7b0; font-size: 0.74rem;
+}
+.mo-bench .mo-wifi { display: inline-flex; align-items: center; gap: 0.45rem; color: #d4d2cc; }
+.mo-bench .mo-wifi-ico { width: 18px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.mo-bench .mo-wifi-ico circle { fill: currentColor; stroke: none; }
+.mo-bench .mo-slash { stroke: #ff8a95; stroke-dasharray: 1; }
+.mo-bench .mo-swap { display: inline-grid; }
+.mo-bench .mo-swap > * { grid-area: 1 / 1; }
+.mo-bench .mo-switch { position: relative; width: 26px; height: 15px; border-radius: 999px; background: rgb(255 255 255 / 0.16); }
+.mo-bench .mo-switch .mo-trk-on { position: absolute; inset: 0; border-radius: inherit; background: #3fb871; }
+.mo-bench .mo-switch .mo-knob { position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+.mo-bench .mo-toolbar { display: flex; align-items: center; padding: 0.7rem 1rem 0; }
+.mo-bench .mo-pill {
+  display: inline-flex; align-items: center; gap: 0.45rem; min-height: 28px; padding: 0.2rem 0.7rem;
+  border-radius: 999px; border: 1px solid; font-size: 0.78rem; font-weight: 500; white-space: nowrap;
+}
+.mo-bench .mo-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+.mo-bench .mo-pill-load { color: #b9b7b0; background: #18181b; border-color: rgb(255 255 255 / 0.1); }
+.mo-bench .mo-pill-load::before { background: #f0b429; }
+.mo-bench .mo-pill-ready { color: #bfe9cf; background: #14241b; border-color: #24402f; }
+.mo-bench .mo-pill-ready::before { background: var(--mo-ok); }
+.mo-bench .mo-stage { aspect-ratio: 640 / 250; }
+.mo-bench .mo-zone { fill: rgb(255 255 255 / 0.02); stroke: rgb(255 255 255 / 0.2); stroke-dasharray: 5 5; }
+.mo-bench .mo-scan-line { fill: var(--qp-accent); }
+.mo-bench .mo-scan-glow { fill: url(#mob-scan); }
+.mo-bench #mob-scan stop { stop-color: #e0414f; }
+.mo-bench .mo-bpage { transform-box: fill-box; transform-origin: center; }
+.mo-bench .mo-done circle { fill: var(--mo-ok); }
+.mo-bench .mo-done path { stroke: #0f1a13; }
+.mo-bench .mo-cap {
+  position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
+  font-size: 0.72rem; font-weight: 600; color: #b9b7b0;
+}
+.mo-bench .mo-size { font-variant-numeric: tabular-nums; }
+.mo-bench .mo-hint { font-weight: 500; color: #8a8881; }
+.mo-bench .mo-size-new { color: #bfe9cf; }
+@media (max-width: 459px) {
+  .mo-bench .mo-win-dots { display: none; }
+  .mo-bench .mo-cap { font-size: 0.66rem; }
+  .mo-bench .mo-wifi-txt { display: none; }
+}
+
+/* Static summary frame: offline, ready, file compressed and saved. */
+.mo-bench .mo-pill-load, .mo-bench .mo-trk-on, .mo-bench .mo-on-t, .mo-bench .mo-scan, .mo-bench .mo-size { opacity: 0; }
+.mo-bench .mo-arcs { opacity: 0.35; }
+.mo-bench .mo-slash { stroke-dashoffset: 0; }
+.mo-bench .mo-bdoc { transform: translate(484px, 100px); }
+.mo-bench .mo-bpage { transform: scale(0.86); }
+
+/* Motion (14 s loop). */
+.mo-bench[data-mo] .mo-pill-load { animation-name: mob-pill-load; }
+.mo-bench[data-mo] .mo-pill-ready { animation-name: mob-pill-ready; }
+.mo-bench[data-mo] .mo-trk-on, .mo-bench[data-mo] .mo-on-t { animation-name: mob-on; }
+.mo-bench[data-mo] .mo-off-t { animation-name: mob-off; }
+.mo-bench[data-mo] .mo-arcs { animation-name: mob-arcs; }
+.mo-bench[data-mo] .mo-slash { animation-name: mob-slash; }
+.mo-bench[data-mo] .mo-knob { animation-name: mob-knob; }
+.mo-bench[data-mo] .mo-bdoc { animation-name: mob-doc; }
+.mo-bench[data-mo] .mo-bpage { animation-name: mob-page; }
+.mo-bench[data-mo] .mo-scan { animation-name: mob-scan; }
+.mo-bench[data-mo] .mo-size-old { animation-name: mob-old; }
+.mo-bench[data-mo] .mo-hint { animation-name: mob-hint; }
+.mo-bench[data-mo] .mo-size-new { animation-name: mob-new; }
+.mo-bench[data-mo] .mo-done { animation-name: mob-done; }
+
+@keyframes mob-pill-load { 0%, 8% { opacity: 1; } 11%, 95% { opacity: 0; } 98%, 100% { opacity: 1; } }
+@keyframes mob-pill-ready { 0%, 8% { opacity: 0; } 11%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes mob-on { 0%, 18% { opacity: 1; } 23%, 92% { opacity: 0; } 97%, 100% { opacity: 1; } }
+@keyframes mob-off { 0%, 18% { opacity: 0; } 23%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+@keyframes mob-arcs { 0%, 18% { opacity: 1; } 23%, 92% { opacity: 0.35; } 97%, 100% { opacity: 1; } }
+@keyframes mob-slash { 0%, 19% { stroke-dashoffset: 1; } 24%, 92% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: 1; } }
+@keyframes mob-knob { 0%, 18% { transform: translateX(11px); } 23%, 92% { transform: translateX(0); } 97%, 100% { transform: translateX(11px); } }
+@keyframes mob-doc {
+  0%, 28% { transform: translate(164px, 56px); opacity: 0; }
+  33%, 58% { transform: translate(164px, 66px); opacity: 1; }
+  68% { transform: translate(484px, 66px); }
+  74%, 90% { transform: translate(484px, 100px); opacity: 1; }
+  93.9% { transform: translate(484px, 100px); opacity: 0; }
+  94%, 100% { transform: translate(164px, 56px); opacity: 0; }
+}
+@keyframes mob-page { 0%, 38% { transform: scale(1); } 52%, 93.9% { transform: scale(0.86); } 94%, 100% { transform: scale(1); } }
+@keyframes mob-scan {
+  0%, 36% { transform: translateY(8px); opacity: 0; }
+  38%, 48% { opacity: 1; }
+  51%, 100% { transform: translateY(118px); opacity: 0; }
+}
+@keyframes mob-hint { 0%, 25% { opacity: 1; } 29%, 94% { opacity: 0; } 98%, 100% { opacity: 1; } }
+@keyframes mob-old { 0%, 29% { opacity: 0; } 33%, 48% { opacity: 1; } 52%, 100% { opacity: 0; } }
+@keyframes mob-new { 0%, 49% { opacity: 0; } 53%, 59% { opacity: 1; } 63%, 100% { opacity: 0; } }
+@keyframes mob-done {
+  0%, 74% { opacity: 0; transform: scale(0.6); }
+  78%, 90% { opacity: 1; transform: scale(1); }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+</style>
+<div class="qp-mo mo-bench" data-qp-motion>
+  <div class="mo-frame">
+    <div class="mo-art" aria-hidden="true">
+      <div class="mo-bar">
+        <span class="mo-win-dots"><i></i><i></i><i></i></span>
+        <span class="mo-addr">qpdf.ca/compress-pdf/</span>
+        <span class="mo-wifi">
+          <svg class="mo-wifi-ico" viewBox="0 0 20 16"><g class="mo-arcs mo-a"><path d="M2 6.2a12 12 0 0 1 16 0M5 9.4a7.4 7.4 0 0 1 10 0M7.9 12.4a3 3 0 0 1 4.2 0" /><circle cx="10" cy="14.6" r="1.2" /></g><path class="mo-slash mo-a" pathLength="1" d="M3.5 1.5 16.5 15" /></svg>
+          <span class="mo-swap mo-wifi-txt"><span class="mo-on-t mo-a">Wi-Fi on</span><span class="mo-off-t mo-a">Wi-Fi off</span></span>
+          <span class="mo-switch"><span class="mo-trk-on mo-a"></span><span class="mo-knob mo-a"></span></span>
+        </span>
+      </div>
+      <div class="mo-toolbar">
+        <span class="mo-swap">
+          <span class="mo-pill mo-pill-load mo-a">Preparing offline use…</span>
+          <span class="mo-pill mo-pill-ready mo-a">Ready to work offline</span>
+        </span>
+      </div>
+      <div class="mo-stage">
+        <svg viewBox="0 0 640 250" focusable="false">
+          <defs>
+            <pattern id="mob-dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="mo-dot" cx="8" cy="8" r="1" /></pattern>
+            <linearGradient id="mob-scan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-opacity="0" /><stop offset="1" stop-opacity="0.24" /></linearGradient>
+          </defs>
+          <rect width="640" height="250" fill="url(#mob-dots)" />
+          <rect class="mo-zone" x="24" y="40" width="376" height="190" rx="14" />
+          <path class="mo-tray-b" d="M460 170 468 158H596L604 170Z" />
+          <g class="mo-bdoc mo-a">
+            <g class="mo-bpage mo-a">
+              <path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" />
+              <path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" />
+              <rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" />
+              <g class="mo-ln">
+                <rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" />
+                <rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" />
+                <rect x="12" y="88" width="70" height="4" rx="2" /><rect x="12" y="98" width="38" height="4" rx="2" />
+              </g>
+              <rect class="mo-tag" x="12" y="110" width="16" height="5" rx="2" />
+              <g class="mo-scan mo-a">
+                <rect class="mo-scan-glow" x="3" y="-14" width="90" height="14" />
+                <rect class="mo-scan-line" x="3" y="-0.75" width="90" height="1.5" rx=".75" />
+              </g>
+            </g>
+          </g>
+          <rect class="mo-tray-f" x="452" y="170" width="160" height="56" rx="12" />
+          <g class="mo-done mo-a"><circle cx="575" cy="110" r="11" /><path d="m570 110.5 3.4 3.4 6.6-6.8" /></g>
+        </svg>
+        <span class="mo-cap mo-hint mo-a" style="left: 33.13%; top: 54%">Select a PDF from your device</span>
+        <span class="mo-cap mo-size mo-size-old mo-a" style="left: 33.13%; top: 84%">2.4 MB</span>
+        <span class="mo-cap mo-size mo-size-new mo-a" style="left: 33.13%; top: 84%">0.8 MB</span>
+        <span class="mo-cap" style="left: 83.13%; top: 79.2%">Downloads</span>
+      </div>
+    </div>
+  </div>
+</div>
