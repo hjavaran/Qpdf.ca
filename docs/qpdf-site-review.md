@@ -8,14 +8,14 @@ Six reviewers worked in parallel from one shared brief (Appendix A): SEO, design
 
 ## 1. Executive summary
 
-**The privacy claim holds.** Across 17 tool runs on the live site with a marker string in the file name and content, no request carried file bytes, the file name or document text. The only non-GET request anywhere was the Cloudflare Web Analytics page-view beacon. Compress, merge, protect and redact also worked with the network cut. Redaction removes text from the content stream, and password protection is AES-256.
+**The privacy claim holds.** Across 17 tool runs on the live site with a marker string in the file name and content, no request carried file bytes, the file name or document text. The only non-GET request anywhere was the Cloudflare Web Analytics page-view beacon. Ten tools were confirmed working with the network cut. Redaction removes text from the content stream, and password protection is AES-256.
 
 **The positioning needs one correction.** The site calls itself a general-purpose toolkit (`about.html`), and its 15 guides are split between Canadian court filing and IRCC immigration uploads. The audience is legal *and* immigration, both Canadian. The homepage names neither: its H1 is "Simple. Private." and it never says "Canada", "lawyer", "immigration", "free" or "offline" in the body text.
 
 **What stands between the site and a lawyer's trust is not the engineering.** It is four things:
 
 1. **Nobody is named.** The only operator shown is a link to wealththeory.ca. There is no legal entity, person, address or email. This blocks trust, CASL-compliant email, institutional listings and author credit on legal guides at once.
-2. **Small defects in exactly the wrong places.** The Workflow Builder renders at 0px height. Sign PDF saves the user's signature in browser storage by default, which the privacy page says does not happen. The privacy page still describes a default favourite that was removed, and says the contact-form host is reachable only on the contact page when the CSP allows it everywhere.
+2. **Small defects in exactly the wrong places.** Sign PDF and Unlock PDF show "Ready to work offline" and then fail offline. Sign PDF reports "Signed PDF downloaded successfully!" with no signature placed. The Workflow Builder renders at 0px height. Sign PDF saves the user's signature in browser storage by default, which the privacy page says does not happen. The privacy page still describes a default favourite that was removed, and says the contact-form host is reachable only on the contact page when the CSP allows it everywhere.
 3. **The proof is quieter than competitors' weaker claims.** At the drop zone, "Your files never leave your device" is the smallest text on the page. The offline test is a click away at the bottom of the homepage.
 4. **Search can't find it yet.** No evidence of indexing was found (not proof: Search Console is needed), the brand query is owned by the qpdf library, and a full duplicate is live at `qpdf.pages.dev`.
 
@@ -33,16 +33,16 @@ Six reviewers worked in parallel from one shared brief (Appendix A): SEO, design
 |---|---|---|---|---|
 | 1 | **Name the operator.** Legal entity, a named person and role, city or mailing address, direct email, on `/about/`, the footer and `/contact/`; add `Organization` JSON-LD. | Unblocks trust, CASL email, listings, guide authorship. Flagged independently by four reviewers. | half day (mostly a decision) | Design H2, Outreach, SEO H4/M1, Competition |
 | 2 | **Make the privacy page true again.** Fix `privacy.html:110`; list `pdfjs.signature`, `ec.userDict` and workflow templates as stored items; correct the Web3Forms sentence. Untick "Save signature" by default in Sign PDF. | The page whose job is credibility has three inaccurate statements. On a shared firm PC the next user can stamp the previous user's signature. | quick to half day | Tech H1, M1, M2 |
-| 3 | **Fix the Workflow Builder layout.** `src/pages/pdf-workflow.html:199-200` keeps `h-[100dvh] overflow-hidden` on `<body>`; `#workflow-app` measures 0px at 1280×800 (re-confirmed). | A visibly broken page undermines everything else. | quick | Design H1 |
+| 3 | **Fix what is visibly or verifiably wrong.** (a) Sign PDF and Unlock PDF fail offline despite the "Ready to work offline" badge; add both to the offline e2e tests. (b) False successes: Sign with no signature, Unlock on an unlocked file, Merge with one file. (c) Workflow Builder renders at 0px (`src/pages/pdf-workflow.html:199-200`, re-confirmed). (d) OCR starts with no language and a disabled button. | The offline test is the site's own proof; a sceptic who picks Sign PDF sees it fail. | half day | Usability 1, 2, 6; Design H1 |
 | 4 | **Shrink the network surface on tool pages.** Don't load the analytics beacon on tool pages; allow `api.web3forms.com` in CSP only on `/contact/`; turn off Cloudflare NEL. | Then "no third-party code runs next to your document" becomes literally true and checkable. Keeps analytics on content pages for measurement. | half day | Tech H2, H3, M3 |
 | 5 | **Rewrite the homepage hero and add links below it.** New H1, title, lede and trust row (text in §4.1 and §4.2); add category link blocks and "For court filing" / "For IRCC uploads" guide blocks under the search. | The strongest page targets no keyword or audience and links to 8 of 125 tools; 21 tool pages have no inbound links outside hubs. | half day | SEO H1, H2; Design H4 |
 | 6 | **Get indexed and remove the duplicate.** Verify Search Console and Bing, submit the sitemap, request indexing for 20 URLs; redirect or noindex `qpdf.pages.dev`. | Nothing else in SEO matters until this is confirmed. | quick | SEO H4, H5 |
-| 7 | **Put the promise where the file is dropped, and confirm it at the result.** Larger "Processed on this device. Nothing is uploaded. Verify offline →" line in every drop zone; reuse Compress's "Nothing was uploaded" note on every result; add `-redacted`, `-protected` suffixes to output names. | The claim is the product; it is 12px grey at the decisive moment. Same-name outputs invite sending the unredacted file. | half day | Design H3, H5; Tech M5 |
+| 7 | **Put the promise where the file is dropped, and confirm it at the result.** Larger "Processed on this device. Nothing is uploaded. Verify offline →" line in every drop zone; "Nothing was uploaded" in the shared success modal; `-redacted`, `-signed`, `-protected` suffixes on output names; make that modal a real dialog for screen readers. | The claim is the product; it is 12px grey at the decisive moment. Same-name outputs invite sending the unredacted file. | half day to multi-day | Design H3, H5; Tech M5; Usability 3, 5, 18 |
 | 8 | **Retitle top tool pages for "without uploading" and deepen 15 money pages.** | "Privately" is not what people type; the "without uploading" results have no major brand. Median landing copy is 132 words, 55 of them shared. | quick (titles) + multi-day (copy) | SEO H6, H3 |
 | 9 | **Publish `/for-firms/` (security summary for IT reviewers) plus `/for/lawyers/`, `/for/immigration-consultants/` and `/library/`.** | Gives outreach somewhere to land, gives each channel a measurable path (UTMs are invisible to Cloudflare Web Analytics), and targets audience keywords. | half day each | Outreach, SEO, Competition |
 | 10 | **Make the build verifiable.** Stamp the Git commit into `sw.js` and the footer, publish a SHA-256 manifest of `dist/`, add `/.well-known/security.txt`. | A sceptical reviewer currently cannot tie the live JavaScript to the public source. | half day | Tech H4, M8 |
 
-Next in line, not in the top 10: staged French (five tool pages and three IRCC guides), the first outreach wave (AlternativeTo, Courthouse Libraries BC, public libraries), and a licence review of upstream's producer-line expectation.
+Next in line, not in the top 10: the Sign and Redact editor flows (editor below the fold, icon-only tools, opening in View mode), plain-language button labels, staged French (five tool pages and three IRCC guides), the first outreach wave (AlternativeTo, Courthouse Libraries BC, public libraries), and a licence review of upstream's producer-line expectation.
 
 ### Conflicts between reviewers, and the recommended side
 
@@ -56,6 +56,7 @@ Next in line, not in the top 10: staged French (five tool pages and three IRCC g
 | **Sitemap `lastmod`** | `docs/STAGE-2-HANDOFF.md` omits it for tools rather than fake dates. SEO: derive from `git log`. | **Derive from Git.** It is honest and covers all 150 URLs. |
 | **Thin Office-format pages** | Noindex ODG/ODP/ODS/WPS/PUB/VSD now, or leave. | **Leave** until Search Console shows "Crawled, currently not indexed". |
 | **Show HN and cold email timing** | Outreach rates Show HN High. The user asked for cold email. | **Both wait for actions 1 to 4.** Cold email also needs a name and mailing address under CASL. |
+| **Offline claim** | Tech: the offline claim holds (tested compress, merge, protect, redact). Usability: it fails for Sign and Unlock. | **Both are right;** they tested different tools. Treat the badge as unreliable for those two until fixed, and say on `/privacy/` which tools the test has been verified for. |
 | **Workflow page** | Design: noindex or unlink until fixed. | **Just fix it;** it is a two-line CSS change. |
 
 One reviewer flag was checked and closed: SEO noted that `docs/STAGE-2-HANDOFF.md` and `docs/SEO-STAGE2-FINAL-AUDIT.md` say the RCIC and BC PD-72 guides are withheld, yet both are live. Commit `5bfac80` and `docs/QPDF_Stage2_Held_Articles_Final_Verification_Report.md` record owner approval on 2026-11-07. Only the two older docs are stale.
@@ -96,6 +97,16 @@ One reviewer flag was checked and closed: SEO noted that `docs/STAGE-2-HANDOFF.m
 - [ ] Offline badge: "Preparing offline use… 53%" → "Ready to use · saving for offline 53%".
 - [ ] `.qp-hero { overflow: hidden }` and hide the maple leaf below 768px.
 - [ ] Mobile: `padding-block: .5rem` on `.qp-footer a` and `.qp-crumbs a`.
+
+**Usability**
+- [ ] `sign-pdf-page.ts:327`: block download with "Add a signature first." when none is placed.
+- [ ] `unlock-pdf-page.ts:149`: "This PDF has no password. Nothing to remove."
+- [ ] Merge: require two files.
+- [ ] `src/pages/ocr-pdf.html:166`: pre-select English; fix the invisible "Advanced Settings" label; "Available languages:".
+- [ ] Labels: "Encrypt PDF" → "Protect PDF"; "Decrypt PDF" → "Unlock PDF"; "Convert" → "Convert to JPG"; "User Password" → "Password to open".
+- [ ] Wrap tool pages in `<main id="main">`; add a `:focus-within` ring on `#drop-zone`.
+- [ ] Word to PDF: "First use downloads the converter (about 77 MB)".
+- [ ] Add the drop-zone privacy line to `/delete-pdf-pages/`, the one page missing it.
 
 **Quality**
 - [ ] `src/js/logic/protect-pdf-page.ts:109`: warn on very short passwords (a one-character password is accepted silently).
@@ -472,7 +483,105 @@ Any subreddit's or Canadavisa's rules; CRTC pages directly; whether a no-revenue
 
 ### 4.5 Usability
 
-_Pending: the usability review was interrupted and is being re-run. This section will be filled in by a follow-up commit._
+Method: hands-on walkthrough of 14 tools on the live site (Chromium via Playwright, desktop 1280×900 and phone 390×844 emulation), a scripted smoke pass over all 125 tool pages, keyboard and accessibility-tree checks, and the offline test. This review was interrupted once by a usage limit and resumed; gaps are listed under "Could not verify".
+
+**Headline:** all 14 tools produce a correct result, but two of them fail offline while showing "Ready to work offline", and several report success for work they did not do.
+
+#### Per-tool walkthrough
+
+Clicks are counted from the homepage: tool card, choose file, then actions. Six of the 14 (Bates, Password Protect, Unlock, Remove Metadata, Word to PDF, PDF to JPG) are not among the 8 homepage cards, so they need a search or "Browse all" first.
+
+| Tool | Clicks | Result and saved name | Issues seen |
+|---|---|---|---|
+| compress-pdf | 3 | Auto-download `a-compressed.pdf`; "Your PDF is now 35% smaller! … saved as a-compressed.pdf. Nothing was uploaded." | Best flow on the site. Result heading lands under the sticky header. A 14 MB file shows only "Compressing…" with no percent. Bad input handled well: "Not a PDF — fake.pdf is not a valid PDF, so it was not added." |
+| merge-pdf | 3 + OK | `merged.pdf`; "PDFs merged successfully!" | List is wiped after success. Merging a single file is reported as a success. Encrypted file prompts for a password; "Skip" silently drops it. No reorder without drag. |
+| split-pdf | 3 + typing + OK | `split-document.pdf` or `split-pages.zip` | Subtitle says "Extract a range of pages into a new PDF." on a page titled Split. |
+| edit-pdf | 5+ | `a.pdf`, no success message | Editor loads below the fold because the full drop zone stays. Icon-only toolbar. Tab is labelled "0_a.pdf". |
+| sign-pdf | 6 + scroll + OK | `document.pdf`; "Signed PDF downloaded successfully!" | Same message and download with **no signature placed**. The only entry point is a 28px icon in a raw PDF.js toolbar. The "Add a signature" dialog opens below the fold. Checkbox reads "Flatten PDF (use the Save button below)". |
+| redact-pdf | 6 to 7 | `a.pdf`, no success message | Opens in "View" mode; the user must find the Redact tab, then an icon. Good guard: "Apply redactions? … Until a mark is applied, the content under it is still in the file." |
+| ocr-pdf | 5 | `scan.pdf` | No language pre-selected and "Start OCR" is disabled with no reason given. "Advanced Settings" label is invisible in the light theme. Jargon: "Tesseract", "whitelists", "This deployment bundles OCR for: English, French." Progress is a raw log. |
+| jpg-to-pdf | 3 + OK | `from_jpgs.pdf` | PNG refused with no pointer to PNG to PDF or Images to PDF. |
+| pdf-to-jpg | 3 + OK | `a_jpgs.zip` | Primary button is just "Convert". A fake file is accepted, then "Failed to convert PDF to JPG. The file might be corrupted." |
+| bates-numbering | 3 + OK | `bates_numbered.zip` (2 files) or `a.pdf` (1 file); "Bates numbers applied successfully! (1 through 5)" | "Select Style" dropdown has one option. Placeholders `[BATES] [PAGE] [FILE] [FILENAME]` are unexplained. |
+| password-protect-pdf | 3 + typing + OK | `a.pdf` | Button says "Encrypt PDF"; labels "User Password" / "Owner Password". No confirm field, no show-password toggle. |
+| unlock-pdf | 3 + typing + OK | `enc.pdf` | Button says "Decrypt PDF". Took 12.7 s; a wrong password took 17 s. An unencrypted PDF gets "PDF decrypted successfully!". A fake file dumps a raw engine traceback into the modal. |
+| remove-pdf-metadata | 3 + OK | `a.pdf`; "Metadata removed successfully!" | Same name as input. |
+| word-to-pdf | 3 + OK | `test.pdf`; "Successfully converted test.docx to PDF." | First use downloads about 77 MB; the page only says "First load takes a moment". A PDF is accepted into the list without complaint. |
+
+#### Smoke pass (all 125 tool pages)
+
+- **Load:** 125/125 returned 200, with 0 console errors, 0 page errors and 0 failed requests.
+- **Speed:** time to file input was median 0.63 s, p90 0.93 s, max 1.6 s. The outlier is `pdf-workflow`, whose load event took 21 s.
+- **H1:** 124 pages have exactly one; `markdown-to-pdf` has two.
+- **Drop area:** 117 show one. The other 8 are editor-style pages.
+- **Drop-zone privacy line:** present on 116 of 117; `delete-pdf-pages` lacks it.
+- **Offline badge:** 89 "Ready to work offline"; 23 "Works offline after a one-time download (9.3 to 13 MB)"; 13 "Converter downloads on first use."
+- **Landmarks:** 123 of 125 tool pages have no `<main>`; the skip link targets an empty `<span id="main">` (`src/partials/navbar.html:25`).
+- **Horizontal scroll:** none at 1280, 640, 390 or 320px.
+
+#### High
+
+**1. "Ready to work offline" is false for Sign PDF and Unlock PDF (half day).** Tested twice in fresh contexts: wait for the badge, go offline, process a file.
+- **Sign:** the viewer iframe fails to load, then "Export failed". `src/js/logic/sign-pdf-page.ts:208` requests `pdfjs-viewer/viewer.html`, which the live site 308-redirects to `/pdfjs-viewer/viewer` (redirect re-confirmed).
+- **Unlock:** "Decryption Failed … Failed to load CoherentPDF library … Failed to load PyMuPDF from CDN". `src/data/tools.mjs:1896` marks it `engine: 'core'`, so the fallback engines aren't cached for it. The test file used pypdf's default encryption, which may be what triggered the fallback path; an AES-256 file may behave differently. The cause needs confirming in code.
+- **Passing offline:** compress, merge, split, edit, redact, OCR, password-protect, bates, pdf-to-jpg, remove-metadata.
+- This is the site's core verifiable claim. Fix the caching and add both tools to the e2e offline tests.
+
+**2. False success messages (quick each).**
+- Sign with no signature: "Signed PDF downloaded successfully!" (`sign-pdf-page.ts:327`). Block with "Add a signature first."
+- Unlock on an unencrypted PDF: "PDF decrypted successfully!" (`unlock-pdf-page.ts:149`). Say "This PDF has no password. Nothing to remove."
+- Merge with one file: say "Add at least two files."
+
+**3. Output names collide with the original (half day).** Edit, Redact, Password Protect, Unlock, Remove Metadata, OCR and single-file Bates all save under the input name; a lawyer ends up with `a.pdf` and `a (1).pdf` and cannot tell redacted from unredacted. Sign saves `document.pdf`; PNG to PDF saves `from_jpgs.pdf` (`png-to-pdf-page.ts:263`). Adopt the compress pattern everywhere and state the saved name in the success message.
+
+**4. Sign and Edit editors load below the fold under a full-size drop zone (half day).** On Sign, the iframe starts at y=734 of 900 and the "Add a signature" dialog at y=877 to 1354, so nothing visibly happens after clicking the icon. Collapse the drop zone once a file loads, scroll the editor into view, and add a labelled "Add signature" button outside the iframe.
+
+**5. Alert, loader and password modals are invisible to assistive technology (half day).** `#alert-modal` (for example `src/pages/merge-pdf.html:221`) has no `role="dialog"`, `aria-modal`, label or live region; focus stays behind it and Escape doesn't close it. `#loader-modal` has no `role="status"`. Every upstream tool reports success and errors only through these. Compress alone does it properly.
+
+**6. OCR dead end (quick).** No language ticked, "Start OCR" disabled with no explanation, and the "Advanced Settings" label at 1.1:1 contrast (`src/pages/ocr-pdf.html:166`). Pre-select English, show "Choose at least one language", fix the colour, and replace "This deployment bundles OCR for:" with "Available languages:".
+
+#### Medium
+
+- **7. No `<main>` on 123 tool pages (quick).** Wrap the tool card and landing section in `<main id="main">`.
+- **8. Drop zone shows no keyboard focus ring (quick).** The file input is focusable but `opacity: 0`. Add `:focus-within` styling on `#drop-zone`.
+- **9. Unnamed 16×16px remove-file buttons (quick)** on split, bates, password-protect, pdf-to-jpg, OCR and others; compress names them correctly. OCR's resolution, binarize and whitelist controls are unlabelled.
+- **10. Search ranking and vocabulary (half day).**
+  - "pdf to word" ranks Word to PDF first; "signature" ranks Digital Signature above Sign PDF; "remove password" ranks Remove Restrictions above Unlock.
+  - Typos ("mrege", "wrod") and French ("fusionner", "compresser", "signer") return nothing.
+  - Weight exact phrase order, add French keywords to `kw`, add a one-edit typo fallback, and persist the query in `?q=` (it is cleared on Back).
+- **11. Redact opens in View mode with icon-only tools (half day).** Preselect the Redact tab on `/redact-pdf/` and add text labels ("Mark text", "Mark area", "Apply").
+- **12. Compress result heading under the sticky header (quick).** Same as Design H5.
+- **13. Jargon in primary labels (quick).**
+  - "Encrypt PDF" → "Protect PDF"; "Decrypt PDF" → "Unlock PDF".
+  - "User Password (Required)" → "Password to open"; "Owner Password (Optional)" → "Permissions password (optional)".
+  - "Convert" → "Convert to JPG".
+  - "Flatten PDF (use the Save button below)" → "Make signature permanent (cannot be edited later)".
+  - Split subtitle → "Split a PDF into parts or pull out pages."
+- **14. Raw engine errors shown to users (quick).** Use "This file isn't a valid PDF" and "This PDF is already password-protected. Unlock it first."
+- **15. Word to PDF hides a 77 MB download (quick).** Say "First use downloads the converter (about 77 MB)"; give an offline-specific error instead of "Error: Failed to fetch".
+- **16. No progress percent and no warning before losing work (half day).** Clicking a nav link with files loaded navigates away with no prompt.
+- **17. Mobile at 390×844 (half day).** Compress, merge, sign and edit all complete; touch signature drawing worked in emulation. Edit's tabs collapse into a "View" dropdown with 22 to 32px icons. Merge reorder is drag-only. `/tools/` is 13,044px tall; make the category chips sticky. The mobile menu doesn't close on Escape.
+- **18. Privacy wording by step (half day).**
+  - Before choosing a file: consistent ("Your files never leave your device.").
+  - During processing: nothing is said.
+  - At download: only Compress says "Nothing was uploaded." Add that line to the shared success modal.
+  - The badge needs a tooltip: "This tool's software is saved in your browser, so it runs with no internet connection and your file is never sent anywhere."
+  - Merge's copy contradicts itself: "Password-protected files must be unlocked first", yet it prompts for the password.
+  - The offline test is findable from the homepage and clear, but sits 3,500px down `/privacy/`. It works for Compress and Merge, the examples it names.
+
+#### Low
+
+- **19. Offline navigation to an uncached tool silently shows the homepage** (`public/sw.js:110-111`). Show an "offline, this tool isn't saved yet" page.
+- **20. Stale favourites copy** at `privacy.html:110`; favourites show only on the homepage although `/tools/` says "Star the ones you use most".
+- **21. Upstream leftovers.** The marketing block exists only on compress (narrower than the brief suggested); Edit's "0_a.pdf" tab; "Save signature" checked by default.
+- **22. Minor accessibility.** `lang` is `en-CA` in source but `en` at runtime on tool pages; tool-card link targets are 19px high (make the whole card the link).
+- **23. Legacy short URLs** `/compress`, `/merge` return 404. The 404 page itself is good.
+
+**What passed:** text contrast in both themes apart from item 6; the maple leaf stops under `prefers-reduced-motion`; no horizontal scroll at 200% or 400% zoom; no images missing alt text; decorative icons hidden from assistive technology; compress radio group works with arrow keys.
+
+#### Could not verify (usability)
+
+Real screen readers (axe-core wasn't available; the accessibility tree and custom scripts were used); real iOS Safari or Android; a true 20 to 30 MB file (14.3 MB was used); Firefox, Safari and private-browsing offline behaviour; Edit PDF beyond load and download; AES-256 encrypted input for Unlock; offline runs of the 23 "one-time download" tools; hands-on use of the other 111 tools.
 
 ---
 
@@ -567,7 +676,7 @@ Safari, iOS and Firefox (Chromium only); PWA install; mobile memory limits; file
 **Week 1: defects and identity**
 - Decide and publish who operates Qpdf.ca (action 1).
 - Privacy page corrections; Sign PDF signature default (action 2).
-- Workflow Builder fix (action 3).
+- Offline failures in Sign and Unlock, false success messages, Workflow Builder, OCR dead end (action 3).
 - All quick wins in §3.
 - Search Console, Bing, sitemap, `qpdf.pages.dev` redirect (action 6).
 - Start the four-week traffic baseline.
@@ -583,7 +692,7 @@ Safari, iOS and Firefox (Chromium only); PWA install; mobile memory limits; file
 - Licence review of the producer-line expectation.
 - AlternativeTo listing.
 
-*Check at day 30:* Search Console shows pages indexed; `/privacy/` has no inaccurate statement; a tool page makes zero third-party requests.
+*Check at day 30:* Search Console shows pages indexed; every tool with a "Ready to work offline" badge passes an offline e2e test; `/privacy/` has no inaccurate statement; a tool page makes zero third-party requests.
 
 ### Days 31 to 60: audience pages and first outreach
 
@@ -593,7 +702,7 @@ Safari, iOS and Firefox (Chromium only); PWA install; mobile memory limits; file
 - Printable handout with QR; press kit; tagged GitHub release.
 - Outreach wave 1: Courthouse Libraries BC, 10 public libraries and settlement agencies, one Slaw tip.
 - First batch of 20 to 30 hand-written firm emails, after reading the CRTC guidance first-hand.
-- Design consistency: form controls, sentence-case labels, card widths, collapsing drop zone.
+- Design and usability consistency: form controls, plain-language labels, card widths, collapsing drop zone, accessible modals, search ranking and typo tolerance.
 - Size guard and unsupported-browser message.
 
 *Check at day 60:* at least one institutional listing or reply; views on `/library/` and `/for-firms/`; branded queries appearing in Search Console.
@@ -603,7 +712,7 @@ Safari, iOS and Firefox (Chromium only); PWA install; mobile memory limits; file
 - Show HN, once the items above are done. Disclose the fork up front.
 - French, staged: five tool pages and three IRCC guides under `/fr/` with hreflang.
 - Remaining 7 priority tool pages; `/compress-pdf-for-ircc/`; restore `/compress-pdf-to-1mb/`; two new guides (Express Entry checklist, CaseLines bookmarks).
-- Re-theme the embedded Sign and Redact editors.
+- Rework the Sign and Redact flows: re-theme, labelled buttons, editor in view, Redact tab preselected.
 - Paralegal program outreach (Capilano, VCC) with `/educators/`.
 - LibreOffice engine integrity pin and watchdog.
 - Decide on a "court bundle" workflow preset, using what users said in email replies.
