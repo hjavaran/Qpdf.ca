@@ -1,5 +1,5 @@
-// Qpdf motion graphics controller (homepage "How it works", /privacy/ offline
-// test, /about/), bundled into site.ts. Each graphic is an element with [data-qp-motion]. Markup and
+// Qpdf motion graphics controller (/privacy/ offline test and /about/),
+// bundled into site.ts. Each graphic is an element with [data-qp-motion]. Markup and
 // layout-only CSS are inline (src/partials/motion-*.html), so each box has its
 // final size at first paint; everything visual is in src/css/qpdf-motion.css.
 //

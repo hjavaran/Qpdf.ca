@@ -21,7 +21,6 @@
   --mo-line: var(--qp-border-strong);
   --mo-dot: rgb(23 23 26 / 0.075);
   --mo-label: var(--qp-faint);
-  --mo-soft: var(--qp-accent-soft);
   --mo-vis: visible;
 }
 html[data-theme='dark'] .qp-mo {
@@ -32,7 +31,6 @@ html[data-theme='dark'] .qp-mo {
   --mo-redact: #050506;
   --mo-stack: #232327;
   --mo-dot: rgb(255 255 255 / 0.06);
-  --mo-soft: rgb(255 125 137 / 0.07);
 }
 .qp-mo .mo-stage svg * { vector-effect: non-scaling-stroke; }
 .qp-mo .mo-frame {
@@ -56,51 +54,10 @@ html[data-theme='dark'] .qp-mo {
 .qp-mo .mo-red { fill: var(--mo-redact); transform-box: fill-box; transform-origin: left center; }
 .qp-mo .mo-tray-f { fill: var(--mo-tray); stroke: var(--mo-line); }
 .qp-mo .mo-tray-b { fill: var(--mo-stack); stroke: var(--mo-line); }
-.qp-mo .mo-handle { fill: var(--mo-line); }
 .qp-mo .mo-done circle { fill: var(--qp-ok); }
 .qp-mo .mo-done path { fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 html[data-theme='dark'] .qp-mo .mo-done path { stroke: #0f1a13; }
 .qp-mo .mo-done { transform-box: fill-box; transform-origin: center; }
-
-/* ── Homepage "How it works" ── */
-.mo-circuit { --mo-t: 12s; }
-.mo-circuit .mo-spark { overflow: hidden; }
-.mo-circuit .mo-spark path { fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.mo-circuit .mo-flat { stroke: var(--mo-line); }
-.mo-circuit .mo-wave path { stroke: var(--qp-accent); }
-.mo-circuit .mo-net path { stroke: var(--mo-line); }
-.mo-circuit .mo-bytes { font-variant-numeric: tabular-nums; color: var(--qp-muted); font-weight: 600; }
-@media (max-width: 400px) { .mo-circuit .mo-wide { display: none; } }
-.mo-circuit .mo-track { fill: none; stroke: var(--mo-line); stroke-dasharray: 2 5; stroke-linecap: round; }
-.mo-circuit .mo-work { fill: var(--mo-soft); stroke: var(--qp-accent); stroke-opacity: 0.25; stroke-dasharray: 4 5; }
-.mo-circuit .mo-sel { fill: none; stroke: var(--qp-accent); stroke-width: 1.5; }
-.mo-circuit .mo-scan-glow { fill: url(#moa-scan); }
-.mo-circuit #moa-scan stop { stop-color: var(--qp-accent); }
-.mo-circuit .mo-scan-line { fill: var(--qp-accent); }
-
-.mo-circuit .mo-cap {
-  position: absolute; top: 72%; transform: translate(-50%, -50%);
-  font-size: 0.72rem; font-weight: 500; color: var(--mo-label); white-space: nowrap;
-}
-.mo-circuit .mo-cap-in { top: 71.5%; font-weight: 600; color: var(--qp-muted); }
-.mo-circuit .mo-stack .mo-paper { fill: var(--mo-stack); }
-.mo-circuit .mo-stack .mo-ln, .mo-circuit .mo-stack .mo-ttl { opacity: 0.55; }
-@media (max-width: 479px) { .mo-circuit .mo-cap { font-size: 0.65rem; } }
-
-/* Stations 1-2-3 (HTML so the digits stay legible at phone sizes). */
-.mo-circuit .mo-stations { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
-.mo-circuit .mo-stations li { position: absolute; top: 89.7%; width: 24px; height: 24px; margin: -12px 0 0 -12px; }
-.mo-circuit .mo-stations span {
-  position: absolute; inset: 0; display: grid; place-items: center; border-radius: 8px;
-  font-size: 0.75rem; font-weight: 700; line-height: 1;
-  background: var(--mo-frame); border: 1px solid var(--mo-line); color: var(--qp-muted);
-}
-.mo-circuit .mo-stations .mo-on { background: var(--qp-accent); border-color: var(--qp-accent); color: #fff; opacity: 0; }
-
-/* Static summary frame: the document is mid-process. */
-.mo-circuit .mo-doc { transform: translate(272px, 70px); }
-.mo-circuit .mo-sel, .mo-circuit .mo-scan, .mo-circuit .mo-done, .mo-circuit .mo-flat { opacity: 0; }
-.mo-circuit .mo-stations li:nth-child(2) .mo-on { opacity: 1; }
 
 /* ── /privacy/ "Test it yourself" ── */
 /* Fixed dark palette: the panel is dark in both themes, so this outranks the
@@ -135,6 +92,12 @@ html[data-theme='dark'] .qp-mo.mo-bench {
 .mo-bench .mo-switch { border-radius: 999px; background: rgb(255 255 255 / 0.16); }
 .mo-bench .mo-switch .mo-trk-on { position: absolute; inset: 0; border-radius: inherit; background: #3fb871; }
 .mo-bench .mo-switch .mo-knob { position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+/* Attention ring: drawn around the Wi-Fi switch once the tool is ready to work
+   offline, one soft halo, then it fades after the switch turns off. */
+.mo-bench .mo-ring { left: 50%; top: 50%; margin: -16px 0 0 -23px; overflow: visible; pointer-events: none; }
+.mo-bench .mo-ring path { fill: none; stroke: #f0505d; stroke-width: 1.6; stroke-linecap: round; }
+.mo-bench .mo-ring-line { stroke-dasharray: 1; stroke-dashoffset: 0; filter: drop-shadow(0 0 3px rgb(240 80 93 / 0.5)); }
+.mo-bench .mo-ring-halo { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .mo-bench .mo-pill { border-radius: 999px; font-weight: 500; }
 .mo-bench .mo-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
 .mo-bench .mo-pill-load { color: #b9b7b0; background: #18181b; border-color: rgb(255 255 255 / 0.1); }
@@ -238,78 +201,6 @@ html[data-theme='dark'] .qp-mo.mo-bench {
   .qp-mo .mo-toggle { display: none; }
 }
 
-/* ── Homepage "How it works" ── */
-/* Motion (12 s loop). */
-[data-mo] .mo-circuit .mo-doc { animation-name: moa-doc; }
-[data-mo] .mo-circuit .mo-sel { animation-name: moa-sel; }
-[data-mo] .mo-circuit .mo-work { animation-name: moa-work; }
-[data-mo] .mo-circuit .mo-scan { animation-name: moa-scan; }
-[data-mo] .mo-circuit .mo-red1 { animation-name: moa-red1; }
-[data-mo] .mo-circuit .mo-red2 { animation-name: moa-red2; }
-[data-mo] .mo-circuit .mo-done { animation-name: moa-done; }
-[data-mo] .mo-circuit .mo-flat { animation-name: moa-flat; }
-[data-mo] .mo-circuit .mo-wave { animation-name: moa-wave; }
-[data-mo] .mo-circuit .mo-wave path { animation: moa-scroll 0.9s linear infinite paused; }
-[data-mo='play'] .mo-circuit .mo-wave path { animation-play-state: running; }
-[data-mo] .mo-circuit .mo-stations li:nth-child(1) .mo-on { animation-name: moa-s1; }
-[data-mo] .mo-circuit .mo-stations li:nth-child(2) .mo-on { animation-name: moa-s2; }
-[data-mo] .mo-circuit .mo-stations li:nth-child(3) .mo-on { animation-name: moa-s3; }
-.qp-how-grid[data-mo] .qp-step h3::before {
-  animation: 12s cubic-bezier(0.45, 0, 0.2, 1) infinite both paused;
-}
-.qp-how-grid[data-mo='play'] .qp-step h3::before { animation-play-state: running; }
-.qp-how-grid[data-mo] .qp-step:nth-child(1) h3::before { animation-name: moa-c1; }
-.qp-how-grid[data-mo] .qp-step:nth-child(2) h3::before { animation-name: moa-c2; }
-.qp-how-grid[data-mo] .qp-step:nth-child(3) h3::before { animation-name: moa-c3; }
-@media (prefers-reduced-motion: reduce) {
-  .mo-circuit .mo-wave path, .qp-how-grid .qp-step h3::before { animation: none !important; }
-}
-
-@keyframes moa-doc {
-  0%, 6% { transform: translate(62px, 70px); opacity: 1; }
-  22%, 62% { transform: translate(272px, 70px); }
-  72% { transform: translate(482px, 70px); }
-  80%, 92% { transform: translate(482px, 128px); opacity: 1; }
-  95% { transform: translate(482px, 128px); opacity: 0; }
-  95.1% { transform: translate(62px, 70px); opacity: 0; }
-  100% { transform: translate(62px, 70px); opacity: 1; }
-}
-@keyframes moa-sel { 0%, 4% { opacity: 0; } 10%, 15% { opacity: 1; } 21%, 100% { opacity: 0; } }
-@keyframes moa-work { 0%, 21% { opacity: 0; } 27%, 58% { opacity: 1; } 64%, 100% { opacity: 0; } }
-@keyframes moa-scan {
-  0%, 29% { transform: translateY(8px); opacity: 0; }
-  31%, 42% { opacity: 1; }
-  45%, 100% { transform: translateY(118px); opacity: 0; }
-}
-@keyframes moa-red1 { 0%, 45% { transform: scaleX(0); } 51%, 94.9% { transform: scaleX(1); } 95.1%, 100% { transform: scaleX(0); } }
-@keyframes moa-red2 { 0%, 51% { transform: scaleX(0); } 57%, 94.9% { transform: scaleX(1); } 95.1%, 100% { transform: scaleX(0); } }
-@keyframes moa-done {
-  0%, 80% { opacity: 0; transform: scale(0.6); }
-  84%, 91% { opacity: 1; transform: scale(1); }
-  95%, 100% { opacity: 0; transform: scale(1); }
-}
-@keyframes moa-flat { 0%, 24% { opacity: 1; } 27%, 58% { opacity: 0; } 61%, 100% { opacity: 1; } }
-@keyframes moa-wave { 0%, 24% { opacity: 0; } 27%, 58% { opacity: 1; } 61%, 100% { opacity: 0; } }
-@keyframes moa-scroll { to { transform: translateX(-16px); } }
-@keyframes moa-s1 { 0%, 18% { opacity: 1; } 22%, 96% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes moa-s2 { 0%, 20% { opacity: 0; } 24%, 60% { opacity: 1; } 64%, 100% { opacity: 0; } }
-@keyframes moa-s3 { 0%, 62% { opacity: 0; } 66%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
-@keyframes moa-c1 {
-  0%, 18% { background: var(--qp-accent); color: #fff; }
-  22%, 96% { background: var(--qp-surface-2); color: var(--qp-muted); }
-  100% { background: var(--qp-accent); color: #fff; }
-}
-@keyframes moa-c2 {
-  0%, 20% { background: var(--qp-surface-2); color: var(--qp-muted); }
-  24%, 60% { background: var(--qp-accent); color: #fff; }
-  64%, 100% { background: var(--qp-surface-2); color: var(--qp-muted); }
-}
-@keyframes moa-c3 {
-  0%, 62% { background: var(--qp-surface-2); color: var(--qp-muted); }
-  66%, 92% { background: var(--qp-accent); color: #fff; }
-  96%, 100% { background: var(--qp-surface-2); color: var(--qp-muted); }
-}
-
 /* ── /privacy/ "Test it yourself" ── */
 /* Motion (14 s loop). */
 .mo-bench[data-mo] .mo-pill-load { animation-name: mob-pill-load; }
@@ -319,6 +210,8 @@ html[data-theme='dark'] .qp-mo.mo-bench {
 .mo-bench[data-mo] .mo-arcs { animation-name: mob-arcs; }
 .mo-bench[data-mo] .mo-slash { animation-name: mob-slash; }
 .mo-bench[data-mo] .mo-knob { animation-name: mob-knob; }
+.mo-bench[data-mo] .mo-ring-line { animation-name: mob-ring; }
+.mo-bench[data-mo] .mo-ring-halo { animation-name: mob-halo; }
 .mo-bench[data-mo] .mo-bdoc { animation-name: mob-doc; }
 .mo-bench[data-mo] .mo-bpage { animation-name: mob-page; }
 .mo-bench[data-mo] .mo-scan { animation-name: mob-scan; }
@@ -329,11 +222,23 @@ html[data-theme='dark'] .qp-mo.mo-bench {
 
 @keyframes mob-pill-load { 0%, 8% { opacity: 1; } 11%, 95% { opacity: 0; } 98%, 100% { opacity: 1; } }
 @keyframes mob-pill-ready { 0%, 8% { opacity: 0; } 11%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
-@keyframes mob-on { 0%, 18% { opacity: 1; } 23%, 92% { opacity: 0; } 97%, 100% { opacity: 1; } }
-@keyframes mob-off { 0%, 18% { opacity: 0; } 23%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
-@keyframes mob-arcs { 0%, 18% { opacity: 1; } 23%, 92% { opacity: 0.35; } 97%, 100% { opacity: 1; } }
-@keyframes mob-slash { 0%, 19% { stroke-dashoffset: 1; } 24%, 92% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: 1; } }
-@keyframes mob-knob { 0%, 18% { transform: translateX(11px); } 23%, 92% { transform: translateX(0); } 97%, 100% { transform: translateX(11px); } }
+@keyframes mob-ring {
+  0%, 11.5% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+  11.6% { opacity: 1; }
+  15.5%, 27% { stroke-dashoffset: 0; opacity: 1; }
+  31% { stroke-dashoffset: 0; opacity: 0; }
+  31.1%, 100% { stroke-dashoffset: 1; opacity: 0; }
+}
+@keyframes mob-halo {
+  0%, 15.5% { opacity: 0; transform: scale(1); }
+  16% { opacity: 0.55; transform: scale(1); animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1); }
+  21%, 100% { opacity: 0; transform: scale(1.32); }
+}
+@keyframes mob-on { 0%, 20% { opacity: 1; } 24.5%, 92% { opacity: 0; } 97%, 100% { opacity: 1; } }
+@keyframes mob-off { 0%, 20% { opacity: 0; } 24.5%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+@keyframes mob-arcs { 0%, 20% { opacity: 1; } 24.5%, 92% { opacity: 0.35; } 97%, 100% { opacity: 1; } }
+@keyframes mob-slash { 0%, 21% { stroke-dashoffset: 1; } 25.5%, 92% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: 1; } }
+@keyframes mob-knob { 0%, 20% { transform: translateX(11px); } 24.5%, 92% { transform: translateX(0); } 97%, 100% { transform: translateX(11px); } }
 @keyframes mob-doc {
   0%, 28% { transform: translate(164px, 56px); opacity: 0; }
   33%, 58% { transform: translate(164px, 66px); opacity: 1; }

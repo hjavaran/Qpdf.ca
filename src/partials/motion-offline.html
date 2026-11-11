@@ -1,5 +1,6 @@
 {{!-- /privacy/ "Test it yourself" motion graphic ("Offline bench").
-     A tool page reaches "Ready to work offline", Wi-Fi is switched off, and
+     A tool page reaches "Ready to work offline", a red ring draws attention to
+     the Wi-Fi switch, Wi-Fi is switched off, and
      a PDF is still compressed and saved to Downloads. Sits inside the dark
      .qp-demo panel (dark in both themes). The numbered steps beside it carry
      the text, so the artwork is aria-hidden. --}}
@@ -9,7 +10,8 @@
 .mo-bench .mo-bar{gap:.6rem}
 .mo-bench .mo-wifi{display:inline-flex;align-items:center;gap:.45rem}
 .mo-bench .mo-wifi-ico{width:18px;height:15px}
-.mo-bench .mo-switch{position:relative;width:26px;height:15px}
+.mo-bench .mo-switch{position:relative;width:26px;height:15px;margin-left:.45rem}
+.mo-bench .mo-ring{position:absolute}
 .mo-bench .mo-toolbar{display:flex;align-items:center;padding:.7rem 1rem 0}
 .mo-bench .mo-pill{display:inline-flex;align-items:center;gap:.45rem;min-height:28px;padding:.2rem .7rem;border-width:1px;border-style:solid;font-size:.78rem;white-space:nowrap}
 .mo-bench .mo-stage{aspect-ratio:640/250}
@@ -23,7 +25,7 @@
         <span class="mo-wifi">
           <svg class="mo-wifi-ico" viewBox="0 0 20 16"><g class="mo-arcs mo-a"><path d="M2 6.2a12 12 0 0 1 16 0M5 9.4a7.4 7.4 0 0 1 10 0M7.9 12.4a3 3 0 0 1 4.2 0" /><circle cx="10" cy="14.6" r="1.2" /></g><path class="mo-slash mo-a" pathLength="1" d="M3.5 1.5 16.5 15" /></svg>
           <span class="mo-swap mo-wifi-txt"><span class="mo-on-t mo-a">Wi-Fi on</span><span class="mo-off-t mo-a">Wi-Fi off</span></span>
-          <span class="mo-switch"><span class="mo-trk-on mo-a"></span><span class="mo-knob mo-a"></span></span>
+          <span class="mo-switch"><span class="mo-trk-on mo-a"></span><span class="mo-knob mo-a"></span><svg class="mo-ring" width="46" height="32" viewBox="0 0 46 32"><path class="mo-ring-halo mo-a" d="M23 2.5a21 13.5 0 1 1 0 27a21 13.5 0 1 1 0-27" /><path class="mo-ring-line mo-a" pathLength="1" d="M23 2.5a21 13.5 0 1 1 0 27a21 13.5 0 1 1 0-27" /></svg></span>
         </span>
       </div>
       <div class="mo-toolbar">
