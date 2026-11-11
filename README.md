@@ -19,6 +19,7 @@ never uploaded. It is a static site designed for Cloudflare Pages.
 Further reading: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) ·
 [docs/cloudflare-r2.md](docs/cloudflare-r2.md) ·
 [docs/LICENSING.md](docs/LICENSING.md) · [docs/TESTING.md](docs/TESTING.md) ·
+[docs/MOTION-GRAPHICS.md](docs/MOTION-GRAPHICS.md) ·
 [docs/STAGE-2-HANDOFF.md](docs/STAGE-2-HANDOFF.md)
 
 ## Quick start

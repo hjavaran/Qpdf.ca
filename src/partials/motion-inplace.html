@@ -3,72 +3,11 @@
      Decorative (aria-hidden): the surrounding text says what the tools do. --}}
 {{> motion-base }}
 <style>
-.mo-inplace { --mo-t: 15s; margin: 1.75rem 0 2rem; }
-.mo-inplace .mo-stage { aspect-ratio: 640 / 240; }
-.mo-inplace .mo-stage svg { height: 100%; }
+.mo-inplace{margin:1.75rem 0 2rem}
+.mo-inplace .mo-stage{aspect-ratio:640/240}
+.mo-inplace .mo-stage svg{height:100%}
 /* Narrow screens: a taller stage; "slice" crops only the empty side margins. */
-@media (max-width: 559px) { .mo-inplace .mo-stage { aspect-ratio: 16 / 10; } }
-.mo-inplace .mo-chapter { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--qp-muted); font-weight: 600; }
-.mo-inplace .mo-swap { display: inline-grid; justify-items: end; }
-.mo-inplace .mo-swap > * { grid-area: 1 / 1; }
-.mo-inplace .mo-pips { display: inline-flex; gap: 4px; }
-.mo-inplace .mo-pips i { position: relative; width: 6px; height: 6px; border-radius: 50%; background: var(--mo-line); }
-.mo-inplace .mo-pips b { position: absolute; inset: 0; border-radius: inherit; background: var(--qp-accent); opacity: 0; }
-.mo-inplace .mo-page2 .mo-paper { fill: var(--mo-stack); }
-.mo-inplace .mo-cpage { transform-box: fill-box; transform-origin: center; }
-.mo-inplace .mo-scan-line { fill: var(--qp-accent); }
-.mo-inplace .mo-scan-glow { fill: url(#moc-scan); }
-.mo-inplace #moc-scan stop { stop-color: var(--qp-accent); }
-.mo-inplace .mo-cap {
-  position: absolute; left: 50%; top: 90%; transform: translate(-50%, -50%);
-  font-size: 0.75rem; font-weight: 600; color: var(--qp-muted); white-space: nowrap; font-variant-numeric: tabular-nums;
-}
-.mo-inplace .mo-cap-ok { color: var(--qp-ok); }
-
-/* Static summary frame: a merged, redacted PDF; all three operations named. */
-.mo-inplace .mo-act1, .mo-inplace .mo-act2, .mo-inplace .mo-cap, .mo-inplace .mo-lab, .mo-inplace .mo-scan { opacity: 0; }
-.mo-inplace .mo-pips b { opacity: 1; }
-.mo-inplace .mo-ma { transform: translate(208px, 46px); }
-.mo-inplace .mo-mb { transform: translate(336px, 46px); }
-
-.mo-inplace[data-mo] .mo-lab-all { opacity: 0; }
-.mo-inplace[data-mo] .mo-act1 { animation-name: moc-act1; }
-.mo-inplace[data-mo] .mo-act2 { animation-name: moc-act2; }
-.mo-inplace[data-mo] .mo-act3 { animation-name: moc-act3; }
-.mo-inplace[data-mo] .mo-cpage { animation-name: moc-shrink; }
-.mo-inplace[data-mo] .mo-scan { animation-name: moc-scan; }
-.mo-inplace[data-mo] .mo-ma { animation-name: moc-ma; }
-.mo-inplace[data-mo] .mo-mb { animation-name: moc-mb; }
-.mo-inplace[data-mo] .mo-red1 { animation-name: moc-red1; }
-.mo-inplace[data-mo] .mo-red2 { animation-name: moc-red2; }
-.mo-inplace[data-mo] .mo-cap-c0 { animation-name: moc-cap-c0; }
-.mo-inplace[data-mo] .mo-cap-c1 { animation-name: moc-cap-c1; }
-.mo-inplace[data-mo] .mo-cap-m { animation-name: moc-cap-m; }
-.mo-inplace[data-mo] .mo-cap-r { animation-name: moc-cap-r; }
-.mo-inplace[data-mo] .mo-lab-c, .mo-inplace[data-mo] .mo-pip-c { animation-name: moc-lab-c; }
-.mo-inplace[data-mo] .mo-lab-m, .mo-inplace[data-mo] .mo-pip-m { animation-name: moc-lab-m; }
-.mo-inplace[data-mo] .mo-lab-r, .mo-inplace[data-mo] .mo-pip-r { animation-name: moc-lab-r; }
-
-@keyframes moc-act1 { 0%, 30% { opacity: 1; } 33%, 97% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes moc-act2 { 0%, 33% { opacity: 0; } 36%, 63% { opacity: 1; } 66%, 100% { opacity: 0; } }
-@keyframes moc-act3 { 0%, 66% { opacity: 0; } 69%, 96% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes moc-shrink { 0%, 5% { transform: scale(1); } 18%, 33% { transform: scale(0.82); } 34%, 100% { transform: scale(1); } }
-@keyframes moc-scan {
-  0%, 3% { transform: translateY(8px); opacity: 0; }
-  5%, 15% { opacity: 1; }
-  18%, 100% { transform: translateY(118px); opacity: 0; }
-}
-@keyframes moc-ma { 0%, 40% { transform: translate(208px, 46px); } 53%, 100% { transform: translate(266px, 46px); } }
-@keyframes moc-mb { 0%, 40% { transform: translate(336px, 46px); } 53%, 100% { transform: translate(277px, 53px); } }
-@keyframes moc-red1 { 0%, 72% { transform: scaleX(0); } 77%, 100% { transform: scaleX(1); } }
-@keyframes moc-red2 { 0%, 77% { transform: scaleX(0); } 82%, 100% { transform: scaleX(1); } }
-@keyframes moc-cap-c0 { 0%, 13% { opacity: 1; } 16%, 97% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes moc-cap-c1 { 0%, 15% { opacity: 0; } 19%, 30% { opacity: 1; } 33%, 100% { opacity: 0; } }
-@keyframes moc-cap-m { 0%, 50% { opacity: 0; } 54%, 63% { opacity: 1; } 66%, 100% { opacity: 0; } }
-@keyframes moc-cap-r { 0%, 80% { opacity: 0; } 84%, 96% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes moc-lab-c { 0%, 31% { opacity: 1; } 34%, 97% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes moc-lab-m { 0%, 31% { opacity: 0; } 34%, 64% { opacity: 1; } 67%, 100% { opacity: 0; } }
-@keyframes moc-lab-r { 0%, 64% { opacity: 0; } 67%, 97% { opacity: 1; } 100% { opacity: 0; } }
+@media (max-width:559px){.mo-inplace .mo-stage{aspect-ratio:16/10}}
 </style>
 <div class="qp-mo mo-inplace" data-qp-motion>
   <div class="mo-frame">

@@ -1,22 +1,30 @@
 // Qpdf motion graphics controller (homepage "How it works", /privacy/ offline
-// test, /about/). Each graphic is an element with [data-qp-motion]; its
-// markup and CSS live in src/partials/motion-*.html.
+// test, /about/), bundled into site.ts. Each graphic is an element with [data-qp-motion]. Markup and
+// layout-only CSS are inline (src/partials/motion-*.html), so each box has its
+// final size at first paint; everything visual is in src/css/qpdf-motion.css.
 //
-// Without JavaScript, or with prefers-reduced-motion, the CSS shows a static
-// summary frame. Here we:
+// Here we:
+//   - load that stylesheet (hashed, same-origin) only after the page's load
+//     event, so it never competes with first paint or the largest contentful
+//     paint. Until it arrives the reserved frames stay invisible;
+//     without JavaScript a <noscript> link loads it instead. It shows a static
+//     summary frame on its own (and for prefers-reduced-motion);
 //   - set data-mo="pause" (CSS animations attached but paused at frame 0),
 //   - switch to data-mo="play" only while the graphic is on screen, the tab is
 //     visible and the visitor has not paused it,
 //   - add a Pause / Play button (WCAG 2.2.2), remembered in this browser only.
-// Nothing here makes a network request.
+// No other network requests; nothing is sent anywhere.
+
+import motionCssUrl from '../../css/qpdf-motion.css?url';
 
 const KEY = 'qpdf.motion';
 const roots = Array.from(
   document.querySelectorAll<HTMLElement>('[data-qp-motion]')
 );
 
-if (roots.length) {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function start(): void {
   const visible = new Set<HTMLElement>();
   let userPaused = false;
   try {
@@ -99,4 +107,21 @@ if (roots.length) {
   document.addEventListener('visibilitychange', sync);
   reduce.addEventListener?.('change', sync);
   sync();
+}
+
+if (roots.length) {
+  // Needed for the static frame too (reduced motion). If it cannot load, the
+  // reserved boxes simply stay empty rather than showing unstyled artwork.
+  const loadStyles = (): void => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = motionCssUrl;
+    link.addEventListener('load', start, { once: true });
+    document.head.append(link);
+  };
+  if (document.readyState === 'complete') setTimeout(loadStyles, 0);
+  else
+    window.addEventListener('load', () => setTimeout(loadStyles, 0), {
+      once: true,
+    });
 }
