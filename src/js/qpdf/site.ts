@@ -7,16 +7,13 @@ import './motion.js';
 const path = location.pathname.replace(/index\.html$/, '');
 for (const a of document.querySelectorAll<HTMLAnchorElement>('[data-nav]')) {
   const href = a.getAttribute('href') || '';
-  if (href !== '/' && path.startsWith(href))
-    a.setAttribute('aria-current', 'page');
+  if (href !== '/' && path.startsWith(href)) a.setAttribute('aria-current', 'page');
 }
 
 // ── Theme (light default; saved in localStorage; applied early by /theme-init.js) ──
 const root = document.documentElement;
 const themeBtn = document.getElementById('qp-theme-toggle');
-const themeColor = document.querySelector<HTMLMetaElement>(
-  'meta[name="theme-color"]'
-);
+const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
 const isDark = () => root.getAttribute('data-theme') === 'dark';
 function syncThemeUi(): void {
   themeBtn?.setAttribute('aria-pressed', String(isDark()));
@@ -35,9 +32,7 @@ function setTheme(dark: boolean, persist: boolean): void {
     }
   }
   syncThemeUi();
-  window.dispatchEvent(
-    new CustomEvent('qpdf:themechange', { detail: { dark } })
-  );
+  window.dispatchEvent(new CustomEvent('qpdf:themechange', { detail: { dark } }));
 }
 syncThemeUi();
 themeBtn?.addEventListener('click', () => setTheme(!isDark(), true));
@@ -57,30 +52,17 @@ if (btn && menu) {
 }
 
 if (document.readyState === 'complete') registerServiceWorker();
-else
-  window.addEventListener('load', () => registerServiceWorker(), {
-    once: true,
-  });
+else window.addEventListener('load', () => registerServiceWorker(), { once: true });
 
 // Cloudflare Web Analytics (optional; enabled at build time with CF_ANALYTICS_TOKEN).
 // Cookieless page-view statistics only. It is not loaded for visitors who send
 // Do Not Track or Global Privacy Control, nor in dev. It never sees documents:
 // files are read by the File API and never pass through the page's network code.
 function loadAnalytics(): void {
-  const token = document.querySelector<HTMLMetaElement>(
-    'meta[name="qpdf-wa"]'
-  )?.content;
+  const token = document.querySelector<HTMLMetaElement>('meta[name="qpdf-wa"]')?.content;
   if (!token || !/^[a-f0-9]{32}$/i.test(token) || import.meta.env.DEV) return;
-  const nav = navigator as Navigator & {
-    globalPrivacyControl?: boolean;
-    msDoNotTrack?: string;
-  };
-  if (
-    nav.globalPrivacyControl ||
-    nav.doNotTrack === '1' ||
-    nav.msDoNotTrack === '1'
-  )
-    return;
+  const nav = navigator as Navigator & { globalPrivacyControl?: boolean; msDoNotTrack?: string };
+  if (nav.globalPrivacyControl || nav.doNotTrack === '1' || nav.msDoNotTrack === '1') return;
   const s = document.createElement('script');
   s.defer = true;
   s.crossOrigin = 'anonymous';
@@ -97,18 +79,12 @@ else window.addEventListener('load', loadAnalytics, { once: true });
 document.addEventListener(
   'click',
   (e) => {
-    const a = (e.target as Element | null)?.closest?.(
-      'a[href]'
-    ) as HTMLAnchorElement | null;
+    const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
     if (!a || !/^https?:$/.test(a.protocol)) return;
     const h = a.hostname.toLowerCase();
-    if (h === location.hostname || h === 'qpdf.ca' || h.endsWith('.qpdf.ca'))
-      return;
+    if (h === location.hostname || h === 'qpdf.ca' || h.endsWith('.qpdf.ca')) return;
     a.target = '_blank';
-    a.rel =
-      h === 'wealththeory.ca' || h.endsWith('.wealththeory.ca')
-        ? 'noopener noreferrer'
-        : 'noopener noreferrer nofollow';
+    a.rel = h === 'wealththeory.ca' || h.endsWith('.wealththeory.ca') ? 'noopener noreferrer' : 'noopener noreferrer nofollow';
   },
   true
 );
