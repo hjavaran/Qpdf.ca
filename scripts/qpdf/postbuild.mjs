@@ -103,6 +103,23 @@ if (!fontPreloads.includes('-400-') || !fontPreloads.includes('-700-')) {
   if (!s.includes('rel="preload" href="/assets/dm-sans')) fs.writeFileSync(f, s.replace('<title>', `${fontPreloads}\n    <title>`));
 }
 
+// ── 2c. Motion graphics: no-JS stylesheet link ────────────────────────────
+// src/js/qpdf/motion.ts loads the graphics' stylesheet after first paint, so
+// Vite never links it in <head>. Without JavaScript, the <noscript> placeholder
+// from src/partials/motion-base.html links the same hashed file instead.
+{
+  const motionCss = fs.readdirSync(path.join(DIST, 'assets')).filter((f) => /^qpdf-motion-[\w-]+\.css$/.test(f));
+  let filled = 0;
+  for (const f of walk(DIST).filter((x) => x.endsWith('.html'))) {
+    const s = fs.readFileSync(f, 'utf8');
+    if (!s.includes('<noscript data-qp-motion-css>')) continue;
+    if (motionCss.length !== 1) throw new Error(`postbuild: expected one qpdf-motion-*.css in dist/assets, found ${motionCss.length}`);
+    fs.writeFileSync(f, s.replace(/<noscript data-qp-motion-css>\s*<\/noscript>/, `<noscript><link rel="stylesheet" href="/assets/${motionCss[0]}" /></noscript>`));
+    filled++;
+  }
+  log(`motion graphics: no-JS stylesheet linked on ${filled} page(s)`);
+}
+
 // ── 2b. External links: new tab, noopener noreferrer, nofollow (except wealththeory.ca) ──
 const THIRD_PARTY_DIR = /^\/(pdfjs-viewer|pdfjs-annotation-viewer|libreoffice-wasm|wasm|vendor)\//;
 const isOwnHost = (h) => h === 'qpdf.ca' || h.endsWith('.qpdf.ca');

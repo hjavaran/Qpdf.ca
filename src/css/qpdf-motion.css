@@ -1,0 +1,303 @@
+/* Qpdf motion graphics (original artwork): everything visual.
+   Markup and the layout-only critical CSS are inline in
+   src/partials/motion-*.html; this file is loaded by src/js/qpdf/motion.ts
+   (dynamic import, after first paint), or through <noscript> without JS
+   (link written by scripts/qpdf/postbuild.mjs). Keep box sizes (aspect
+   ratios, paddings, margins, grid) in the inline layer only, so this file
+   can arrive late without moving anything.
+   Static summary frame by default (no JS, reduced motion); animations attach
+   only under [data-mo] and run only under [data-mo='play']. */
+
+/* ── Shared frame and tokens ── */
+.qp-mo {
+  --mo-frame: var(--qp-surface);
+  --mo-page: #fff;
+  --mo-page-edge: #cfccc4;
+  --mo-page-line: #e2dfd8;
+  --mo-page-title: #bdb9af;
+  --mo-redact: #1b1b1e;
+  --mo-stack: #f6f5f1;
+  --mo-tray: var(--qp-surface-2);
+  --mo-line: var(--qp-border-strong);
+  --mo-dot: rgb(23 23 26 / 0.075);
+  --mo-label: var(--qp-faint);
+  --mo-vis: visible;
+}
+html[data-theme='dark'] .qp-mo {
+  --mo-page: #2b2b30;
+  --mo-page-edge: #4a4a52;
+  --mo-page-line: #3e3e45;
+  --mo-page-title: #55555e;
+  --mo-redact: #050506;
+  --mo-stack: #232327;
+  --mo-dot: rgb(255 255 255 / 0.06);
+}
+.qp-mo .mo-stage svg * { vector-effect: non-scaling-stroke; }
+.qp-mo .mo-frame {
+  border-color: var(--qp-border);
+  background: var(--mo-frame);
+  box-shadow: var(--qp-shadow-sm);
+}
+.qp-mo .mo-bar { border-bottom-color: var(--qp-border); color: var(--mo-label); }
+.qp-mo .mo-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.qp-mo .mo-dot { fill: var(--mo-dot); }
+.qp-mo .mo-paper { fill: var(--mo-page); stroke: var(--mo-page-edge); }
+.qp-mo .mo-fold { fill: none; stroke: var(--mo-page-edge); }
+.qp-mo .mo-ttl { fill: var(--mo-page-title); }
+.qp-mo .mo-ln { fill: var(--mo-page-line); }
+.qp-mo .mo-tag { fill: var(--qp-accent); opacity: 0.85; }
+.qp-mo .mo-red { fill: var(--mo-redact); transform-box: fill-box; transform-origin: left center; }
+.qp-mo .mo-tray-f { fill: var(--mo-tray); stroke: var(--mo-line); }
+.qp-mo .mo-tray-b { fill: var(--mo-stack); stroke: var(--mo-line); }
+.qp-mo .mo-done circle { fill: var(--qp-ok); }
+.qp-mo .mo-done path { fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+html[data-theme='dark'] .qp-mo .mo-done path { stroke: #0f1a13; }
+.qp-mo .mo-done { transform-box: fill-box; transform-origin: center; }
+
+/* ── /privacy/ "Test it yourself" ── */
+/* Fixed dark palette: the panel is dark in both themes, so this outranks the
+   html[data-theme='dark'] .qp-mo tokens above. */
+.mo-bench,
+html[data-theme='dark'] .qp-mo.mo-bench {
+  --mo-t: 14s;
+  --mo-frame: #1d1d21;
+  --mo-page: #f4f2ed;
+  --mo-page-edge: #d6d3cb;
+  --mo-page-line: #dedbd3;
+  --mo-page-title: #b3afa5;
+  --mo-tray: #26262b;
+  --mo-stack: #202024;
+  --mo-line: #45454d;
+  --mo-dot: rgb(255 255 255 / 0.05);
+  --mo-label: #9c9a93;
+  --mo-ok: #4ade80;
+}
+.mo-bench .mo-frame { border-color: rgb(255 255 255 / 0.1); box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.6); }
+.mo-bench .mo-bar { border-color: rgb(255 255 255 / 0.08); background: #222227; }
+.mo-bench .mo-win-dots { display: inline-flex; gap: 5px; }
+.mo-bench .mo-win-dots i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a41; }
+.mo-bench .mo-addr {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+  padding: 0.3rem 0.7rem; border-radius: 999px; background: #18181b; color: #b9b7b0; font-size: 0.74rem;
+}
+.mo-bench .mo-wifi { color: #d4d2cc; }
+.mo-bench .mo-wifi-ico { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.mo-bench .mo-wifi-ico circle { fill: currentColor; stroke: none; }
+.mo-bench .mo-slash { stroke: #ff8a95; stroke-dasharray: 1; }
+.mo-bench .mo-switch { border-radius: 999px; background: rgb(255 255 255 / 0.16); }
+.mo-bench .mo-switch .mo-trk-on { position: absolute; inset: 0; border-radius: inherit; background: #3fb871; }
+.mo-bench .mo-switch .mo-knob { position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+/* Attention ring: drawn around the Wi-Fi switch once the tool is ready to work
+   offline, one soft halo, then it fades after the switch turns off. */
+.mo-bench .mo-ring { left: 50%; top: 50%; margin: -16px 0 0 -23px; overflow: visible; pointer-events: none; }
+.mo-bench .mo-ring path { fill: none; stroke: #f0505d; stroke-width: 1.6; stroke-linecap: round; }
+.mo-bench .mo-ring-line { stroke-dasharray: 1; stroke-dashoffset: 0; filter: drop-shadow(0 0 3px rgb(240 80 93 / 0.5)); }
+.mo-bench .mo-ring-halo { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.mo-bench .mo-pill { border-radius: 999px; font-weight: 500; }
+.mo-bench .mo-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+.mo-bench .mo-pill-load { color: #b9b7b0; background: #18181b; border-color: rgb(255 255 255 / 0.1); }
+.mo-bench .mo-pill-load::before { background: #f0b429; }
+.mo-bench .mo-pill-ready { color: #bfe9cf; background: #14241b; border-color: #24402f; }
+.mo-bench .mo-pill-ready::before { background: var(--mo-ok); }
+.mo-bench .mo-zone { fill: rgb(255 255 255 / 0.02); stroke: rgb(255 255 255 / 0.2); stroke-dasharray: 5 5; }
+.mo-bench .mo-scan-line { fill: var(--qp-accent); }
+.mo-bench .mo-scan-glow { fill: url(#mob-scan); }
+.mo-bench #mob-scan stop { stop-color: #e0414f; }
+.mo-bench .mo-bpage { transform-box: fill-box; transform-origin: center; }
+.mo-bench .mo-done circle { fill: var(--mo-ok); }
+.mo-bench .mo-done path { stroke: #0f1a13; }
+.mo-bench .mo-cap {
+  position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
+  font-size: 0.72rem; font-weight: 600; color: #b9b7b0;
+}
+.mo-bench .mo-size { font-variant-numeric: tabular-nums; }
+.mo-bench .mo-hint { font-weight: 500; color: #8a8881; }
+.mo-bench .mo-size-new { color: #bfe9cf; }
+@media (max-width: 459px) {
+  .mo-bench .mo-win-dots { display: none; }
+  .mo-bench .mo-cap { font-size: 0.66rem; }
+  /* Visually hidden, not display:none: removing it from rendering would
+     restart its animations and put the label out of step with the switch. */
+  .mo-bench .mo-wifi-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+
+/* Static summary frame: offline, ready, file compressed and saved. */
+.mo-bench .mo-pill-load, .mo-bench .mo-trk-on, .mo-bench .mo-on-t, .mo-bench .mo-scan, .mo-bench .mo-size { opacity: 0; }
+.mo-bench .mo-arcs { opacity: 0.35; }
+.mo-bench .mo-slash { stroke-dashoffset: 0; }
+.mo-bench .mo-bdoc { transform: translate(484px, 100px); }
+.mo-bench .mo-bpage { transform: scale(0.86); }
+
+/* ── /about/ ── */
+.mo-inplace { --mo-t: 15s; }
+.mo-inplace .mo-chapter { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--qp-muted); font-weight: 600; }
+.mo-inplace .mo-swap { justify-items: end; }
+.mo-inplace .mo-pips { display: inline-flex; gap: 4px; }
+.mo-inplace .mo-pips i { position: relative; width: 6px; height: 6px; border-radius: 50%; background: var(--mo-line); }
+.mo-inplace .mo-pips b { position: absolute; inset: 0; border-radius: inherit; background: var(--qp-accent); opacity: 0; }
+.mo-inplace .mo-page2 .mo-paper { fill: var(--mo-stack); }
+.mo-inplace .mo-cpage { transform-box: fill-box; transform-origin: center; }
+.mo-inplace .mo-scan-line { fill: var(--qp-accent); }
+.mo-inplace .mo-scan-glow { fill: url(#moc-scan); }
+.mo-inplace #moc-scan stop { stop-color: var(--qp-accent); }
+.mo-inplace .mo-cap {
+  position: absolute; left: 50%; top: 90%; transform: translate(-50%, -50%);
+  font-size: 0.75rem; font-weight: 600; color: var(--qp-muted); white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.mo-inplace .mo-cap-ok { color: var(--qp-ok); }
+
+/* Static summary frame: a merged, redacted PDF; all three operations named. */
+.mo-inplace .mo-act1, .mo-inplace .mo-act2, .mo-inplace .mo-cap, .mo-inplace .mo-lab, .mo-inplace .mo-scan { opacity: 0; }
+.mo-inplace .mo-pips b { opacity: 1; }
+.mo-inplace .mo-ma { transform: translate(208px, 46px); }
+.mo-inplace .mo-mb { transform: translate(336px, 46px); }
+
+/* ══ Animation layer ══ */
+
+/* ── Shared: pause button and play-state gating ── */
+/* Pause / play (added by motion.ts; hidden without JS and for reduced motion). */
+.qp-mo .mo-toggle {
+  position: absolute;
+  top: calc(2.75rem + 0.5rem);
+  right: 0.5rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid var(--qp-border);
+  background: var(--mo-frame);
+  color: var(--qp-muted);
+  opacity: 0.75;
+  cursor: pointer;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+.qp-mo .mo-toggle:hover,
+.qp-mo .mo-toggle:focus-visible { opacity: 1; color: var(--qp-ink); border-color: var(--qp-border-strong); }
+.qp-mo .mo-toggle:focus-visible { outline: 2px solid var(--qp-accent); outline-offset: 2px; }
+.qp-mo .mo-toggle svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.qp-mo .mo-toggle .mo-i-play { fill: currentColor; }
+.qp-mo .mo-toggle[data-paused='true'] .mo-i-pause,
+.qp-mo .mo-toggle:not([data-paused='true']) .mo-i-play { display: none; }
+.qp-mo .mo-toggle[hidden] { display: none; }
+
+/* Animation gating: names are set per graphic; timing lives here. */
+.qp-mo[data-mo] .mo-a {
+  animation-duration: var(--mo-t, 12s);
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.qp-mo[data-mo='play'] .mo-a { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) {
+  .qp-mo .mo-a { animation: none !important; }
+  .qp-mo .mo-toggle { display: none; }
+}
+
+/* ── /privacy/ "Test it yourself" ── */
+/* Motion (14 s loop). */
+.mo-bench[data-mo] .mo-pill-load { animation-name: mob-pill-load; }
+.mo-bench[data-mo] .mo-pill-ready { animation-name: mob-pill-ready; }
+.mo-bench[data-mo] .mo-trk-on, .mo-bench[data-mo] .mo-on-t { animation-name: mob-on; }
+.mo-bench[data-mo] .mo-off-t { animation-name: mob-off; }
+.mo-bench[data-mo] .mo-arcs { animation-name: mob-arcs; }
+.mo-bench[data-mo] .mo-slash { animation-name: mob-slash; }
+.mo-bench[data-mo] .mo-knob { animation-name: mob-knob; }
+.mo-bench[data-mo] .mo-ring-line { animation-name: mob-ring; }
+.mo-bench[data-mo] .mo-ring-halo { animation-name: mob-halo; }
+.mo-bench[data-mo] .mo-bdoc { animation-name: mob-doc; }
+.mo-bench[data-mo] .mo-bpage { animation-name: mob-page; }
+.mo-bench[data-mo] .mo-scan { animation-name: mob-scan; }
+.mo-bench[data-mo] .mo-size-old { animation-name: mob-old; }
+.mo-bench[data-mo] .mo-hint { animation-name: mob-hint; }
+.mo-bench[data-mo] .mo-size-new { animation-name: mob-new; }
+.mo-bench[data-mo] .mo-done { animation-name: mob-done; }
+
+@keyframes mob-pill-load { 0%, 8% { opacity: 1; } 11%, 95% { opacity: 0; } 98%, 100% { opacity: 1; } }
+@keyframes mob-pill-ready { 0%, 8% { opacity: 0; } 11%, 95% { opacity: 1; } 98%, 100% { opacity: 0; } }
+@keyframes mob-ring {
+  0%, 11.5% { stroke-dashoffset: 1; opacity: 0; animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1); }
+  11.6% { opacity: 1; }
+  15.5%, 27% { stroke-dashoffset: 0; opacity: 1; }
+  31% { stroke-dashoffset: 0; opacity: 0; }
+  31.1%, 100% { stroke-dashoffset: 1; opacity: 0; }
+}
+@keyframes mob-halo {
+  0%, 15.5% { opacity: 0; transform: scale(1); }
+  16% { opacity: 0.55; transform: scale(1); animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1); }
+  21%, 100% { opacity: 0; transform: scale(1.32); }
+}
+@keyframes mob-on { 0%, 20% { opacity: 1; } 24.5%, 92% { opacity: 0; } 97%, 100% { opacity: 1; } }
+@keyframes mob-off { 0%, 20% { opacity: 0; } 24.5%, 92% { opacity: 1; } 97%, 100% { opacity: 0; } }
+@keyframes mob-arcs { 0%, 20% { opacity: 1; } 24.5%, 92% { opacity: 0.35; } 97%, 100% { opacity: 1; } }
+@keyframes mob-slash { 0%, 21% { stroke-dashoffset: 1; } 25.5%, 92% { stroke-dashoffset: 0; } 96%, 100% { stroke-dashoffset: 1; } }
+@keyframes mob-knob { 0%, 20% { transform: translateX(11px); } 24.5%, 92% { transform: translateX(0); } 97%, 100% { transform: translateX(11px); } }
+@keyframes mob-doc {
+  0%, 28% { transform: translate(164px, 56px); opacity: 0; }
+  33%, 58% { transform: translate(164px, 66px); opacity: 1; }
+  68% { transform: translate(484px, 66px); }
+  74%, 90% { transform: translate(484px, 100px); opacity: 1; }
+  93.9% { transform: translate(484px, 100px); opacity: 0; }
+  94%, 100% { transform: translate(164px, 56px); opacity: 0; }
+}
+@keyframes mob-page { 0%, 38% { transform: scale(1); } 52%, 93.9% { transform: scale(0.86); } 94%, 100% { transform: scale(1); } }
+@keyframes mob-scan {
+  0%, 36% { transform: translateY(8px); opacity: 0; }
+  38%, 48% { opacity: 1; }
+  51%, 100% { transform: translateY(118px); opacity: 0; }
+}
+@keyframes mob-hint { 0%, 25% { opacity: 1; } 29%, 94% { opacity: 0; } 98%, 100% { opacity: 1; } }
+@keyframes mob-old { 0%, 29% { opacity: 0; } 33%, 48% { opacity: 1; } 52%, 100% { opacity: 0; } }
+@keyframes mob-new { 0%, 49% { opacity: 0; } 53%, 59% { opacity: 1; } 63%, 100% { opacity: 0; } }
+@keyframes mob-done {
+  0%, 74% { opacity: 0; transform: scale(0.6); }
+  78%, 90% { opacity: 1; transform: scale(1); }
+  94%, 100% { opacity: 0; transform: scale(1); }
+}
+
+/* ── /about/ ── */
+.mo-inplace[data-mo] .mo-lab-all { opacity: 0; }
+.mo-inplace[data-mo] .mo-act1 { animation-name: moc-act1; }
+.mo-inplace[data-mo] .mo-act2 { animation-name: moc-act2; }
+.mo-inplace[data-mo] .mo-act3 { animation-name: moc-act3; }
+.mo-inplace[data-mo] .mo-cpage { animation-name: moc-shrink; }
+.mo-inplace[data-mo] .mo-scan { animation-name: moc-scan; }
+.mo-inplace[data-mo] .mo-ma { animation-name: moc-ma; }
+.mo-inplace[data-mo] .mo-mb { animation-name: moc-mb; }
+.mo-inplace[data-mo] .mo-red1 { animation-name: moc-red1; }
+.mo-inplace[data-mo] .mo-red2 { animation-name: moc-red2; }
+.mo-inplace[data-mo] .mo-cap-c0 { animation-name: moc-cap-c0; }
+.mo-inplace[data-mo] .mo-cap-c1 { animation-name: moc-cap-c1; }
+.mo-inplace[data-mo] .mo-cap-m { animation-name: moc-cap-m; }
+.mo-inplace[data-mo] .mo-cap-r { animation-name: moc-cap-r; }
+.mo-inplace[data-mo] .mo-lab-c, .mo-inplace[data-mo] .mo-pip-c { animation-name: moc-lab-c; }
+.mo-inplace[data-mo] .mo-lab-m, .mo-inplace[data-mo] .mo-pip-m { animation-name: moc-lab-m; }
+.mo-inplace[data-mo] .mo-lab-r, .mo-inplace[data-mo] .mo-pip-r { animation-name: moc-lab-r; }
+
+@keyframes moc-act1 { 0%, 30% { opacity: 1; } 33%, 97% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes moc-act2 { 0%, 33% { opacity: 0; } 36%, 63% { opacity: 1; } 66%, 100% { opacity: 0; } }
+@keyframes moc-act3 { 0%, 66% { opacity: 0; } 69%, 96% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes moc-shrink { 0%, 5% { transform: scale(1); } 18%, 33% { transform: scale(0.82); } 34%, 100% { transform: scale(1); } }
+@keyframes moc-scan {
+  0%, 3% { transform: translateY(8px); opacity: 0; }
+  5%, 15% { opacity: 1; }
+  18%, 100% { transform: translateY(118px); opacity: 0; }
+}
+@keyframes moc-ma { 0%, 40% { transform: translate(208px, 46px); } 53%, 100% { transform: translate(266px, 46px); } }
+@keyframes moc-mb { 0%, 40% { transform: translate(336px, 46px); } 53%, 100% { transform: translate(277px, 53px); } }
+@keyframes moc-red1 { 0%, 72% { transform: scaleX(0); } 77%, 100% { transform: scaleX(1); } }
+@keyframes moc-red2 { 0%, 77% { transform: scaleX(0); } 82%, 100% { transform: scaleX(1); } }
+@keyframes moc-cap-c0 { 0%, 13% { opacity: 1; } 16%, 97% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes moc-cap-c1 { 0%, 15% { opacity: 0; } 19%, 30% { opacity: 1; } 33%, 100% { opacity: 0; } }
+@keyframes moc-cap-m { 0%, 50% { opacity: 0; } 54%, 63% { opacity: 1; } 66%, 100% { opacity: 0; } }
+@keyframes moc-cap-r { 0%, 80% { opacity: 0; } 84%, 96% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes moc-lab-c { 0%, 31% { opacity: 1; } 34%, 97% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes moc-lab-m { 0%, 31% { opacity: 0; } 34%, 64% { opacity: 1; } 67%, 100% { opacity: 0; } }
+@keyframes moc-lab-r { 0%, 64% { opacity: 0; } 67%, 97% { opacity: 1; } 100% { opacity: 0; } }

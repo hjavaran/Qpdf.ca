@@ -12,8 +12,50 @@
  * The few upstream elements that were already light are corrected below.
  */
 
+/* Metric-matched fallbacks for DM Sans (font-display: swap). Until DM Sans
+   arrives, text is set in a local Arial/Liberation Sans (or Roboto on
+   Android) scaled to DM Sans's average glyph width and line metrics, so the
+   swap does not rewrap paragraphs and shift the page (CLS). Values come from
+   the fonts' hmtx/hhea tables, weighted by English letter frequency. */
+@font-face {
+  font-family: 'DM Sans Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans');
+  font-weight: 100 549;
+  size-adjust: 104.96%;
+  ascent-override: 94.51%;
+  descent-override: 29.54%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'DM Sans Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold');
+  font-weight: 550 1000;
+  size-adjust: 102.57%;
+  ascent-override: 96.71%;
+  descent-override: 30.22%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'DM Sans Fallback Roboto';
+  src: local('Roboto'), local('Roboto-Regular');
+  font-weight: 100 549;
+  size-adjust: 104.96%;
+  ascent-override: 94.51%;
+  descent-override: 29.54%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'DM Sans Fallback Roboto';
+  src: local('Roboto Bold'), local('Roboto-Bold');
+  font-weight: 550 1000;
+  size-adjust: 109.04%;
+  ascent-override: 90.98%;
+  descent-override: 28.43%;
+  line-gap-override: 0%;
+}
+
 @theme {
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'DM Sans', 'DM Sans Fallback', 'DM Sans Fallback Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Warm neutral scale, inverted for the upstream dark-theme markup. */
   --color-gray-50: #141412;
@@ -1084,14 +1126,14 @@ input[type='range'] {
   letter-spacing: -0.03em;
   font-weight: 700;
   color: var(--qp-ink);
-  max-width: 24ch;
+  max-width: 16.9em; /* 24ch of DM Sans 700; em keeps the measure stable while fonts swap */
 }
 .qp-page-head p {
   margin-top: 0.75rem;
   font-size: 1.08rem;
   line-height: 1.6;
   color: var(--qp-muted);
-  max-width: 62ch;
+  max-width: 42.4em; /* 62ch of DM Sans */
 }
 .qp-prose {
   color: var(--qp-text);
@@ -1252,7 +1294,7 @@ input[type='range'] {
   margin-top: 0.6rem;
   font-size: 0.76rem;
   color: var(--qp-faint);
-  max-width: 80ch;
+  max-width: 54.7em; /* 80ch of DM Sans */
   line-height: 1.5;
 }
 
@@ -1344,7 +1386,7 @@ textarea.qp-input { min-height: 9.5rem; resize: vertical; }
 .qp-success { text-align: center; padding: 2rem 0.5rem; }
 .qp-success-mark { display: grid; place-items: center; width: 56px; height: 56px; margin: 0 auto 1rem; border-radius: 50%; background: var(--qp-ok-soft); color: var(--qp-ok); font-size: 1.7rem; }
 .qp-success h2 { font-size: 1.4rem; font-weight: 700; color: var(--qp-ink); letter-spacing: -0.02em; }
-.qp-success p { margin: 0.5rem auto 1.25rem; max-width: 40ch; color: var(--qp-muted); line-height: 1.6; }
+.qp-success p { margin: 0.5rem auto 1.25rem; max-width: 27.4em; color: var(--qp-muted); line-height: 1.6; }
 @media (prefers-reduced-motion: no-preference) {
   .qp-success { animation: qp-rise 0.28s ease-out; }
   .qp-success-mark { animation: qp-pop-in 0.35s ease-out 0.05s both; }
@@ -1474,12 +1516,12 @@ html[data-theme='dark'] #text-editor-app {
   letter-spacing: -0.025em;
   font-weight: 700;
   color: var(--qp-ink);
-  max-width: 22ch;
+  max-width: 15.5em; /* 22ch of DM Sans 700 */
   margin-inline: auto;
 }
 .qp-feature p {
   margin: 0.9rem auto 0;
-  max-width: 62ch;
+  max-width: 42.4em; /* 62ch of DM Sans */
   font-size: 1.03rem;
   line-height: 1.7;
   color: var(--qp-text);

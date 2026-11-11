@@ -1,0 +1,20 @@
+{{!-- Shared by every motion graphic: layout-only critical CSS and the no-JS
+     stylesheet link (filled in by scripts/qpdf/postbuild.mjs with the hashed
+     qpdf-motion CSS). The controller, src/js/qpdf/motion.ts, is imported by
+     site.ts after the page's load event and loads that same stylesheet. --}}
+<style>
+/* Motion graphics, layout only: fixes each box's final size before
+   src/css/qpdf-motion.css (visuals, loaded after first paint) arrives, so
+   nothing shifts; the frame stays invisible until it is styled. */
+.qp-mo{position:relative}
+.qp-mo noscript{display:none}
+.qp-mo svg{display:block}
+.qp-mo .mo-frame{position:relative;border-width:1px;border-style:solid;border-radius:18px;overflow:hidden;visibility:var(--mo-vis,hidden)}
+.qp-mo .mo-bar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;min-height:2.75rem;padding:.55rem 1rem;border-bottom-width:1px;border-bottom-style:solid;font-size:.75rem;line-height:1.2;white-space:nowrap}
+.qp-mo .mo-stage{position:relative}
+.qp-mo .mo-stage>:not(svg){position:absolute}
+.qp-mo .mo-stage svg{display:block;width:100%;height:auto}
+.qp-mo .mo-swap{display:inline-grid}
+.qp-mo .mo-swap>*{grid-area:1/1}
+</style>
+<noscript data-qp-motion-css></noscript>

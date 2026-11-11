@@ -1,0 +1,67 @@
+{{!-- /about/ motion graphic ("In place"). One page is compressed, merged
+     and redacted in turn without leaving a frame labelled "Your device".
+     Decorative (aria-hidden): the surrounding text says what the tools do. --}}
+{{> motion-base }}
+<style>
+.mo-inplace{margin:1.75rem 0 2rem}
+.mo-inplace .mo-stage{aspect-ratio:640/240}
+.mo-inplace .mo-stage svg{height:100%}
+/* Narrow screens: a taller stage; "slice" crops only the empty side margins. */
+@media (max-width:559px){.mo-inplace .mo-stage{aspect-ratio:16/10}}
+</style>
+<div class="qp-mo mo-inplace" data-qp-motion>
+  <div class="mo-frame">
+    <div class="mo-art" aria-hidden="true">
+      <div class="mo-bar">
+        <span class="mo-label">Your device</span>
+        <span class="mo-chapter">
+          <span class="mo-swap">
+            <span class="mo-lab-all">Compress · Merge · Redact</span>
+            <span class="mo-lab mo-lab-c mo-a">Compress</span>
+            <span class="mo-lab mo-lab-m mo-a">Merge</span>
+            <span class="mo-lab mo-lab-r mo-a">Redact</span>
+          </span>
+          <span class="mo-pips"><i><b class="mo-pip-c mo-a"></b></i><i><b class="mo-pip-m mo-a"></b></i><i><b class="mo-pip-r mo-a"></b></i></span>
+        </span>
+      </div>
+      <div class="mo-stage">
+        <svg viewBox="0 0 640 240" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <defs>
+            <pattern id="moc-dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="mo-dot" cx="8" cy="8" r="1" /></pattern>
+            <linearGradient id="moc-scan" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-opacity="0" /><stop offset="1" stop-opacity="0.22" /></linearGradient>
+          </defs>
+          <rect width="640" height="240" fill="url(#moc-dots)" />
+          <g transform="matrix(1.25 0 0 1.25 -80 -24)">
+          <g class="mo-act1 mo-a">
+            <g transform="translate(272 46)">
+              <g class="mo-cpage mo-a">
+                <path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /><path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" /><rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" /><g class="mo-ln"><rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" /><rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" /><rect x="12" y="88" width="70" height="4" rx="2" /><rect x="12" y="98" width="38" height="4" rx="2" /></g><rect class="mo-tag" x="12" y="110" width="16" height="5" rx="2" />
+                <g class="mo-scan mo-a">
+                  <rect class="mo-scan-glow" x="3" y="-14" width="90" height="14" />
+                  <rect class="mo-scan-line" x="3" y="-0.75" width="90" height="1.5" rx=".75" />
+                </g>
+              </g>
+            </g>
+          </g>
+          <g class="mo-act2 mo-a">
+            <g class="mo-mb mo-page2 mo-a"><path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /><path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" /><rect class="mo-ttl" x="12" y="30" width="34" height="6" rx="3" /><g class="mo-ln"><rect x="12" y="48" width="70" height="4" rx="2" /><rect x="12" y="58" width="72" height="4" rx="2" /><rect x="12" y="68" width="60" height="4" rx="2" /><rect x="12" y="78" width="68" height="4" rx="2" /><rect x="12" y="88" width="46" height="4" rx="2" /></g></g>
+            <g class="mo-ma mo-a"><path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /><path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" /><rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" /><g class="mo-ln"><rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" /><rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" /><rect x="12" y="88" width="70" height="4" rx="2" /><rect x="12" y="98" width="38" height="4" rx="2" /></g><rect class="mo-tag" x="12" y="110" width="16" height="5" rx="2" /></g>
+          </g>
+          <g class="mo-act3 mo-a">
+            <g class="mo-page2" transform="translate(283 53)"><path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /></g>
+            <g transform="translate(272 46)">
+              <path class="mo-paper" d="M6 .5H72L95.5 24V118A5.5 5.5 0 0 1 90 123.5H6A5.5 5.5 0 0 1 .5 118V6A5.5 5.5 0 0 1 6 .5Z" /><path class="mo-fold" d="M72 .5V18A6 6 0 0 0 78 24H95.5" /><rect class="mo-ttl" x="12" y="30" width="42" height="6" rx="3" /><g class="mo-ln"><rect x="12" y="48" width="72" height="4" rx="2" /><rect x="12" y="58" width="64" height="4" rx="2" /><rect x="12" y="68" width="72" height="4" rx="2" /><rect x="12" y="78" width="54" height="4" rx="2" /><rect x="12" y="88" width="70" height="4" rx="2" /><rect x="12" y="98" width="38" height="4" rx="2" /></g><rect class="mo-tag" x="12" y="110" width="16" height="5" rx="2" />
+              <rect class="mo-red mo-red1 mo-a" x="10" y="55" width="70" height="10" rx="2" />
+              <rect class="mo-red mo-red2 mo-a" x="10" y="75" width="58" height="10" rx="2" />
+            </g>
+          </g>
+          </g>
+        </svg>
+        <span class="mo-cap mo-cap-c0 mo-a">2.4 MB</span>
+        <span class="mo-cap mo-cap-ok mo-cap-c1 mo-a">2.4 MB → 0.8 MB</span>
+        <span class="mo-cap mo-cap-m mo-a">2 files → 1 PDF</span>
+        <span class="mo-cap mo-cap-r mo-a">2 passages redacted</span>
+      </div>
+    </div>
+  </div>
+</div>

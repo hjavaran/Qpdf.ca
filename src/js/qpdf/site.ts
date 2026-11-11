@@ -1,6 +1,8 @@
 // Site-wide behaviour for every Qpdf page: navigation state, mobile menu and
 // offline service worker registration.
 import { registerServiceWorker } from './sw.js';
+// Motion graphics (/privacy/, /about/); a no-op on other pages.
+import './motion.js';
 
 const path = location.pathname.replace(/index\.html$/, '');
 for (const a of document.querySelectorAll<HTMLAnchorElement>('[data-nav]')) {
